@@ -1,7 +1,39 @@
 /* Font */
 @font-face {
   font-family: 'Jalnan2';
-  src: url('/fonts/Jalnan2TTF.ttf') format('truetype');
+  src: url('/fonts/jalnan2.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JalnanGothic';
+  src: url('/fonts/jalnan-gothic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BMJUA';
+  src: url('/fonts/bmjua.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SBAggroM';
+  src: url('/fonts/sb-aggro-m.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SBAggroL';
+  src: url('/fonts/sb-aggro-l.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;

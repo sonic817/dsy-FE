@@ -41,7 +41,7 @@ export default function Header() {
             </button>
           </li>
           <li className="nav-item">
-            <button className="nav-link" onClick={() => scrollTo("reservation")}>
+            <button className="nav-link nav-link-accent" onClick={() => scrollTo("reservation")}>
               예약
             </button>
           </li>

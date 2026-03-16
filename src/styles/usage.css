@@ -58,3 +58,10 @@
 .fee-table tr:nth-child(even) td {
   background: var(--primary-light);
 }
+
+.fee-note {
+  font-size: 0.8125rem;
+  color: #999;
+  margin-top: 12px;
+  text-align: center;
+}

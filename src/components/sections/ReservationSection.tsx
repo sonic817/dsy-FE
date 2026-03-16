@@ -21,7 +21,7 @@ export default function ReservationSection() {
   });
 
   const handleNameChange = (value: string) => {
-    const filtered = value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\s]/g, "");
+    const filtered = value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\s]/g, "").slice(0, 10);
     setFormData((prev) => ({ ...prev, name: filtered }));
   };
 
@@ -44,6 +44,19 @@ export default function ReservationSection() {
 
   const handleInputChange = (field: keyof ReservationFormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSlotSelect = (slot: string) => {
+    setSelectedSlot(slot);
+    setTimeout(() => {
+      const el = document.getElementById("reservation-form");
+      const header = document.querySelector(".header-fixed-wrapper") as HTMLElement;
+      if (el) {
+        const offset = header ? header.offsetHeight : 0;
+        const top = el.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }, 100);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -98,7 +111,18 @@ export default function ReservationSection() {
         <div className="reservation-layout">
         <div className="reservation-left">
         {/* 달력 */}
-        <Calendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+        <Calendar selectedDate={selectedDate} onDateSelect={(date) => {
+          setSelectedDate(date);
+          setTimeout(() => {
+            const el = document.getElementById("time-slots");
+            const header = document.querySelector(".header-fixed-wrapper") as HTMLElement;
+            if (el) {
+              const offset = header ? header.offsetHeight : 0;
+              const top = el.getBoundingClientRect().top + window.scrollY - offset;
+              window.scrollTo({ top, behavior: "smooth" });
+            }
+          }, 100);
+        }} />
 
         {/* 선택된 날짜 표시 */}
         {selectedDate && (
@@ -109,7 +133,7 @@ export default function ReservationSection() {
 
         {/* 시간 선택 */}
         {selectedDate ? (
-          <div className="time-slots">
+          <div className="time-slots" id="time-slots">
             <h3 className="time-slots-title">시간 선택</h3>
 
             <div className="time-slot-group">
@@ -122,7 +146,7 @@ export default function ReservationSection() {
                   <button
                     key={slot}
                     className={`time-slot-btn ${selectedSlot === slot ? "selected" : ""}`}
-                    onClick={() => setSelectedSlot(slot)}
+                    onClick={() => handleSlotSelect(slot)}
                   >
                     {slot}
                   </button>
@@ -140,7 +164,7 @@ export default function ReservationSection() {
                   <button
                     key={slot}
                     className={`time-slot-btn ${selectedSlot === slot ? "selected" : ""}`}
-                    onClick={() => setSelectedSlot(slot)}
+                    onClick={() => handleSlotSelect(slot)}
                   >
                     {slot}
                   </button>
@@ -158,7 +182,7 @@ export default function ReservationSection() {
                   <button
                     key={slot}
                     className={`time-slot-btn ${selectedSlot === slot ? "selected" : ""}`}
-                    onClick={() => setSelectedSlot(slot)}
+                    onClick={() => handleSlotSelect(slot)}
                   >
                     {slot}
                   </button>
@@ -166,13 +190,11 @@ export default function ReservationSection() {
               </div>
             </div>
           </div>
-        ) : (
-          <p className="no-date-msg">달력에서 날짜를 선택해주세요.</p>
-        )}
+        ) : null}
 
         </div>
         {/* 신청 폼 */}
-        <form className="reservation-form" onSubmit={handleSubmit}>
+        <form className="reservation-form" id="reservation-form" onSubmit={handleSubmit}>
           <h3 className="form-title">
             {type === "individual" ? "개인" : "단체"} 예약 신청
           </h3>
@@ -286,7 +308,11 @@ export default function ReservationSection() {
 
       <ReservationCompleteModal
         isOpen={isCompleteOpen}
-        onClose={() => setIsCompleteOpen(false)}
+        onClose={() => {
+          setIsCompleteOpen(false);
+          setFormData({ name: "", phone: "", totalPeople: "", emergencyContact: "" });
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
       />
     </section>
   );

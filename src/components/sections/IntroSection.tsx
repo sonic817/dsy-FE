@@ -6,7 +6,21 @@ import ImageModal from "@/components/modal/ImageModal";
 
 export default function IntroSection() {
   const [activeTab, setActiveTab] = useState(0);
-  const [modalImage, setModalImage] = useState<{ src: string; alt: string } | null>(null);
+  const [modalImage, setModalImage] = useState<{ src: string; alt: string; list?: { src: string; alt: string }[]; index?: number } | null>(null);
+
+  const goModalPrev = () => {
+    if (modalImage?.list && modalImage.index !== undefined && modalImage.index > 0) {
+      const prev = modalImage.index - 1;
+      setModalImage({ ...modalImage.list[prev], list: modalImage.list, index: prev });
+    }
+  };
+
+  const goModalNext = () => {
+    if (modalImage?.list && modalImage.index !== undefined && modalImage.index < modalImage.list.length - 1) {
+      const next = modalImage.index + 1;
+      setModalImage({ ...modalImage.list[next], list: modalImage.list, index: next });
+    }
+  };
 
   return (
     <section id="intro" className="section intro-section">
@@ -69,7 +83,10 @@ export default function IntroSection() {
               <div
                 key={i}
                 className="facility-card"
-                onClick={() => setModalImage({ src: facility.image, alt: facility.name })}
+                onClick={() => {
+                  const list = FACILITIES.map(f => ({ src: f.image, alt: f.name }));
+                  setModalImage({ src: facility.image, alt: facility.name, list, index: i });
+                }}
                 style={{ cursor: "pointer" }}
               >
                 <img
@@ -94,7 +111,10 @@ export default function IntroSection() {
                   src={src}
                   alt={`다율숲 사진 ${n}`}
                   className="photo-grid-img"
-                  onClick={() => setModalImage({ src, alt: `다율숲 사진 ${n}` })}
+                  onClick={() => {
+                    const list = [1, 2, 3, 4, 5, 6].map(i => ({ src: `/images/intro/intro-0${i}.png`, alt: "사진" }));
+                    setModalImage({ src, alt: "사진", list, index: n - 1 });
+                  }}
                   style={{ cursor: "pointer" }}
                 />
               );
@@ -108,6 +128,8 @@ export default function IntroSection() {
         onClose={() => setModalImage(null)}
         src={modalImage?.src || ""}
         alt={modalImage?.alt || ""}
+        onPrev={modalImage?.list && modalImage.index !== undefined && modalImage.index > 0 ? goModalPrev : undefined}
+        onNext={modalImage?.list && modalImage.index !== undefined && modalImage.index < modalImage.list.length - 1 ? goModalNext : undefined}
       />
     </section>
   );

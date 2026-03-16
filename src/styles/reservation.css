@@ -128,12 +128,14 @@
 }
 
 .calendar-day.today span {
-  background: var(--calendar-today);
+  background: var(--primary);
+  color: var(--text-white);
   font-weight: 700;
 }
 
 .calendar-day.selected span {
   background: var(--calendar-today);
+  color: var(--text);
   font-weight: 700;
 }
 
@@ -169,6 +171,7 @@
 
 /* Time Slots */
 .time-slots {
+  margin-top: 16px;
   margin-bottom: 24px;
 }
 
@@ -378,9 +381,3 @@
 }
 
 /* No date selected message */
-.no-date-msg {
-  text-align: center;
-  padding: 20px;
-  color: var(--text-light);
-  font-size: 0.875rem;
-}

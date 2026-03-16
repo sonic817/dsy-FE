@@ -29,8 +29,10 @@
   border-radius: 16px;
   width: 100%;
   max-width: 400px;
-  max-height: 80vh;
-  overflow-y: auto;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   animation: modalSlideUp 0.25s ease;
 }
 
@@ -59,14 +61,15 @@
 }
 
 .modal-close-btn {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   color: var(--text-light);
+  line-height: 1;
   transition: background 0.2s;
 }
 
@@ -76,6 +79,8 @@
 
 .modal-body {
   padding: 20px;
+  flex: 1;
+  overflow: hidden;
 }
 
 .modal-footer {
@@ -146,4 +151,108 @@
   color: var(--text);
   line-height: 1.8;
   white-space: pre-line;
+}
+
+/* Lightbox (mobile fullscreen) */
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+  padding: 0;
+}
+
+.lightbox-close svg {
+  display: block;
+}
+
+/* 모바일: 라이트박스만 표시 */
+.image-modal-desktop {
+  display: none;
+}
+
+/* 데스크톱: 모달만 표시 */
+@media (min-width: 1024px) {
+  .lightbox {
+    display: none;
+  }
+
+  .image-modal-desktop {
+    display: block;
+  }
+}
+
+/* Image Modal */
+.image-modal-body {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.image-modal-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1;
+  line-height: 1;
+  padding: 0;
+  transition: background 0.2s;
+}
+
+.image-modal-nav:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.image-modal-nav.prev {
+  left: 8px;
+}
+
+.image-modal-nav.next {
+  right: 8px;
 }

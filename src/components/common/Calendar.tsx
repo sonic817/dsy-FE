@@ -25,6 +25,7 @@ function MonthCalendar({
   today,
   onPrev,
   onNext,
+  prevDisabled,
 }: {
   year: number;
   month: number;
@@ -33,6 +34,7 @@ function MonthCalendar({
   today: Date;
   onPrev?: () => void;
   onNext?: () => void;
+  prevDisabled?: boolean;
 }) {
   const daysInMonth = getDaysInMonth(year, month);
   const firstDay = getFirstDayOfMonth(year, month);
@@ -51,7 +53,7 @@ function MonthCalendar({
     <div className="calendar">
       <div className="calendar-header">
         {onPrev ? (
-          <button className="calendar-nav-btn" onClick={onPrev}>◀</button>
+          <button className="calendar-nav-btn" onClick={onPrev} disabled={prevDisabled} style={prevDisabled ? { opacity: 0.3, cursor: "default" } : undefined}>◀</button>
         ) : <span />}
         <h3>
           {year}년 {month + 1}월
@@ -86,7 +88,7 @@ function MonthCalendar({
 
           const classNames = ["calendar-day"];
           if (isPast) classNames.push("past");
-          if (isToday && !selectedDate) classNames.push("today");
+          if (isToday) classNames.push("today");
           if (isSelected) classNames.push("selected");
           if (dayOfWeek === 0) classNames.push("sunday");
           if (dayOfWeek === 6) classNames.push("saturday");
@@ -101,15 +103,7 @@ function MonthCalendar({
                 }
               }}
             >
-              <span
-                style={
-                  isSelected
-                    ? { background: "#ffeb3b", fontWeight: 700, borderRadius: "50%" }
-                    : isToday && !selectedDate
-                      ? { background: "#ffeb3b", fontWeight: 700, borderRadius: "50%" }
-                      : undefined
-                }
-              >
+              <span>
                 {day}
               </span>
             </div>
@@ -159,6 +153,7 @@ export default function Calendar({ selectedDate, onDateSelect }: CalendarProps) 
         onDateSelect={onDateSelect}
         today={today}
         onPrev={goBack}
+        prevDisabled={baseYear === today.getFullYear() && baseMonth === today.getMonth()}
         onNext={goForward}
       />
       <MonthCalendar

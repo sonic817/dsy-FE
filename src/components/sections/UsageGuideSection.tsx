@@ -6,7 +6,21 @@ import ImageModal from "@/components/modal/ImageModal";
 
 export default function UsageGuideSection() {
   const [activeTab, setActiveTab] = useState(0);
-  const [modalImage, setModalImage] = useState<{ src: string; alt: string } | null>(null);
+  const [modalImage, setModalImage] = useState<{ src: string; alt: string; list?: { src: string; alt: string }[]; index?: number } | null>(null);
+
+  const goModalPrev = () => {
+    if (modalImage?.list && modalImage.index !== undefined && modalImage.index > 0) {
+      const prev = modalImage.index - 1;
+      setModalImage({ ...modalImage.list[prev], list: modalImage.list, index: prev });
+    }
+  };
+
+  const goModalNext = () => {
+    if (modalImage?.list && modalImage.index !== undefined && modalImage.index < modalImage.list.length - 1) {
+      const next = modalImage.index + 1;
+      setModalImage({ ...modalImage.list[next], list: modalImage.list, index: next });
+    }
+  };
 
   return (
     <section id="usage" className="section usage-section">
@@ -44,7 +58,10 @@ export default function UsageGuideSection() {
               <div
                 key={i}
                 className="facility-card"
-                onClick={() => setModalImage({ src: facility.image, alt: facility.name })}
+                onClick={() => {
+                  const list = USAGE_FACILITIES.map(f => ({ src: f.image, alt: f.name }));
+                  setModalImage({ src: facility.image, alt: facility.name, list, index: i });
+                }}
                 style={{ cursor: "pointer" }}
               >
                 <img
@@ -86,14 +103,7 @@ export default function UsageGuideSection() {
               </tr>
             </tbody>
           </table>
-          <p
-            style={{
-              fontSize: "0.8125rem",
-              color: "#999",
-              marginTop: 12,
-              textAlign: "center",
-            }}
-          >
+          <p className="fee-note">
             * 이용료는 추후 업데이트 예정입니다.
           </p>
         </div>
@@ -109,7 +119,10 @@ export default function UsageGuideSection() {
                   src={src}
                   alt={`이용안내 사진 ${n}`}
                   className="photo-grid-img"
-                  onClick={() => setModalImage({ src, alt: `이용안내 사진 ${n}` })}
+                  onClick={() => {
+                    const list = [1, 2, 3, 4, 5, 6].map(i => ({ src: `/images/usage/usage-0${i}.png`, alt: "사진" }));
+                    setModalImage({ src, alt: "사진", list, index: n - 1 });
+                  }}
                   style={{ cursor: "pointer" }}
                 />
               );
@@ -123,6 +136,8 @@ export default function UsageGuideSection() {
         onClose={() => setModalImage(null)}
         src={modalImage?.src || ""}
         alt={modalImage?.alt || ""}
+        onPrev={modalImage?.list && modalImage.index !== undefined && modalImage.index > 0 ? goModalPrev : undefined}
+        onNext={modalImage?.list && modalImage.index !== undefined && modalImage.index < modalImage.list.length - 1 ? goModalNext : undefined}
       />
     </section>
   );
