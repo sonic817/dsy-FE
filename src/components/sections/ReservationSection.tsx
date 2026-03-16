@@ -95,6 +95,8 @@ export default function ReservationSection() {
           </button>
         </div>
 
+        <div className="reservation-layout">
+        <div className="reservation-left">
         {/* 달력 */}
         <Calendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
 
@@ -168,6 +170,7 @@ export default function ReservationSection() {
           <p className="no-date-msg">달력에서 날짜를 선택해주세요.</p>
         )}
 
+        </div>
         {/* 신청 폼 */}
         <form className="reservation-form" onSubmit={handleSubmit}>
           <h3 className="form-title">
@@ -268,6 +271,7 @@ export default function ReservationSection() {
             예약 신청하기
           </button>
         </form>
+        </div>
       </div>
 
       <ReservationConfirmModal

@@ -1,16 +1,11 @@
-@media (min-width: 481px) {
-  .container {
-    max-width: 480px;
-  }
-}
-
+/* ===== Tablet (768px~) ===== */
 @media (min-width: 768px) {
   .container {
-    max-width: 600px;
+    max-width: 720px;
   }
 
   .hero-title {
-    font-size: 2rem;
+    font-size: 2.25rem;
   }
 
   .facility-grid {
@@ -19,5 +14,236 @@
 
   .photo-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ===== Desktop (1024px~) ===== */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1100px;
+    padding: 0 32px;
+  }
+
+
+  /* Nav */
+  .nav-list {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* Hero */
+  .hero {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .hero-overlay {
+    padding: 32px;
+    border-radius: 16px;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+    margin-bottom: 12px;
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+  }
+
+  /* Section */
+  .section {
+    padding: 60px 0;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+    margin-bottom: 36px;
+  }
+
+  .section-title::after {
+    width: 50px;
+    height: 4px;
+    margin-top: 12px;
+  }
+
+  /* News */
+  .news-list {
+    flex-direction: row;
+    gap: 16px;
+  }
+
+  .news-item {
+    flex: 1;
+    padding: 24px;
+    border-radius: 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .news-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .news-item-title {
+    font-size: 1.0625rem;
+  }
+
+  /* Tabs */
+  .tabs {
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .tab-btn {
+    flex: none;
+    padding: 12px 28px;
+    font-size: 0.9375rem;
+  }
+
+  /* Intro */
+  .intro-main-img {
+    border-radius: 16px;
+  }
+
+  .intro-info {
+    padding: 28px;
+  }
+
+  .intro-info h4 {
+    font-size: 1.125rem;
+  }
+
+  .map-img {
+    border-radius: 16px;
+  }
+
+  /* Grids */
+  .facility-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .facility-card-img {
+    height: 160px;
+  }
+
+  .photo-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .photo-grid-img {
+    height: 200px;
+    border-radius: 12px;
+  }
+
+  /* Usage */
+  .program-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .program-card {
+    flex: 1;
+    min-width: calc(50% - 8px);
+    padding: 24px;
+  }
+
+  .fee-table {
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 1rem;
+  }
+
+  .fee-table th,
+  .fee-table td {
+    padding: 14px 16px;
+  }
+
+  /* Reservation */
+  .reservation-type-tabs {
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .type-tab {
+    padding: 14px 48px;
+    font-size: 1.125rem;
+  }
+
+  .reservation-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .time-slot-grid {
+    gap: 8px;
+  }
+
+  .time-slot-btn {
+    padding: 12px 0;
+    font-size: 0.9375rem;
+  }
+
+  .reservation-form {
+    padding: 32px 28px;
+  }
+
+  .form-title {
+    font-size: 1.25rem;
+  }
+
+  .submit-btn {
+    padding: 18px;
+    font-size: 1.125rem;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 48px 0 32px;
+  }
+
+  .footer-title {
+    font-size: 1.375rem;
+  }
+
+  .footer-phone {
+    font-size: 1.75rem;
+  }
+
+  /* Modal */
+  .modal {
+    max-width: 560px;
+  }
+}
+
+/* ===== Wide Desktop (1280px~) ===== */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1200px;
+  }
+
+  .hero {
+    max-width: 1200px;
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.375rem;
+  }
+
+  .photo-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
