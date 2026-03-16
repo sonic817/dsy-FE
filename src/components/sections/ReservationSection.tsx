@@ -4,10 +4,14 @@ import { useState } from "react";
 import Calendar from "@/components/common/Calendar";
 import ReservationConfirmModal from "@/components/modal/ReservationConfirmModal";
 import ReservationCompleteModal from "@/components/modal/ReservationCompleteModal";
-import { TIME_SLOTS } from "@/constants";
+import ReservationCheckSection from "@/components/sections/ReservationCheckSection";
+import { TIME_SLOTS, MAX_CAPACITY, MOCK_SLOT_COUNT } from "@/constants";
 import type { ReservationType, ReservationFormData } from "@/types";
 
+type ReservationTab = "reserve" | "check";
+
 export default function ReservationSection() {
+  const [activeTab, setActiveTab] = useState<ReservationTab>("reserve");
   const [type, setType] = useState<ReservationType>("individual");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
@@ -92,6 +96,25 @@ export default function ReservationSection() {
       <div className="container">
         <h2 className="section-title">예약</h2>
 
+        {/* 예약하기 / 예약확인 탭 */}
+        <div className="reservation-main-tabs">
+          <button
+            className={`reservation-main-tab ${activeTab === "reserve" ? "active" : ""}`}
+            onClick={() => setActiveTab("reserve")}
+          >
+            예약하기
+          </button>
+          <button
+            className={`reservation-main-tab ${activeTab === "check" ? "active" : ""}`}
+            onClick={() => setActiveTab("check")}
+          >
+            예약확인
+          </button>
+        </div>
+
+        {activeTab === "check" && <ReservationCheckSection />}
+
+        {activeTab === "reserve" && (<>
         {/* 개인 / 단체 탭 */}
         <div className="reservation-type-tabs">
           <button
@@ -142,15 +165,21 @@ export default function ReservationSection() {
                 오전
               </p>
               <div className="time-slot-grid">
-                {TIME_SLOTS.morning.map((slot) => (
-                  <button
-                    key={slot}
-                    className={`time-slot-btn ${selectedSlot === slot ? "selected" : ""}`}
-                    onClick={() => handleSlotSelect(slot)}
-                  >
-                    {slot}
-                  </button>
-                ))}
+                {TIME_SLOTS.morning.map((slot) => {
+                  const count = MOCK_SLOT_COUNT[slot] ?? 0;
+                  const isFull = count >= MAX_CAPACITY;
+                  return (
+                    <button
+                      key={slot}
+                      className={`time-slot-btn ${selectedSlot === slot ? "selected" : ""} ${isFull ? "unavailable" : ""}`}
+                      onClick={() => !isFull && handleSlotSelect(slot)}
+                      disabled={isFull}
+                    >
+                      <span className="slot-name">{slot}</span>
+                      <span className="slot-count">{isFull ? "마감" : `${count}/${MAX_CAPACITY}`}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -160,15 +189,21 @@ export default function ReservationSection() {
                 오후
               </p>
               <div className="time-slot-grid">
-                {TIME_SLOTS.afternoon.map((slot) => (
-                  <button
-                    key={slot}
-                    className={`time-slot-btn ${selectedSlot === slot ? "selected" : ""}`}
-                    onClick={() => handleSlotSelect(slot)}
-                  >
-                    {slot}
-                  </button>
-                ))}
+                {TIME_SLOTS.afternoon.map((slot) => {
+                  const count = MOCK_SLOT_COUNT[slot] ?? 0;
+                  const isFull = count >= MAX_CAPACITY;
+                  return (
+                    <button
+                      key={slot}
+                      className={`time-slot-btn ${selectedSlot === slot ? "selected" : ""} ${isFull ? "unavailable" : ""}`}
+                      onClick={() => !isFull && handleSlotSelect(slot)}
+                      disabled={isFull}
+                    >
+                      <span className="slot-name">{slot}</span>
+                      <span className="slot-count">{isFull ? "마감" : `${count}/${MAX_CAPACITY}`}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -178,15 +213,21 @@ export default function ReservationSection() {
                 야간
               </p>
               <div className="time-slot-grid night-grid">
-                {TIME_SLOTS.night.map((slot) => (
-                  <button
-                    key={slot}
-                    className={`time-slot-btn ${selectedSlot === slot ? "selected" : ""}`}
-                    onClick={() => handleSlotSelect(slot)}
-                  >
-                    {slot}
-                  </button>
-                ))}
+                {TIME_SLOTS.night.map((slot) => {
+                  const count = MOCK_SLOT_COUNT[slot] ?? 0;
+                  const isFull = count >= MAX_CAPACITY;
+                  return (
+                    <button
+                      key={slot}
+                      className={`time-slot-btn ${selectedSlot === slot ? "selected" : ""} ${isFull ? "unavailable" : ""}`}
+                      onClick={() => !isFull && handleSlotSelect(slot)}
+                      disabled={isFull}
+                    >
+                      <span className="slot-name">{slot}</span>
+                      <span className="slot-count">{isFull ? "마감" : `${count}/${MAX_CAPACITY}`}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -294,6 +335,7 @@ export default function ReservationSection() {
           </button>
         </form>
         </div>
+      </>)}
       </div>
 
       <ReservationConfirmModal
