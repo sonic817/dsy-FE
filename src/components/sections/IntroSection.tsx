@@ -28,7 +28,7 @@ export default function IntroSection() {
         {/* 다율숲 */}
         <div className={`tab-content ${activeTab === 0 ? "active" : ""}`}>
           <img
-            src="/images/main.png"
+            src="/images/intro-main.png"
             alt="다율숲 대표 이미지"
             className="intro-main-img"
           />

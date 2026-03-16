@@ -1,7 +1,8 @@
 export default function HeroSection() {
   return (
     <section className="hero">
-      <div className="container">
+      <img src="/images/main.jpg" alt="다율숲 대표 이미지" className="hero-bg" />
+      <div className="hero-overlay">
         <h2 className="hero-title">
           숲으로의 초대,
           <br />
@@ -9,7 +10,6 @@ export default function HeroSection() {
         </h2>
         <p className="hero-subtitle">다율숲에서 특별한 숲체험을 만나보세요</p>
       </div>
-      <img src="/images/main.png" alt="다율숲 대표 이미지" className="hero-img" />
     </section>
   );
 }

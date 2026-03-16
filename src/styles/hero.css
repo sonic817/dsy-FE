@@ -1,9 +1,27 @@
 .hero {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: var(--text-white);
-  text-align: center;
-  padding: 48px 0 0;
+  position: relative;
   margin-top: 100px;
+}
+
+.hero-bg {
+  width: 100%;
+  display: block;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-white);
+  padding: 16px;
 }
 
 .hero-title {
@@ -11,15 +29,11 @@
   font-weight: 800;
   line-height: 1.3;
   margin-bottom: 8px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .hero-subtitle {
   font-size: 1rem;
   opacity: 0.9;
-  margin-bottom: 24px;
-}
-
-.hero-img {
-  width: 100%;
-  display: block;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
