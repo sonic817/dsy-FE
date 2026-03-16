@@ -1,0 +1,60 @@
+.usage-section {
+  background: #fff;
+}
+
+.program-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.program-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.program-card h4 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.program-card p {
+  font-size: 0.8125rem;
+  color: var(--text-light);
+}
+
+.fee-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.fee-table th {
+  background: var(--primary);
+  color: var(--text-white);
+  padding: 12px 8px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.fee-table td {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.fee-table tr:last-child td {
+  border-bottom: none;
+}
+
+.fee-table tr:nth-child(even) td {
+  background: var(--primary-light);
+}

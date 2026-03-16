@@ -1,0 +1,37 @@
+.intro-section {
+  background: #fff;
+}
+
+.intro-info {
+  background: var(--primary-light);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.intro-info h4 {
+  font-size: 1rem;
+  color: var(--primary-dark);
+  margin-bottom: 8px;
+}
+
+.intro-info p {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  line-height: 1.7;
+}
+
+.intro-main-img {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.map-placeholder {
+  height: 240px;
+}
+
+.map-img {
+  width: 100%;
+  border-radius: 12px;
+}

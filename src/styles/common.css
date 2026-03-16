@@ -1,0 +1,140 @@
+/* Layout */
+.container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Section common */
+.section {
+  padding: 40px 0;
+  border-bottom: 1px solid var(--border);
+  scroll-margin-top: 100px;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-align: center;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: var(--primary);
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+
+/* Image Placeholder */
+.image-placeholder {
+  border: 2px dashed var(--red-placeholder);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--red-placeholder);
+  font-size: 0.875rem;
+  background: #fff5f5;
+  min-height: 180px;
+}
+
+/* Tabs (shared) */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-btn {
+  flex: 1;
+  min-width: fit-content;
+  padding: 10px 14px;
+  border-radius: 20px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: #f0f0f0;
+  color: var(--text-light);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.tab-btn.active {
+  background: var(--primary);
+  color: var(--text-white);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.tab-text {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--text-light);
+  margin-bottom: 16px;
+}
+
+/* Grids */
+.facility-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.facility-card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.facility-card .image-placeholder {
+  min-height: 120px;
+  border-radius: 12px;
+}
+
+.facility-card-img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.facility-card-name {
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 8px 0;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.photo-grid .image-placeholder {
+  min-height: 140px;
+}
+
+.photo-grid-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+}

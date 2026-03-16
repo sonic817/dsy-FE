@@ -1,0 +1,12 @@
+@import "../styles/variables.css";
+@import "../styles/reset.css";
+@import "../styles/common.css";
+@import "../styles/header.css";
+@import "../styles/hero.css";
+@import "../styles/news.css";
+@import "../styles/intro.css";
+@import "../styles/usage.css";
+@import "../styles/reservation.css";
+@import "../styles/modal.css";
+@import "../styles/footer.css";
+@import "../styles/responsive.css";
