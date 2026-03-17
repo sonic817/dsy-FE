@@ -180,6 +180,7 @@ export default function ReservationSection() {
             totalAmount: expectedAmount,
             currency: "KRW",
             payMethod: "CARD",
+            redirectUrl: `${window.location.origin}/payment-complete?orderId=${orderId}&expectedAmount=${expectedAmount}`,
             customer: {
               fullName: formData.name,
               phoneNumber: formData.phone.replace(/-/g, ""),
