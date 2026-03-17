@@ -1,0 +1,170 @@
+/* Skeleton */
+.skeleton-box {
+  background: #e0e0e0;
+  border-radius: 6px;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+/* News Skeleton - 1줄 3개 */
+.news-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.news-skeleton-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.news-skeleton-item .skeleton-title {
+  height: 16px;
+  width: 60%;
+  margin-bottom: 8px;
+}
+
+.news-skeleton-item .skeleton-date {
+  height: 12px;
+  width: 30%;
+}
+
+/* Gallery/Photo Skeleton - 1줄 4개 */
+.gallery-skeleton {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.gallery-skeleton-item {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.gallery-skeleton-item .skeleton-img {
+  height: 120px;
+  border-radius: 12px;
+}
+
+.gallery-skeleton-item .skeleton-name {
+  height: 14px;
+  width: 60%;
+  margin: 10px auto;
+}
+
+/* Photo Grid Skeleton */
+.photo-skeleton {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.photo-skeleton .skeleton-img {
+  height: 140px;
+  border-radius: 8px;
+}
+
+/* Program Skeleton - 2행 2열 */
+.program-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.program-skeleton-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.program-skeleton-item .skeleton-title {
+  height: 16px;
+  width: 40%;
+  margin-bottom: 8px;
+}
+
+.program-skeleton-item .skeleton-desc {
+  height: 12px;
+  width: 80%;
+}
+
+/* Fee Table Skeleton */
+.fee-skeleton {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.fee-skeleton td {
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.fee-skeleton td .skeleton-box {
+  height: 14px;
+  width: 60%;
+  margin: 0 auto;
+}
+
+/* Slot Skeleton */
+.slot-skeleton-group {
+  margin-bottom: 12px;
+}
+
+.slot-skeleton-label {
+  height: 14px;
+  width: 50px;
+  margin-bottom: 8px;
+}
+
+.slot-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.slot-skeleton-grid.night {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.slot-skeleton-btn {
+  height: 48px;
+  border-radius: 8px;
+}
+
+/* Spinner */
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

@@ -17,13 +17,17 @@ export default function UsageGuideSection() {
   const [facilities, setFacilities] = useState<Gallery[]>([]);
   const [fees, setFees] = useState<Fee[]>([]);
   const [photos, setPhotos] = useState<Gallery[]>([]);
+  const [loadingPrograms, setLoadingPrograms] = useState(true);
+  const [loadingFacilities, setLoadingFacilities] = useState(true);
+  const [loadingFees, setLoadingFees] = useState(true);
+  const [loadingPhotos, setLoadingPhotos] = useState(true);
   const [modalImage, setModalImage] = useState<{ src: string; alt: string; list?: { src: string; alt: string }[]; index?: number } | null>(null);
 
   useEffect(() => {
-    fetchApi("/api/programs").then((r) => r.json()).then(setPrograms).catch(() => {});
-    fetchApi("/api/galleries?category=facility").then((r) => r.json()).then(setFacilities).catch(() => {});
-    fetchApi("/api/fees").then((r) => r.json()).then(setFees).catch(() => {});
-    fetchApi("/api/galleries?category=usage").then((r) => r.json()).then(setPhotos).catch(() => {});
+    fetchApi("/api/programs").then((r) => r.json()).then(setPrograms).catch(() => {}).finally(() => setLoadingPrograms(false));
+    fetchApi("/api/galleries?category=facility").then((r) => r.json()).then(setFacilities).catch(() => {}).finally(() => setLoadingFacilities(false));
+    fetchApi("/api/fees").then((r) => r.json()).then(setFees).catch(() => {}).finally(() => setLoadingFees(false));
+    fetchApi("/api/galleries?category=usage").then((r) => r.json()).then(setPhotos).catch(() => {}).finally(() => setLoadingPhotos(false));
   }, []);
 
   const goModalPrev = () => {
@@ -59,34 +63,56 @@ export default function UsageGuideSection() {
 
         {/* 숲체험 프로그램 */}
         <div className={`tab-content ${activeTab === 0 ? "active" : ""}`}>
-          <div className="program-list">
-            {programs.map((program) => (
-              <div key={program.id} className="program-card">
-                <h4>{program.name}</h4>
-                <p>{program.description}</p>
-              </div>
-            ))}
-          </div>
+          {loadingPrograms ? (
+            <div className="program-skeleton">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="program-skeleton-item">
+                  <div className="skeleton-box skeleton-title" />
+                  <div className="skeleton-box skeleton-desc" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="program-list">
+              {programs.map((program) => (
+                <div key={program.id} className="program-card">
+                  <h4>{program.name}</h4>
+                  <p>{program.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* 주요시설 */}
         <div className={`tab-content ${activeTab === 1 ? "active" : ""}`}>
-          <div className="facility-grid">
-            {facilities.map((facility, i) => (
-              <div
-                key={facility.id}
-                className="facility-card"
-                onClick={() => {
-                  const list = facilities.map(f => ({ src: f.image_url, alt: f.title }));
-                  setModalImage({ src: facility.image_url, alt: facility.title, list, index: i });
-                }}
-                style={{ cursor: "pointer" }}
-              >
-                <img src={facility.image_url} alt={facility.title} className="facility-card-img" />
-                <p className="facility-card-name">{facility.title}</p>
-              </div>
-            ))}
-          </div>
+          {loadingFacilities ? (
+            <div className="gallery-skeleton">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="gallery-skeleton-item">
+                  <div className="skeleton-box skeleton-img" />
+                  <div className="skeleton-box skeleton-name" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="facility-grid">
+              {facilities.map((facility, i) => (
+                <div
+                  key={facility.id}
+                  className="facility-card"
+                  onClick={() => {
+                    const list = facilities.map(f => ({ src: f.image_url, alt: f.title }));
+                    setModalImage({ src: facility.image_url, alt: facility.title, list, index: i });
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  <img src={facility.image_url} alt={facility.title} className="facility-card-img" />
+                  <p className="facility-card-name">{facility.title}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* 이용료 */}
@@ -100,7 +126,15 @@ export default function UsageGuideSection() {
               </tr>
             </thead>
             <tbody>
-              {fees.map((fee) => (
+              {loadingFees ? (
+                Array.from({ length: 3 }).map((_, i) => (
+                  <tr key={i}>
+                    <td><div className="skeleton-box" style={{ height: 14, width: "60%", margin: "0 auto" }} /></td>
+                    <td><div className="skeleton-box" style={{ height: 14, width: "60%", margin: "0 auto" }} /></td>
+                    <td><div className="skeleton-box" style={{ height: 14, width: "60%", margin: "0 auto" }} /></td>
+                  </tr>
+                ))
+              ) : fees.map((fee) => (
                 <tr key={fee.id}>
                   <td>{PERIOD_LABELS[fee.period] || fee.period}</td>
                   <td>{fee.individual_price.toLocaleString()}원</td>
@@ -114,21 +148,29 @@ export default function UsageGuideSection() {
 
         {/* 사진 */}
         <div className={`tab-content ${activeTab === 3 ? "active" : ""}`}>
-          <div className="photo-grid">
-            {photos.map((photo, i) => (
-              <img
-                key={photo.id}
-                src={photo.image_url}
-                alt={photo.title || "사진"}
-                className="photo-grid-img"
-                onClick={() => {
-                  const list = photos.map(p => ({ src: p.image_url, alt: "사진" }));
-                  setModalImage({ src: photo.image_url, alt: "사진", list, index: i });
-                }}
-                style={{ cursor: "pointer" }}
-              />
-            ))}
-          </div>
+          {loadingPhotos ? (
+            <div className="photo-skeleton">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="skeleton-box skeleton-img" />
+              ))}
+            </div>
+          ) : (
+            <div className="photo-grid">
+              {photos.map((photo, i) => (
+                <img
+                  key={photo.id}
+                  src={photo.image_url}
+                  alt={photo.title || "사진"}
+                  className="photo-grid-img"
+                  onClick={() => {
+                    const list = photos.map(p => ({ src: p.image_url, alt: "사진" }));
+                    setModalImage({ src: photo.image_url, alt: "사진", list, index: i });
+                  }}
+                  style={{ cursor: "pointer" }}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

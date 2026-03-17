@@ -28,6 +28,8 @@ export default function ReservationSection() {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState<ReservationFormData>({
     name: "",
     phone: "",
@@ -39,6 +41,7 @@ export default function ReservationSection() {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, "0");
     const d = String(date.getDate()).padStart(2, "0");
+    setLoadingSlots(true);
     try {
       const res = await fetchApi(`/api/time-slots?date=${y}-${m}-${d}`);
       if (res.ok) {
@@ -56,6 +59,7 @@ export default function ReservationSection() {
         }
       }
     } catch { /* */ }
+    setLoadingSlots(false);
   }, []);
 
   useEffect(() => {
@@ -112,6 +116,7 @@ export default function ReservationSection() {
 
   const handleConfirm = async () => {
     setIsConfirmOpen(false);
+    setSubmitting(true);
     try {
       const y = selectedDate!.getFullYear();
       const m = String(selectedDate!.getMonth() + 1).padStart(2, "0");
@@ -131,10 +136,13 @@ export default function ReservationSection() {
       if (!res.ok) {
         const data = await res.json();
         alert(data.message);
+        setSubmitting(false);
         return;
       }
+      setSubmitting(false);
       setIsCompleteOpen(true);
     } catch {
+      setSubmitting(false);
       alert("예약 신청에 실패했습니다.");
     }
   };
@@ -212,7 +220,25 @@ export default function ReservationSection() {
         )}
 
         {/* 시간 선택 */}
-        {selectedDate && slots.length > 0 ? (
+        {selectedDate && loadingSlots ? (
+          <div className="time-slots" id="time-slots">
+            <h3 className="time-slots-title">시간 선택</h3>
+            {[
+              { label: "오전", count: 4, gridClass: "" },
+              { label: "오후", count: 4, gridClass: "" },
+              { label: "야간", count: 2, gridClass: "night" },
+            ].map((group) => (
+              <div key={group.label} className="slot-skeleton-group">
+                <div className="skeleton-box slot-skeleton-label" />
+                <div className={`slot-skeleton-grid ${group.gridClass}`}>
+                  {Array.from({ length: group.count }).map((_, i) => (
+                    <div key={i} className="skeleton-box slot-skeleton-btn" />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : selectedDate && slots.length > 0 ? (
           <div className="time-slots" id="time-slots">
             <h3 className="time-slots-title">시간 선택</h3>
 
@@ -375,6 +401,12 @@ export default function ReservationSection() {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       />
+
+      {submitting && (
+        <div className="spinner-overlay">
+          <div className="spinner" />
+        </div>
+      )}
     </section>
   );
 }

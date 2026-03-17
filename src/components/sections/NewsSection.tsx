@@ -13,13 +13,15 @@ interface NewsItem {
 
 export default function NewsSection() {
   const [items, setItems] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
 
   useEffect(() => {
     fetchApi("/api/news")
       .then((res) => res.json())
       .then(setItems)
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   const formatDate = (dateStr: string) => {
@@ -32,7 +34,16 @@ export default function NewsSection() {
       <div className="container">
         <h2 className="section-title">다율숲 소식</h2>
         <div className="news-list">
-          {items.map((item) => (
+          {loading ? (
+            <div className="news-skeleton">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="news-skeleton-item">
+                  <div className="skeleton-box skeleton-title" />
+                  <div className="skeleton-box skeleton-date" />
+                </div>
+              ))}
+            </div>
+          ) : items.map((item) => (
             <div
               key={item.id}
               className="news-item"

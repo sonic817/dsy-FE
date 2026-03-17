@@ -64,6 +64,25 @@
   color: var(--text-light);
   transition: all 0.2s;
   white-space: nowrap;
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 2px;
+  transition: width 0.2s;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 3.5em;
 }
 
 .nav-link:hover,
@@ -73,4 +92,22 @@
 
 .nav-link-accent {
   color: var(--primary);
+}
+
+.bounce-text {
+  display: inline-flex;
+}
+
+.bounce-char {
+  display: inline-block;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.bounce-char.bounce-2 {
+  animation-delay: 0.15s;
+}
+
+@keyframes bounce {
+  0%, 20%, 100% { transform: translateY(0); }
+  10% { transform: translateY(-4px); }
 }

@@ -12,11 +12,13 @@ export default function IntroSection() {
   const [activeTab, setActiveTab] = useState(0);
   const [facilities, setFacilities] = useState<Gallery[]>([]);
   const [photos, setPhotos] = useState<Gallery[]>([]);
+  const [loadingFacilities, setLoadingFacilities] = useState(true);
+  const [loadingPhotos, setLoadingPhotos] = useState(true);
   const [modalImage, setModalImage] = useState<{ src: string; alt: string; list?: { src: string; alt: string }[]; index?: number } | null>(null);
 
   useEffect(() => {
-    fetchApi("/api/galleries?category=facility").then((r) => r.json()).then(setFacilities).catch(() => {});
-    fetchApi("/api/galleries?category=intro").then((r) => r.json()).then(setPhotos).catch(() => {});
+    fetchApi("/api/galleries?category=facility").then((r) => r.json()).then(setFacilities).catch(() => {}).finally(() => setLoadingFacilities(false));
+    fetchApi("/api/galleries?category=intro").then((r) => r.json()).then(setPhotos).catch(() => {}).finally(() => setLoadingPhotos(false));
   }, []);
 
   const goModalPrev = () => {
@@ -89,41 +91,60 @@ export default function IntroSection() {
 
         {/* 주요시설 */}
         <div className={`tab-content ${activeTab === 2 ? "active" : ""}`}>
-          <div className="facility-grid">
-            {facilities.map((facility, i) => (
-              <div
-                key={facility.id}
-                className="facility-card"
-                onClick={() => {
-                  const list = facilities.map(f => ({ src: f.image_url, alt: f.title }));
-                  setModalImage({ src: facility.image_url, alt: facility.title, list, index: i });
-                }}
-                style={{ cursor: "pointer" }}
-              >
-                <img src={facility.image_url} alt={facility.title} className="facility-card-img" />
-                <p className="facility-card-name">{facility.title}</p>
-              </div>
-            ))}
-          </div>
+          {loadingFacilities ? (
+            <div className="gallery-skeleton">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="gallery-skeleton-item">
+                  <div className="skeleton-box skeleton-img" />
+                  <div className="skeleton-box skeleton-name" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="facility-grid">
+              {facilities.map((facility, i) => (
+                <div
+                  key={facility.id}
+                  className="facility-card"
+                  onClick={() => {
+                    const list = facilities.map(f => ({ src: f.image_url, alt: f.title }));
+                    setModalImage({ src: facility.image_url, alt: facility.title, list, index: i });
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  <img src={facility.image_url} alt={facility.title} className="facility-card-img" />
+                  <p className="facility-card-name">{facility.title}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* 사진 */}
         <div className={`tab-content ${activeTab === 3 ? "active" : ""}`}>
-          <div className="photo-grid">
-            {photos.map((photo, i) => (
-              <img
-                key={photo.id}
-                src={photo.image_url}
-                alt={photo.title || "사진"}
-                className="photo-grid-img"
-                onClick={() => {
-                  const list = photos.map(p => ({ src: p.image_url, alt: "사진" }));
-                  setModalImage({ src: photo.image_url, alt: "사진", list, index: i });
-                }}
-                style={{ cursor: "pointer" }}
-              />
-            ))}
-          </div>
+          {loadingPhotos ? (
+            <div className="photo-skeleton">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="skeleton-box skeleton-img" />
+              ))}
+            </div>
+          ) : (
+            <div className="photo-grid">
+              {photos.map((photo, i) => (
+                <img
+                  key={photo.id}
+                  src={photo.image_url}
+                  alt={photo.title || "사진"}
+                  className="photo-grid-img"
+                  onClick={() => {
+                    const list = photos.map(p => ({ src: p.image_url, alt: "사진" }));
+                    setModalImage({ src: photo.image_url, alt: "사진", list, index: i });
+                  }}
+                  style={{ cursor: "pointer" }}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
