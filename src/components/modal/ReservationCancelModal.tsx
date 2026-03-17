@@ -101,16 +101,20 @@ export default function ReservationCancelModal({
                   <th>환불액</th>
                 </tr>
               </thead>
-              <tbody>
-                {policy.map((row, i) => (
-                  <tr key={i} className={row.label === refundLabel ? "cancel-policy-active" : ""}>
-                    <td>{row.label}</td>
-                    <td>{row.penalty}</td>
-                    <td>{row.refund}</td>
-                  </tr>
-                ))}
-              </tbody>
             </table>
+            <div className="cancel-policy-table-wrapper">
+              <table className="cancel-policy-table">
+                <tbody>
+                  {policy.map((row, i) => (
+                    <tr key={i} className={row.label === refundLabel ? "cancel-policy-active" : ""}>
+                      <td>{row.label}</td>
+                      <td>{row.penalty}</td>
+                      <td>{row.refund}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </>
       )}

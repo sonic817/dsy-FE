@@ -164,6 +164,16 @@
   margin-bottom: 8px;
 }
 
+.cancel-policy-table-wrapper {
+  max-height: 100px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.cancel-policy-table-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
 .cancel-policy-table {
   width: 100%;
   border-collapse: collapse;
@@ -183,6 +193,7 @@
   text-align: center;
   border-bottom: 1px solid #f0f0f0;
   color: var(--text-light);
+  word-break: keep-all;
 }
 
 .cancel-policy-table tr:last-child td {
