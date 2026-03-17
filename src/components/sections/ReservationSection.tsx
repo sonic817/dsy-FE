@@ -35,13 +35,26 @@ export default function ReservationSection() {
     emergencyContact: "",
   });
 
-  const fetchSlots = useCallback(async (date: Date) => {
+  const fetchSlots = useCallback(async (date: Date, shouldScroll?: boolean) => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, "0");
     const d = String(date.getDate()).padStart(2, "0");
     try {
       const res = await fetchApi(`/api/time-slots?date=${y}-${m}-${d}`);
-      if (res.ok) setSlots(await res.json());
+      if (res.ok) {
+        setSlots(await res.json());
+        if (shouldScroll) {
+          setTimeout(() => {
+            const el = document.getElementById("time-slots");
+            const header = document.querySelector(".header-fixed-wrapper") as HTMLElement;
+            if (el) {
+              const offset = header ? header.offsetHeight : 0;
+              const top = el.getBoundingClientRect().top + window.scrollY - offset;
+              window.scrollTo({ top, behavior: "smooth" });
+            }
+          }, 100);
+        }
+      }
     } catch { /* */ }
   }, []);
 
@@ -188,15 +201,7 @@ export default function ReservationSection() {
         {/* 달력 */}
         <Calendar selectedDate={selectedDate} onDateSelect={(date) => {
           setSelectedDate(date);
-          setTimeout(() => {
-            const el = document.getElementById("time-slots");
-            const header = document.querySelector(".header-fixed-wrapper") as HTMLElement;
-            if (el) {
-              const offset = header ? header.offsetHeight : 0;
-              const top = el.getBoundingClientRect().top + window.scrollY - offset;
-              window.scrollTo({ top, behavior: "smooth" });
-            }
-          }, 100);
+          fetchSlots(date, true);
         }} />
 
         {/* 선택된 날짜 표시 */}

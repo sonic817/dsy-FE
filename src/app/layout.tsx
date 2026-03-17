@@ -13,6 +13,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `history.scrollRestoration = "manual"` }} />
+      </head>
       <body>{children}</body>
     </html>
   );
