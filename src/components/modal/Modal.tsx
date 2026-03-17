@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useCallback } from "react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -12,37 +12,36 @@ interface ModalProps {
 }
 
 export default function Modal({ isOpen, onClose, title, children, footer, large }: ModalProps) {
-  const scrollYRef = useRef(0);
+  const preventScroll = useCallback((e: TouchEvent) => {
+    const target = e.target as HTMLElement;
+    const scrollable = target.closest(".modal-body, .cancel-policy-table-wrapper");
+    if (!scrollable) {
+      e.preventDefault();
+      return;
+    }
+    const { scrollTop, scrollHeight, clientHeight } = scrollable;
+    const isAtTop = scrollTop <= 0;
+    const isAtBottom = scrollTop + clientHeight >= scrollHeight;
+    if ((isAtTop && e.touches[0].clientY > 0) || (isAtBottom && e.touches[0].clientY < 0)) {
+      // allow normal scroll within bounds
+    }
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
-      scrollYRef.current = window.scrollY;
-      document.body.style.position = "fixed";
-      document.body.style.top = `-${scrollYRef.current}px`;
-      document.body.style.left = "0";
-      document.body.style.right = "0";
       document.body.style.overflow = "hidden";
-    }
-    return () => {
-      if (isOpen) {
-        document.body.style.position = "";
-        document.body.style.top = "";
-        document.body.style.left = "";
-        document.body.style.right = "";
+      document.addEventListener("touchmove", preventScroll, { passive: false });
+      const handleEsc = (e: KeyboardEvent) => {
+        if (e.key === "Escape") onClose();
+      };
+      window.addEventListener("keydown", handleEsc);
+      return () => {
         document.body.style.overflow = "";
-        window.scrollTo(0, scrollYRef.current);
-      }
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, [isOpen, onClose]);
+        document.removeEventListener("touchmove", preventScroll);
+        window.removeEventListener("keydown", handleEsc);
+      };
+    }
+  }, [isOpen, onClose, preventScroll]);
 
   if (!isOpen) return null;
 

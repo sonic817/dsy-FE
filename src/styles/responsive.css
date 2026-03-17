@@ -286,6 +286,11 @@
     font-size: 1.0625rem;
   }
 
+  .cancel-policy-table-wrapper {
+    max-height: none;
+    overflow-y: visible;
+  }
+
   .check-result-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

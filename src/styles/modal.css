@@ -12,6 +12,7 @@
   z-index: 200;
   padding: 16px;
   animation: modalFadeIn 0.2s ease;
+  overscroll-behavior: contain;
 }
 
 @keyframes modalFadeIn {
