@@ -1,0 +1,99 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "개인정보처리방침 - 다율숲" };
+
+export default function PrivacyPolicyPage() {
+  return (
+    <>
+      <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 24, borderBottom: "2px solid #333", paddingBottom: 12 }}>개인정보처리방침</h1>
+
+      <p style={{ marginBottom: 24 }}>대일숲 주식회사(이하 &quot;회사&quot;)는 이용자의 개인정보를 중요시하며, 「개인정보 보호법」 등 관련 법령을 준수하고 있습니다.</p>
+
+      <Section title="제1조 (수집하는 개인정보 항목)">
+        <p>회사는 예약 서비스 제공을 위해 다음과 같은 개인정보를 수집합니다.</p>
+        <ol>
+          <li>필수 항목: 신청인 성명, 연락처, 비상연락처</li>
+          <li>자동 수집 항목: IP 주소, 접속 일시, 서비스 이용 기록</li>
+        </ol>
+      </Section>
+
+      <Section title="제2조 (개인정보의 수집 및 이용 목적)">
+        <ol>
+          <li>숲체험 프로그램 예약 접수 및 확인</li>
+          <li>예약 변경 및 취소 처리</li>
+          <li>이용자 본인 확인 및 예약 조회</li>
+          <li>비상 상황 시 긴급 연락</li>
+          <li>서비스 개선 및 통계 분석</li>
+        </ol>
+      </Section>
+
+      <Section title="제3조 (개인정보의 보유 및 이용 기간)">
+        <ol>
+          <li>이용자의 개인정보는 수집 목적이 달성된 후 지체 없이 파기합니다.</li>
+          <li>단, 관련 법령에 의해 보존이 필요한 경우 해당 기간 동안 보관합니다.
+            <ul>
+              <li>계약 또는 청약철회 등에 관한 기록: 5년</li>
+              <li>대금결제 및 재화 등의 공급에 관한 기록: 5년</li>
+              <li>소비자의 불만 또는 분쟁처리에 관한 기록: 3년</li>
+            </ul>
+          </li>
+        </ol>
+      </Section>
+
+      <Section title="제4조 (개인정보의 제3자 제공)">
+        <p>회사는 이용자의 개인정보를 원칙적으로 제3자에게 제공하지 않습니다. 다만 다음의 경우에는 예외로 합니다.</p>
+        <ol>
+          <li>이용자가 사전에 동의한 경우</li>
+          <li>법령의 규정에 의거하거나, 수사 목적으로 법령에 정해진 절차와 방법에 따라 수사기관의 요구가 있는 경우</li>
+        </ol>
+      </Section>
+
+      <Section title="제5조 (개인정보의 파기)">
+        <ol>
+          <li>회사는 개인정보 보유 기간이 경과하거나 처리 목적이 달성된 경우 지체 없이 해당 개인정보를 파기합니다.</li>
+          <li>전자적 파일 형태의 정보는 복구 및 재생이 불가능한 방법으로 파기합니다.</li>
+        </ol>
+      </Section>
+
+      <Section title="제6조 (이용자의 권리와 행사 방법)">
+        <ol>
+          <li>이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있습니다.</li>
+          <li>이용자는 개인정보의 처리 정지, 삭제를 요구할 수 있습니다.</li>
+          <li>위 요청은 이메일(dis2412@naver.com) 또는 전화(031-000-0000)로 연락 주시면 처리해 드립니다.</li>
+        </ol>
+      </Section>
+
+      <Section title="제7조 (개인정보의 안전성 확보 조치)">
+        <ol>
+          <li>개인정보의 암호화</li>
+          <li>해킹 등에 대비한 기술적 대책</li>
+          <li>개인정보 취급 직원의 최소화 및 교육</li>
+        </ol>
+      </Section>
+
+      <Section title="제8조 (개인정보 보호책임자)">
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          <li>성명: 하우석</li>
+          <li>직위: 대표</li>
+          <li>연락처: 031-000-0000</li>
+          <li>이메일: dis2412@naver.com</li>
+        </ul>
+      </Section>
+
+      <Section title="제9조 (개인정보처리방침 변경)">
+        <p>본 개인정보처리방침은 법령, 정책 또는 보안 기술의 변경에 따라 내용이 추가, 삭제 및 수정될 수 있으며, 변경 시 서비스 화면을 통해 공지합니다.</p>
+      </Section>
+
+      <p style={{ marginTop: 32, color: "#888" }}>시행일: 2026년 03월 17일</p>
+    </>
+  );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 8 }}>{title}</h2>
+      <div>{children}</div>
+    </div>
+  );
+}

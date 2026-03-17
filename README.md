@@ -21,3 +21,9 @@ http://localhost:3000 에서 확인
 npm run build
 npm run start
 ```
+
+## 약관 페이지
+
+- 이용약관: /terms/service
+- 개인정보처리방침: /terms/privacy
+- 취소 및 환불 정책: /terms/refund

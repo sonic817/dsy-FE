@@ -32,6 +32,27 @@
   margin: 16px auto;
 }
 
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-links {
+  font-size: 0.8125rem;
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+.footer-links a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer-links span {
+  margin: 0 6px;
+  opacity: 0.5;
+}
+
 .footer-copyright {
   font-size: 0.75rem;
   opacity: 0.6;

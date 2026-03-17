@@ -249,6 +249,22 @@
     font-size: 1.75rem;
   }
 
+  .footer-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .footer-left {
+    flex: 1;
+  }
+
+  .footer-right {
+    flex: 1;
+    text-align: right;
+  }
+
   /* Modal */
   .modal {
     max-width: 640px;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { fetchApi } from "@/lib/api";
 
 interface ReservationResult {
   date: string;
@@ -30,23 +31,20 @@ export default function ReservationCheckSection() {
     setCheckName(filtered);
   };
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setSearched(true);
-    // TODO: API 연동 - 현재는 가데이터
-    if (checkName === "이강원" && checkPhone === "010-2998-9985") {
-      setResults([
-        {
-          date: "2026년 03월 22일 (일)",
-          timeSlot: "오전2",
-          type: "단체",
-          name: "이강원",
-          phone: "010-2998-9985",
-          totalPeople: "15",
-          status: "예약완료",
-        },
-      ]);
-    } else {
+    try {
+      const res = await fetchApi("/api/reservations/check", {
+        method: "POST",
+        body: JSON.stringify({ name: checkName, phone: checkPhone }),
+      });
+      if (res.ok) {
+        setResults(await res.json());
+      } else {
+        setResults([]);
+      }
+    } catch {
       setResults([]);
     }
   };

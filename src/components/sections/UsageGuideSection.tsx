@@ -1,12 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import { USAGE_TABS, PROGRAMS, USAGE_FACILITIES } from "@/constants";
+import { useState, useEffect } from "react";
+import { fetchApi } from "@/lib/api";
 import ImageModal from "@/components/modal/ImageModal";
+
+interface Program { id: number; name: string; description: string; }
+interface Gallery { id: number; title: string; image_url: string; sort_order: number; }
+interface Fee { id: number; period: string; individual_price: number; group_price: number; }
+
+const USAGE_TABS = ["숲체험 프로그램", "주요시설", "이용료", "사진"];
+const PERIOD_LABELS: Record<string, string> = { morning: "오전", afternoon: "오후", night: "야간" };
 
 export default function UsageGuideSection() {
   const [activeTab, setActiveTab] = useState(0);
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [facilities, setFacilities] = useState<Gallery[]>([]);
+  const [fees, setFees] = useState<Fee[]>([]);
+  const [photos, setPhotos] = useState<Gallery[]>([]);
   const [modalImage, setModalImage] = useState<{ src: string; alt: string; list?: { src: string; alt: string }[]; index?: number } | null>(null);
+
+  useEffect(() => {
+    fetchApi("/api/programs").then((r) => r.json()).then(setPrograms).catch(() => {});
+    fetchApi("/api/galleries?category=facility").then((r) => r.json()).then(setFacilities).catch(() => {});
+    fetchApi("/api/fees").then((r) => r.json()).then(setFees).catch(() => {});
+    fetchApi("/api/galleries?category=usage").then((r) => r.json()).then(setPhotos).catch(() => {});
+  }, []);
 
   const goModalPrev = () => {
     if (modalImage?.list && modalImage.index !== undefined && modalImage.index > 0) {
@@ -42,10 +60,10 @@ export default function UsageGuideSection() {
         {/* 숲체험 프로그램 */}
         <div className={`tab-content ${activeTab === 0 ? "active" : ""}`}>
           <div className="program-list">
-            {PROGRAMS.map((program, i) => (
-              <div key={i} className="program-card">
+            {programs.map((program) => (
+              <div key={program.id} className="program-card">
                 <h4>{program.name}</h4>
-                <p>{program.desc}</p>
+                <p>{program.description}</p>
               </div>
             ))}
           </div>
@@ -54,22 +72,18 @@ export default function UsageGuideSection() {
         {/* 주요시설 */}
         <div className={`tab-content ${activeTab === 1 ? "active" : ""}`}>
           <div className="facility-grid">
-            {USAGE_FACILITIES.map((facility, i) => (
+            {facilities.map((facility, i) => (
               <div
-                key={i}
+                key={facility.id}
                 className="facility-card"
                 onClick={() => {
-                  const list = USAGE_FACILITIES.map(f => ({ src: f.image, alt: f.name }));
-                  setModalImage({ src: facility.image, alt: facility.name, list, index: i });
+                  const list = facilities.map(f => ({ src: f.image_url, alt: f.title }));
+                  setModalImage({ src: facility.image_url, alt: facility.title, list, index: i });
                 }}
                 style={{ cursor: "pointer" }}
               >
-                <img
-                  src={facility.image}
-                  alt={facility.name}
-                  className="facility-card-img"
-                />
-                <p className="facility-card-name">{facility.name}</p>
+                <img src={facility.image_url} alt={facility.title} className="facility-card-img" />
+                <p className="facility-card-name">{facility.title}</p>
               </div>
             ))}
           </div>
@@ -86,47 +100,34 @@ export default function UsageGuideSection() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>오전</td>
-                <td>5,000원</td>
-                <td>3,000원</td>
-              </tr>
-              <tr>
-                <td>오후</td>
-                <td>5,000원</td>
-                <td>3,000원</td>
-              </tr>
-              <tr>
-                <td>야간</td>
-                <td>8,000원</td>
-                <td>5,000원</td>
-              </tr>
+              {fees.map((fee) => (
+                <tr key={fee.id}>
+                  <td>{PERIOD_LABELS[fee.period] || fee.period}</td>
+                  <td>{fee.individual_price.toLocaleString()}원</td>
+                  <td>{fee.group_price.toLocaleString()}원</td>
+                </tr>
+              ))}
             </tbody>
           </table>
-          <p className="fee-note">
-            * 이용료는 추후 업데이트 예정입니다.
-          </p>
+          <p className="fee-note">* 이용료는 추후 업데이트 예정입니다.</p>
         </div>
 
         {/* 사진 */}
         <div className={`tab-content ${activeTab === 3 ? "active" : ""}`}>
           <div className="photo-grid">
-            {[1, 2, 3, 4, 5, 6].map((n) => {
-              const src = `/images/usage/usage-0${n}.png`;
-              return (
-                <img
-                  key={n}
-                  src={src}
-                  alt={`이용안내 사진 ${n}`}
-                  className="photo-grid-img"
-                  onClick={() => {
-                    const list = [1, 2, 3, 4, 5, 6].map(i => ({ src: `/images/usage/usage-0${i}.png`, alt: "사진" }));
-                    setModalImage({ src, alt: "사진", list, index: n - 1 });
-                  }}
-                  style={{ cursor: "pointer" }}
-                />
-              );
-            })}
+            {photos.map((photo, i) => (
+              <img
+                key={photo.id}
+                src={photo.image_url}
+                alt={photo.title || "사진"}
+                className="photo-grid-img"
+                onClick={() => {
+                  const list = photos.map(p => ({ src: p.image_url, alt: "사진" }));
+                  setModalImage({ src: photo.image_url, alt: "사진", list, index: i });
+                }}
+                style={{ cursor: "pointer" }}
+              />
+            ))}
           </div>
         </div>
       </div>

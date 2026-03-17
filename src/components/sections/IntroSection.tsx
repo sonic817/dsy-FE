@@ -1,12 +1,23 @@
 "use client";
 
-import { useState } from "react";
-import { INTRO_TABS, FACILITIES } from "@/constants";
+import { useState, useEffect } from "react";
+import { fetchApi } from "@/lib/api";
 import ImageModal from "@/components/modal/ImageModal";
+
+interface Gallery { id: number; title: string; image_url: string; sort_order: number; }
+
+const INTRO_TABS = ["다율숲", "찾아오시는 길", "주요시설", "사진"];
 
 export default function IntroSection() {
   const [activeTab, setActiveTab] = useState(0);
+  const [facilities, setFacilities] = useState<Gallery[]>([]);
+  const [photos, setPhotos] = useState<Gallery[]>([]);
   const [modalImage, setModalImage] = useState<{ src: string; alt: string; list?: { src: string; alt: string }[]; index?: number } | null>(null);
+
+  useEffect(() => {
+    fetchApi("/api/galleries?category=facility").then((r) => r.json()).then(setFacilities).catch(() => {});
+    fetchApi("/api/galleries?category=intro").then((r) => r.json()).then(setPhotos).catch(() => {});
+  }, []);
 
   const goModalPrev = () => {
     if (modalImage?.list && modalImage.index !== undefined && modalImage.index > 0) {
@@ -79,22 +90,18 @@ export default function IntroSection() {
         {/* 주요시설 */}
         <div className={`tab-content ${activeTab === 2 ? "active" : ""}`}>
           <div className="facility-grid">
-            {FACILITIES.map((facility, i) => (
+            {facilities.map((facility, i) => (
               <div
-                key={i}
+                key={facility.id}
                 className="facility-card"
                 onClick={() => {
-                  const list = FACILITIES.map(f => ({ src: f.image, alt: f.name }));
-                  setModalImage({ src: facility.image, alt: facility.name, list, index: i });
+                  const list = facilities.map(f => ({ src: f.image_url, alt: f.title }));
+                  setModalImage({ src: facility.image_url, alt: facility.title, list, index: i });
                 }}
                 style={{ cursor: "pointer" }}
               >
-                <img
-                  src={facility.image}
-                  alt={facility.name}
-                  className="facility-card-img"
-                />
-                <p className="facility-card-name">{facility.name}</p>
+                <img src={facility.image_url} alt={facility.title} className="facility-card-img" />
+                <p className="facility-card-name">{facility.title}</p>
               </div>
             ))}
           </div>
@@ -103,22 +110,19 @@ export default function IntroSection() {
         {/* 사진 */}
         <div className={`tab-content ${activeTab === 3 ? "active" : ""}`}>
           <div className="photo-grid">
-            {[1, 2, 3, 4, 5, 6].map((n) => {
-              const src = `/images/intro/intro-0${n}.png`;
-              return (
-                <img
-                  key={n}
-                  src={src}
-                  alt={`다율숲 사진 ${n}`}
-                  className="photo-grid-img"
-                  onClick={() => {
-                    const list = [1, 2, 3, 4, 5, 6].map(i => ({ src: `/images/intro/intro-0${i}.png`, alt: "사진" }));
-                    setModalImage({ src, alt: "사진", list, index: n - 1 });
-                  }}
-                  style={{ cursor: "pointer" }}
-                />
-              );
-            })}
+            {photos.map((photo, i) => (
+              <img
+                key={photo.id}
+                src={photo.image_url}
+                alt={photo.title || "사진"}
+                className="photo-grid-img"
+                onClick={() => {
+                  const list = photos.map(p => ({ src: p.image_url, alt: "사진" }));
+                  setModalImage({ src: photo.image_url, alt: "사진", list, index: i });
+                }}
+                style={{ cursor: "pointer" }}
+              />
+            ))}
           </div>
         </div>
       </div>

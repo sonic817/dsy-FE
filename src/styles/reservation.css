@@ -205,7 +205,7 @@
   line-height: 1;
 }
 
-.calendar-day:hover:not(.empty):not(.past) span {
+.calendar-day:hover:not(.empty):not(.past):not(.selected) span {
   background: var(--primary-light);
 }
 
@@ -215,7 +215,8 @@
   font-weight: 700;
 }
 
-.calendar-day.selected span {
+.calendar-day.selected span,
+.calendar-day.selected:hover span {
   background: var(--calendar-today);
   color: var(--text);
   font-weight: 700;

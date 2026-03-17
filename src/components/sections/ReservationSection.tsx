@@ -1,12 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Calendar from "@/components/common/Calendar";
 import ReservationConfirmModal from "@/components/modal/ReservationConfirmModal";
 import ReservationCompleteModal from "@/components/modal/ReservationCompleteModal";
 import ReservationCheckSection from "@/components/sections/ReservationCheckSection";
-import { TIME_SLOTS, MAX_CAPACITY, MOCK_SLOT_COUNT } from "@/constants";
+import { fetchApi } from "@/lib/api";
 import type { ReservationType, ReservationFormData } from "@/types";
+
+interface SlotInfo {
+  id: number;
+  name: string;
+  period: string;
+  maxCapacity: number;
+  currentCount: number;
+  sortOrder: number;
+}
 
 type ReservationTab = "reserve" | "check";
 
@@ -15,14 +24,34 @@ export default function ReservationSection() {
   const [type, setType] = useState<ReservationType>("individual");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+  const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
+  const [slots, setSlots] = useState<SlotInfo[]>([]);
   const [formData, setFormData] = useState<ReservationFormData>({
     name: "",
     phone: "",
     totalPeople: "",
     emergencyContact: "",
   });
+
+  const fetchSlots = useCallback(async (date: Date) => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    try {
+      const res = await fetchApi(`/api/time-slots?date=${y}-${m}-${d}`);
+      if (res.ok) setSlots(await res.json());
+    } catch { /* */ }
+  }, []);
+
+  useEffect(() => {
+    if (selectedDate) fetchSlots(selectedDate);
+  }, [selectedDate, fetchSlots]);
+
+  const morningSlots = slots.filter(s => s.period === "morning");
+  const afternoonSlots = slots.filter(s => s.period === "afternoon");
+  const nightSlots = slots.filter(s => s.period === "night");
 
   const handleNameChange = (value: string) => {
     const filtered = value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\s]/g, "").slice(0, 10);
@@ -68,10 +97,33 @@ export default function ReservationSection() {
     setIsConfirmOpen(true);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setIsConfirmOpen(false);
-    setIsCompleteOpen(true);
-    // TODO: API 연동
+    try {
+      const y = selectedDate!.getFullYear();
+      const m = String(selectedDate!.getMonth() + 1).padStart(2, "0");
+      const d = String(selectedDate!.getDate()).padStart(2, "0");
+      const res = await fetchApi("/api/reservations", {
+        method: "POST",
+        body: JSON.stringify({
+          type: type,
+          date: `${y}-${m}-${d}`,
+          timeSlotId: selectedSlotId,
+          name: formData.name,
+          phone: formData.phone,
+          totalPeople: Number(formData.totalPeople.replace(/,/g, "")),
+          emergencyContact: formData.emergencyContact,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.message);
+        return;
+      }
+      setIsCompleteOpen(true);
+    } catch {
+      alert("예약 신청에 실패했습니다.");
+    }
   };
 
   const formatDate = (date: Date): string => {
@@ -155,81 +207,43 @@ export default function ReservationSection() {
         )}
 
         {/* 시간 선택 */}
-        {selectedDate ? (
+        {selectedDate && slots.length > 0 ? (
           <div className="time-slots" id="time-slots">
             <h3 className="time-slots-title">시간 선택</h3>
 
-            <div className="time-slot-group">
-              <p className="time-slot-group-label">
-                <span className="dot morning" />
-                오전
-              </p>
-              <div className="time-slot-grid">
-                {TIME_SLOTS.morning.map((slot) => {
-                  const count = MOCK_SLOT_COUNT[slot] ?? 0;
-                  const isFull = count >= MAX_CAPACITY;
-                  return (
-                    <button
-                      key={slot}
-                      className={`time-slot-btn ${selectedSlot === slot ? "selected" : ""} ${isFull ? "unavailable" : ""}`}
-                      onClick={() => !isFull && handleSlotSelect(slot)}
-                      disabled={isFull}
-                    >
-                      <span className="slot-name">{slot}</span>
-                      <span className="slot-count">{isFull ? "마감" : `${count}/${MAX_CAPACITY}`}</span>
-                    </button>
-                  );
-                })}
+            {[
+              { label: "오전", dotClass: "morning", items: morningSlots, gridClass: "" },
+              { label: "오후", dotClass: "afternoon", items: afternoonSlots, gridClass: "" },
+              { label: "야간", dotClass: "night", items: nightSlots, gridClass: "night-grid" },
+            ].map((group) => (
+              <div key={group.label} className="time-slot-group">
+                <p className="time-slot-group-label">
+                  <span className={`dot ${group.dotClass}`} />
+                  {group.label}
+                </p>
+                <div className={`time-slot-grid ${group.gridClass}`}>
+                  {group.items.map((slot) => {
+                    const isFull = slot.currentCount >= slot.maxCapacity;
+                    return (
+                      <button
+                        key={slot.id}
+                        className={`time-slot-btn ${selectedSlot === slot.name ? "selected" : ""} ${isFull ? "unavailable" : ""}`}
+                        onClick={() => {
+                          if (!isFull) {
+                            setSelectedSlotId(slot.id);
+                            handleSlotSelect(slot.name);
+                          }
+                        }}
+                        disabled={isFull}
+                      >
+                        <span className="slot-name">{slot.name}</span>
+                        <span className="slot-count">{isFull ? "마감" : `${slot.currentCount}/${slot.maxCapacity}`}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-
-            <div className="time-slot-group">
-              <p className="time-slot-group-label">
-                <span className="dot afternoon" />
-                오후
-              </p>
-              <div className="time-slot-grid">
-                {TIME_SLOTS.afternoon.map((slot) => {
-                  const count = MOCK_SLOT_COUNT[slot] ?? 0;
-                  const isFull = count >= MAX_CAPACITY;
-                  return (
-                    <button
-                      key={slot}
-                      className={`time-slot-btn ${selectedSlot === slot ? "selected" : ""} ${isFull ? "unavailable" : ""}`}
-                      onClick={() => !isFull && handleSlotSelect(slot)}
-                      disabled={isFull}
-                    >
-                      <span className="slot-name">{slot}</span>
-                      <span className="slot-count">{isFull ? "마감" : `${count}/${MAX_CAPACITY}`}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="time-slot-group">
-              <p className="time-slot-group-label">
-                <span className="dot night" />
-                야간
-              </p>
-              <div className="time-slot-grid night-grid">
-                {TIME_SLOTS.night.map((slot) => {
-                  const count = MOCK_SLOT_COUNT[slot] ?? 0;
-                  const isFull = count >= MAX_CAPACITY;
-                  return (
-                    <button
-                      key={slot}
-                      className={`time-slot-btn ${selectedSlot === slot ? "selected" : ""} ${isFull ? "unavailable" : ""}`}
-                      onClick={() => !isFull && handleSlotSelect(slot)}
-                      disabled={isFull}
-                    >
-                      <span className="slot-name">{slot}</span>
-                      <span className="slot-count">{isFull ? "마감" : `${count}/${MAX_CAPACITY}`}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            ))}
           </div>
         ) : null}
 
