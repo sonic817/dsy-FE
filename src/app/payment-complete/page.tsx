@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchApi } from "@/lib/api";
 
-export default function PaymentCompletePage() {
+function PaymentCompleteContent() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState("");
@@ -70,5 +70,17 @@ export default function PaymentCompletePage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function PaymentCompletePage() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div className="spinner" />
+      </div>
+    }>
+      <PaymentCompleteContent />
+    </Suspense>
   );
 }
