@@ -285,6 +285,12 @@
   .news-detail-content {
     font-size: 1.0625rem;
   }
+
+  .check-result-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
 }
 
 /* ===== Wide Desktop (1280px~) ===== */
