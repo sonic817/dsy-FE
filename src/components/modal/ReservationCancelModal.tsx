@@ -41,10 +41,14 @@ export default function ReservationCancelModal({
 
   useEffect(() => {
     if (!loading && activeRowRef.current && wrapperRef.current) {
-      const wrapper = wrapperRef.current;
-      const row = activeRowRef.current;
-      const rowTop = row.offsetTop - wrapper.offsetTop;
-      wrapper.scrollTo({ top: rowTop, behavior: "smooth" });
+      setTimeout(() => {
+        const wrapper = wrapperRef.current!;
+        const row = activeRowRef.current!;
+        const rowTop = row.offsetTop;
+        const rowHeight = row.offsetHeight;
+        const wrapperHeight = wrapper.clientHeight;
+        wrapper.scrollTo({ top: rowTop - wrapperHeight / 2 + rowHeight / 2, behavior: "smooth" });
+      }, 100);
     }
   }, [loading, refundLabel]);
 
