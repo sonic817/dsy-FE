@@ -2,15 +2,29 @@
 
 import { useState } from "react";
 import { fetchApi } from "@/lib/api";
+import ReservationCancelModal from "@/components/modal/ReservationCancelModal";
 
 interface ReservationResult {
+  id: number;
   date: string;
   timeSlot: string;
   type: string;
   name: string;
   phone: string;
   totalPeople: string;
+  amountPaid: number;
   status: string;
+  createdAt: string;
+}
+
+interface CancelPreview {
+  createdAt: string;
+  timeSlot: string;
+  name: string;
+  amountPaid: number;
+  refundAmount: number;
+  refundLabel: string;
+  policy: { label: string; penalty: string; refund: string }[];
 }
 
 export default function ReservationCheckSection() {
@@ -18,6 +32,9 @@ export default function ReservationCheckSection() {
   const [checkPhone, setCheckPhone] = useState("");
   const [results, setResults] = useState<ReservationResult[] | null>(null);
   const [searched, setSearched] = useState(false);
+  const [cancelTargetId, setCancelTargetId] = useState<number | null>(null);
+  const [cancelPreview, setCancelPreview] = useState<CancelPreview | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
 
   const formatPhone = (value: string): string => {
     const digits = value.replace(/\D/g, "").slice(0, 11);
@@ -47,6 +64,43 @@ export default function ReservationCheckSection() {
     } catch {
       setResults([]);
     }
+  };
+
+  const openCancelModal = async (id: number) => {
+    setCancelTargetId(id);
+    setPreviewLoading(true);
+    setCancelPreview(null);
+    try {
+      const res = await fetchApi(`/api/reservations/${id}/cancel-preview`);
+      if (res.ok) {
+        setCancelPreview(await res.json());
+      } else {
+        alert("취소 정보를 불러올 수 없습니다.");
+        setCancelTargetId(null);
+      }
+    } catch {
+      alert("취소 정보를 불러올 수 없습니다.");
+      setCancelTargetId(null);
+    }
+    setPreviewLoading(false);
+  };
+
+  const handleCancel = async () => {
+    if (!cancelTargetId) return;
+    try {
+      const res = await fetchApi(`/api/reservations/${cancelTargetId}/cancel`, { method: "PATCH" });
+      if (res.ok) {
+        alert("예약이 취소되었습니다.");
+        setResults((prev) => prev?.map((r) => r.id === cancelTargetId ? { ...r, status: "취소" } : r) || null);
+      } else {
+        const data = await res.json();
+        alert(data.message || "취소에 실패했습니다.");
+      }
+    } catch {
+      alert("취소에 실패했습니다.");
+    }
+    setCancelTargetId(null);
+    setCancelPreview(null);
   };
 
   const isSearchValid = checkName.trim() && checkPhone.trim();
@@ -126,9 +180,18 @@ export default function ReservationCheckSection() {
                     <span className="check-result-value">{item.totalPeople}명</span>
                   </div>
                   <div className="check-result-row">
+                    <span className="check-result-label">결제금액</span>
+                    <span className="check-result-value">{item.amountPaid > 0 ? `${item.amountPaid.toLocaleString()}원` : "미결제"}</span>
+                  </div>
+                  <div className="check-result-row">
                     <span className="check-result-label">상태</span>
                     <span className="check-result-value check-status">{item.status}</span>
                   </div>
+                  {item.status !== "취소" && new Date(item.date + "T00:00:00") > new Date(new Date().toDateString()) && (
+                    <button className="cancel-btn" onClick={() => openCancelModal(item.id)}>
+                      취소하기
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -139,6 +202,20 @@ export default function ReservationCheckSection() {
           )}
         </div>
       )}
+
+      <ReservationCancelModal
+        isOpen={cancelTargetId !== null}
+        onClose={() => { setCancelTargetId(null); setCancelPreview(null); }}
+        onConfirm={handleCancel}
+        loading={previewLoading}
+        createdAt={cancelPreview?.createdAt || ""}
+        timeSlot={cancelPreview?.timeSlot || ""}
+        name={cancelPreview?.name || ""}
+        amountPaid={cancelPreview?.amountPaid || 0}
+        refundAmount={cancelPreview?.refundAmount || 0}
+        refundLabel={cancelPreview?.refundLabel || ""}
+        policy={cancelPreview?.policy || []}
+      />
     </div>
   );
 }

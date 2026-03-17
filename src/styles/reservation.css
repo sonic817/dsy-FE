@@ -77,6 +77,24 @@
   color: var(--primary);
 }
 
+.cancel-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  background: #fff;
+  color: var(--red-placeholder);
+  border: 1px solid var(--red-placeholder);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  background: var(--red-placeholder);
+  color: #fff;
+}
+
 .check-empty {
   text-align: center;
   padding: 40px 0;

@@ -397,6 +397,10 @@ export default function ReservationSection() {
         isOpen={isCompleteOpen}
         onClose={() => {
           setIsCompleteOpen(false);
+          setSelectedDate(null);
+          setSelectedSlot(null);
+          setSelectedSlotId(null);
+          setSlots([]);
           setFormData({ name: "", phone: "", totalPeople: "", emergencyContact: "" });
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
