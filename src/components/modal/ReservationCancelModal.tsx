@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Modal from "./Modal";
 
 interface PolicyRow {
@@ -35,6 +36,18 @@ export default function ReservationCancelModal({
   refundLabel,
   policy,
 }: ReservationCancelModalProps) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const activeRowRef = useRef<HTMLTableRowElement>(null);
+
+  useEffect(() => {
+    if (!loading && activeRowRef.current && wrapperRef.current) {
+      const wrapper = wrapperRef.current;
+      const row = activeRowRef.current;
+      const rowTop = row.offsetTop - wrapper.offsetTop;
+      wrapper.scrollTo({ top: rowTop, behavior: "smooth" });
+    }
+  }, [loading, refundLabel]);
+
   const formatDateTime = (s: string) => {
     if (!s) return "-";
     const d = new Date(s);
@@ -102,11 +115,11 @@ export default function ReservationCancelModal({
                 </tr>
               </thead>
             </table>
-            <div className="cancel-policy-table-wrapper">
+            <div className="cancel-policy-table-wrapper" ref={wrapperRef}>
               <table className="cancel-policy-table">
                 <tbody>
                   {policy.map((row, i) => (
-                    <tr key={i} className={row.label === refundLabel ? "cancel-policy-active" : ""}>
+                    <tr key={i} ref={row.label === refundLabel ? activeRowRef : undefined} className={row.label === refundLabel ? "cancel-policy-active" : ""}>
                       <td>{row.label}</td>
                       <td>{row.penalty}</td>
                       <td>{row.refund}</td>

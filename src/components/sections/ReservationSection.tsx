@@ -188,13 +188,14 @@ export default function ReservationSection() {
             },
           });
         } catch {
+          await fetchApi(`/api/reservations/${orderId}/cleanup`, { method: "DELETE" }).catch(() => {});
           alert("결제창을 열 수 없습니다.");
           setSubmitting(false);
           return;
         }
 
         if (payment?.code != null) {
-          alert(payment.message || "결제가 취소되었습니다.");
+          await fetchApi(`/api/reservations/${orderId}/cleanup`, { method: "DELETE" }).catch(() => {});
           setSubmitting(false);
           return;
         }

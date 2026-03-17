@@ -36,6 +36,7 @@ export default function ReservationCheckSection() {
   const [cancelTargetId, setCancelTargetId] = useState<number | null>(null);
   const [cancelPreview, setCancelPreview] = useState<CancelPreview | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
 
   const formatPhone = (value: string): string => {
     const digits = value.replace(/\D/g, "").slice(0, 11);
@@ -88,21 +89,26 @@ export default function ReservationCheckSection() {
 
   const handleCancel = async () => {
     if (!cancelTargetId) return;
+    setCancelling(true);
     try {
       const res = await fetchApi(`/api/reservations/${cancelTargetId}/cancel`, { method: "PATCH" });
       if (res.ok) {
         const data = await res.json();
+        setCancelling(false);
+        setCancelTargetId(null);
+        setCancelPreview(null);
         alert(data.message || "예약이 취소되었습니다.");
         setResults((prev) => prev?.map((r) => r.id === cancelTargetId ? { ...r, status: "취소" } : r) || null);
+        return;
       } else {
         const data = await res.json();
+        setCancelling(false);
         alert(data.message || "취소에 실패했습니다.");
       }
     } catch {
+      setCancelling(false);
       alert("취소에 실패했습니다.");
     }
-    setCancelTargetId(null);
-    setCancelPreview(null);
   };
 
   const isSearchValid = checkName.trim() && checkPhone.trim();
@@ -228,6 +234,12 @@ export default function ReservationCheckSection() {
         refundLabel={cancelPreview?.refundLabel || ""}
         policy={cancelPreview?.policy || []}
       />
+
+      {cancelling && (
+        <div className="spinner-overlay">
+          <div className="spinner" />
+        </div>
+      )}
     </div>
   );
 }
