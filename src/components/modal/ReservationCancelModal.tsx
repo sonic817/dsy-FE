@@ -103,7 +103,7 @@ export default function ReservationCancelModal({
               </thead>
               <tbody>
                 {policy.map((row, i) => (
-                  <tr key={i}>
+                  <tr key={i} className={row.label === refundLabel ? "cancel-policy-active" : ""}>
                     <td>{row.label}</td>
                     <td>{row.penalty}</td>
                     <td>{row.refund}</td>

@@ -11,6 +11,7 @@ interface ReservationConfirmModalProps {
   date: string;
   timeSlot: string;
   formData: ReservationFormData;
+  totalAmount: number;
 }
 
 export default function ReservationConfirmModal({
@@ -21,19 +22,20 @@ export default function ReservationConfirmModal({
   date,
   timeSlot,
   formData,
+  totalAmount,
 }: ReservationConfirmModalProps) {
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="예약 신청 확인"
+      title="예약 결제 확인"
       footer={
         <>
           <button className="modal-btn modal-btn-secondary" onClick={onClose}>
             취소
           </button>
           <button className="modal-btn modal-btn-primary" onClick={onConfirm}>
-            신청하기
+            결제하기
           </button>
         </>
       }
@@ -57,6 +59,10 @@ export default function ReservationConfirmModal({
         <span className="confirm-value">{formData.name}</span>
       </div>
       <div className="confirm-row">
+        <span className="confirm-label">이메일</span>
+        <span className="confirm-value">{formData.email}</span>
+      </div>
+      <div className="confirm-row">
         <span className="confirm-label">연락처</span>
         <span className="confirm-value">{formData.phone}</span>
       </div>
@@ -67,6 +73,12 @@ export default function ReservationConfirmModal({
       <div className="confirm-row">
         <span className="confirm-label">비상연락처</span>
         <span className="confirm-value">{formData.emergencyContact}</span>
+      </div>
+      <div className="confirm-row" style={{ borderTop: "2px solid #e0e0e0", paddingTop: 12, marginTop: 4 }}>
+        <span className="confirm-label" style={{ fontWeight: 700, color: "var(--text)" }}>결제금액</span>
+        <span className="confirm-value" style={{ color: "var(--primary)", fontSize: "1.125rem" }}>
+          {totalAmount.toLocaleString()}원
+        </span>
       </div>
     </Modal>
   );

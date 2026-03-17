@@ -189,6 +189,15 @@
   border-bottom: none;
 }
 
+.cancel-policy-active {
+  background: var(--primary-light);
+}
+
+.cancel-policy-active td {
+  color: var(--primary);
+  font-weight: 700;
+}
+
 .cancel-refund {
   color: var(--red-placeholder);
 }

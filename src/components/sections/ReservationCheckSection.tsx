@@ -13,6 +13,7 @@ interface ReservationResult {
   phone: string;
   totalPeople: string;
   amountPaid: number;
+  amountCancelled: number;
   status: string;
   createdAt: string;
 }
@@ -90,7 +91,8 @@ export default function ReservationCheckSection() {
     try {
       const res = await fetchApi(`/api/reservations/${cancelTargetId}/cancel`, { method: "PATCH" });
       if (res.ok) {
-        alert("예약이 취소되었습니다.");
+        const data = await res.json();
+        alert(data.message || "예약이 취소되었습니다.");
         setResults((prev) => prev?.map((r) => r.id === cancelTargetId ? { ...r, status: "취소" } : r) || null);
       } else {
         const data = await res.json();
@@ -181,11 +183,21 @@ export default function ReservationCheckSection() {
                   </div>
                   <div className="check-result-row">
                     <span className="check-result-label">결제금액</span>
-                    <span className="check-result-value">{item.amountPaid > 0 ? `${item.amountPaid.toLocaleString()}원` : "미결제"}</span>
+                    <span className="check-result-value">
+                      {item.status === "취소" && item.amountPaid > 0
+                        ? item.amountCancelled >= item.amountPaid
+                          ? `${item.amountPaid.toLocaleString()}원 (환불완료)`
+                          : item.amountCancelled > 0
+                            ? `${item.amountPaid.toLocaleString()}원 (${item.amountCancelled.toLocaleString()}원 환불)`
+                            : `${item.amountPaid.toLocaleString()}원 (환불없음)`
+                        : item.amountPaid > 0
+                          ? `${item.amountPaid.toLocaleString()}원`
+                          : "미결제"}
+                    </span>
                   </div>
                   <div className="check-result-row">
                     <span className="check-result-label">상태</span>
-                    <span className="check-result-value check-status">{item.status}</span>
+                    <span className={`check-result-value check-status ${item.status === "취소" ? "check-status-canceled" : ""}`}>{item.status}</span>
                   </div>
                   {item.status !== "취소" && new Date(item.date + "T00:00:00") > new Date(new Date().toDateString()) && (
                     <button className="cancel-btn" onClick={() => openCancelModal(item.id)}>

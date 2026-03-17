@@ -1,12 +1,15 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import * as PortOne from "@portone/browser-sdk/v2";
 import Calendar from "@/components/common/Calendar";
 import ReservationConfirmModal from "@/components/modal/ReservationConfirmModal";
 import ReservationCompleteModal from "@/components/modal/ReservationCompleteModal";
 import ReservationCheckSection from "@/components/sections/ReservationCheckSection";
 import { fetchApi } from "@/lib/api";
 import type { ReservationType, ReservationFormData } from "@/types";
+
+interface Fee { id: number; period: string; individual_price: number; group_price: number; }
 
 interface SlotInfo {
   id: number;
@@ -28,10 +31,12 @@ export default function ReservationSection() {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
+  const [fees, setFees] = useState<Fee[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState<ReservationFormData>({
     name: "",
+    email: "",
     phone: "",
     totalPeople: "",
     emergencyContact: "",
@@ -60,6 +65,10 @@ export default function ReservationSection() {
       }
     } catch { /* */ }
     setLoadingSlots(false);
+  }, []);
+
+  useEffect(() => {
+    fetchApi("/api/fees").then((r) => r.json()).then(setFees).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -109,6 +118,18 @@ export default function ReservationSection() {
     }, 100);
   };
 
+  const getUnitPrice = () => {
+    if (!selectedSlot) return 0;
+    const slotInfo = slots.find((s) => s.name === selectedSlot);
+    const fee = fees.find((f) => f.period === slotInfo?.period);
+    if (!fee) return 0;
+    return type === "individual" ? fee.individual_price : fee.group_price;
+  };
+
+  const unitPrice = getUnitPrice();
+  const peopleCount = Number(formData.totalPeople.replace(/,/g, "") || "0");
+  const totalAmount = unitPrice * peopleCount;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsConfirmOpen(true);
@@ -121,10 +142,12 @@ export default function ReservationSection() {
       const y = selectedDate!.getFullYear();
       const m = String(selectedDate!.getMonth() + 1).padStart(2, "0");
       const d = String(selectedDate!.getDate()).padStart(2, "0");
-      const res = await fetchApi("/api/reservations", {
+
+      // 1단계: prepare (예약+결제 준비, 금액 서버 저장)
+      const prepareRes = await fetchApi("/api/reservations/prepare", {
         method: "POST",
         body: JSON.stringify({
-          type: type,
+          type,
           date: `${y}-${m}-${d}`,
           timeSlotId: selectedSlotId,
           name: formData.name,
@@ -133,17 +156,80 @@ export default function ReservationSection() {
           emergencyContact: formData.emergencyContact,
         }),
       });
-      if (!res.ok) {
-        const data = await res.json();
-        alert(data.message);
+
+      if (!prepareRes.ok) {
+        const data = await prepareRes.json();
+        alert(data.message || "예약 준비에 실패했습니다.");
         setSubmitting(false);
         return;
       }
+
+      const { orderId, expectedAmount } = await prepareRes.json();
+
+      const hasPayment = process.env.NEXT_PUBLIC_PORTONE_STORE_ID && process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY;
+
+      if (hasPayment) {
+        // 2단계: 포트원 결제
+        let payment;
+        try {
+          payment = await PortOne.requestPayment({
+            storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID!,
+            channelKey: process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY!,
+            paymentId: orderId,
+            orderName: `다율숲 숲체험 예약 (${selectedSlot})`,
+            totalAmount: expectedAmount,
+            currency: "KRW",
+            payMethod: "CARD",
+            customer: {
+              fullName: formData.name,
+              phoneNumber: formData.phone.replace(/-/g, ""),
+              email: formData.email,
+            },
+          });
+        } catch {
+          alert("결제창을 열 수 없습니다.");
+          setSubmitting(false);
+          return;
+        }
+
+        if (payment?.code != null) {
+          alert(payment.message || "결제가 취소되었습니다.");
+          setSubmitting(false);
+          return;
+        }
+
+        // 3단계: complete (3중 금액 검증 + 확정)
+        const completeRes = await fetchApi("/api/reservations/complete", {
+          method: "POST",
+          body: JSON.stringify({ orderId, expectedAmount }),
+        });
+
+        if (!completeRes.ok) {
+          const data = await completeRes.json();
+          alert(data.message || "결제 검증에 실패했습니다.");
+          setSubmitting(false);
+          return;
+        }
+      } else {
+        // 결제 미설정: prepare만으로 바로 확정
+        const completeRes = await fetchApi("/api/reservations/complete-without-payment", {
+          method: "POST",
+          body: JSON.stringify({ orderId }),
+        });
+
+        if (!completeRes.ok) {
+          const data = await completeRes.json();
+          alert(data.message || "예약 처리에 실패했습니다.");
+          setSubmitting(false);
+          return;
+        }
+      }
+
       setSubmitting(false);
       setIsCompleteOpen(true);
     } catch {
       setSubmitting(false);
-      alert("예약 신청에 실패했습니다.");
+      alert("결제에 실패했습니다.");
     }
   };
 
@@ -160,6 +246,7 @@ export default function ReservationSection() {
     selectedDate &&
     selectedSlot &&
     formData.name.trim() &&
+    formData.email.trim() &&
     formData.phone.trim() &&
     formData.totalPeople.trim() &&
     formData.emergencyContact.trim();
@@ -303,6 +390,10 @@ export default function ReservationSection() {
               <span className="label">시간</span>
               <span className="value">{selectedSlot || "미선택"}</span>
             </div>
+            <div className="form-summary-row">
+              <span className="label">이용료</span>
+              <span className="value">{unitPrice > 0 ? `${unitPrice.toLocaleString()}원 / 인` : "미선택"}</span>
+            </div>
           </div>
 
           <div className="form-group">
@@ -315,6 +406,20 @@ export default function ReservationSection() {
               placeholder="성명을 입력하세요"
               value={formData.name}
               onChange={(e) => handleNameChange(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">
+              이메일<span className="required">*</span>
+            </label>
+            <input
+              type="email"
+              className="form-input"
+              placeholder="이메일을 입력하세요"
+              value={formData.email}
+              onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
               required
             />
           </div>
@@ -354,6 +459,17 @@ export default function ReservationSection() {
             />
           </div>
 
+          {unitPrice > 0 && peopleCount > 0 && (
+            <div className="form-price-info">
+              <span className="form-price-calc">
+                {peopleCount}명 x {unitPrice.toLocaleString()}원 =
+              </span>
+              <span className="form-price-total">
+                {totalAmount.toLocaleString()}원
+              </span>
+            </div>
+          )}
+
           <div className="form-group">
             <label className="form-label">
               비상연락처 (신청인 외)<span className="required">*</span>
@@ -391,6 +507,7 @@ export default function ReservationSection() {
         date={selectedDate ? formatDate(selectedDate) : ""}
         timeSlot={selectedSlot || ""}
         formData={formData}
+        totalAmount={totalAmount}
       />
 
       <ReservationCompleteModal
@@ -401,7 +518,7 @@ export default function ReservationSection() {
           setSelectedSlot(null);
           setSelectedSlotId(null);
           setSlots([]);
-          setFormData({ name: "", phone: "", totalPeople: "", emergencyContact: "" });
+          setFormData({ name: "", email: "", phone: "", totalPeople: "", emergencyContact: "" });
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       />
