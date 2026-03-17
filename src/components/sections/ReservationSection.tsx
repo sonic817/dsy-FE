@@ -250,6 +250,7 @@ export default function ReservationSection() {
     formData.email.trim() &&
     formData.phone.trim() &&
     formData.totalPeople.trim() &&
+    peopleCount > 0 &&
     formData.emergencyContact.trim();
 
   return (
