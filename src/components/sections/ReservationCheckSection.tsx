@@ -33,6 +33,7 @@ export default function ReservationCheckSection() {
   const [checkPhone, setCheckPhone] = useState("");
   const [results, setResults] = useState<ReservationResult[] | null>(null);
   const [searched, setSearched] = useState(false);
+  const [searching, setSearching] = useState(false);
   const [cancelTargetId, setCancelTargetId] = useState<number | null>(null);
   const [cancelPreview, setCancelPreview] = useState<CancelPreview | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
@@ -53,6 +54,7 @@ export default function ReservationCheckSection() {
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setSearched(true);
+    setSearching(true);
     try {
       const res = await fetchApi("/api/reservations/check", {
         method: "POST",
@@ -66,6 +68,16 @@ export default function ReservationCheckSection() {
     } catch {
       setResults([]);
     }
+    setSearching(false);
+    setTimeout(() => {
+      const el = document.getElementById("check-results");
+      const header = document.querySelector(".header-fixed-wrapper") as HTMLElement;
+      if (el) {
+        const offset = header ? header.offsetHeight + 16 : 16;
+        const top = el.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }, 100);
   };
 
   const openCancelModal = async (id: number) => {
@@ -162,8 +174,21 @@ export default function ReservationCheckSection() {
       </div>
 
       {searched && (
-        <div className="check-results">
-          {results && results.length > 0 ? (
+        <div className="check-results" id="check-results">
+          {searching ? (
+            <div className="check-result-list">
+              {Array.from({ length: 2 }).map((_, i) => (
+                <div key={i} className="check-result-card">
+                  {Array.from({ length: 7 }).map((_, j) => (
+                    <div key={j} className="check-result-row">
+                      <div className="skeleton-box" style={{ width: "20%", height: 14 }} />
+                      <div className="skeleton-box" style={{ width: "30%", height: 14 }} />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          ) : results && results.length > 0 ? (
             <div className="check-result-list">
               {results.map((item, i) => (
                 <div key={i} className="check-result-card">
