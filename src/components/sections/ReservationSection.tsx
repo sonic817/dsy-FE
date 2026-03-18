@@ -150,10 +150,10 @@ export default function ReservationSection() {
           type,
           date: `${y}-${m}-${d}`,
           timeSlotId: selectedSlotId,
-          name: formData.name,
-          phone: formData.phone,
+          name: formData.name.trim(),
+          phone: formData.phone.trim(),
           totalPeople: Number(formData.totalPeople.replace(/,/g, "")),
-          emergencyContact: formData.emergencyContact,
+          emergencyContact: formData.emergencyContact.trim(),
         }),
       });
 
@@ -182,9 +182,9 @@ export default function ReservationSection() {
             payMethod: "CARD",
             redirectUrl: `${window.location.origin}/payment-complete?orderId=${orderId}&expectedAmount=${expectedAmount}`,
             customer: {
-              fullName: formData.name,
-              phoneNumber: formData.phone.replace(/-/g, ""),
-              email: formData.email,
+              fullName: formData.name.trim(),
+              phoneNumber: formData.phone.trim().replace(/-/g, ""),
+              email: formData.email.trim(),
             },
           });
         } catch {
