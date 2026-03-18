@@ -6,13 +6,15 @@
 ## 프로젝트 개요
 - 다율숲 숲체험 비회원 예약 웹사이트 (모바일 반응형 + 데스크톱)
 - 의뢰인은 비개발자 — 기술 용어 최소화, 화면 중심으로 소통
-- 결제 기능은 미구현 (추후 포트원 연동 예정)
+- 결제: 포트원 V2 연동 (KG이니시스)
 - 백엔드: `dys-BE` 프로젝트 (별도)
 - DB: Supabase (PostgreSQL)
 
 ## 기술 스택
 - **프레임워크**: Next.js 15 (App Router)
 - **언어**: TypeScript
+- **결제**: @portone/browser-sdk (V2)
+- **이미지 슬라이더**: Swiper
 - **스타일링**: Plain CSS (섹션별 분리, CSS 변수 기반 테마)
 - **폰트**: SB 어그로 M (본문), SB 어그로 L (헤더 로고) — `public/fonts/`
 - **패키지 매니저**: npm
@@ -21,110 +23,87 @@
 ```
 src/
 ├── app/
-│   ├── globals.css       # CSS import 허브 (직접 스타일 없음)
-│   ├── layout.tsx        # 루트 레이아웃
-│   └── page.tsx          # 메인 페이지 (단일 페이지)
+│   ├── globals.css              # CSS import 허브 (직접 스타일 없음)
+│   ├── layout.tsx               # 루트 레이아웃
+│   ├── page.tsx                 # 메인 페이지 (단일 페이지)
+│   └── payment-complete/
+│       └── page.tsx             # 모바일 결제 완료 리다이렉트 페이지
 ├── components/
-│   ├── common/           # 재사용 가능한 공통 컴포넌트
-│   │   └── Calendar.tsx
-│   ├── layout/           # 레이아웃 컴포넌트 (헤더, 푸터)
-│   │   ├── Header.tsx
+│   ├── common/
+│   │   └── Calendar.tsx         # 2개월 달력
+│   ├── layout/
+│   │   ├── Header.tsx           # 네비게이션 (스크롤 활성 표시, 예약 바운스)
 │   │   └── Footer.tsx
-│   ├── modal/            # 모달 컴포넌트
-│   │   ├── Modal.tsx                    # 공통 모달 (ESC 닫기 지원)
-│   │   ├── ImageModal.tsx               # 이미지 뷰어 (모바일: 라이트박스, 데스크톱: 모달)
+│   ├── modal/
+│   │   ├── Modal.tsx                    # 공통 모달 (ESC, 모바일 터치 스크롤 방지)
+│   │   ├── ImageModal.tsx               # 이미지 뷰어 (모바일: Swiper 라이트박스, 데스크톱: 모달)
 │   │   ├── NewsDetailModal.tsx          # 소식 상세
-│   │   ├── ReservationConfirmModal.tsx  # 예약 확인
-│   │   └── ReservationCompleteModal.tsx # 예약 완료
-│   └── sections/         # 페이지 섹션 컴포넌트
+│   │   ├── ReservationConfirmModal.tsx  # 예약 결제 확인 (결제금액 표시)
+│   │   ├── ReservationCompleteModal.tsx # 예약 완료
+│   │   └── ReservationCancelModal.tsx   # 예약 취소 (환불금액 계산, 정책 테이블)
+│   └── sections/
 │       ├── HeroSection.tsx
-│       ├── NewsSection.tsx
-│       ├── IntroSection.tsx
-│       ├── UsageGuideSection.tsx
-│       ├── ReservationSection.tsx
-│       └── ReservationCheckSection.tsx  # 예약 조회
-├── constants/            # 하드코딩 데이터 (추후 API 교체 대상)
-│   ├── index.ts
-│   ├── intro.ts
-│   ├── news.ts
-│   ├── reservation.ts   # TIME_SLOTS, MAX_CAPACITY, MOCK_SLOT_COUNT
-│   └── usage.ts
-├── styles/               # CSS 섹션별 분리
-│   ├── variables.css     # CSS 변수, 폰트 정의
-│   ├── reset.css         # 리셋, 기본 스타일
-│   ├── common.css        # 공통 (container, section, tabs, grids)
-│   ├── header.css
+│       ├── NewsSection.tsx              # 스켈레톤 로딩
+│       ├── IntroSection.tsx             # 스켈레톤 로딩
+│       ├── UsageGuideSection.tsx         # 스켈레톤 로딩
+│       ├── ReservationSection.tsx        # 결제 연동, 슬롯 스켈레톤, 스피너
+│       └── ReservationCheckSection.tsx   # 예약 조회 + 취소, 스켈레톤
+├── lib/
+│   └── api.ts                   # fetchApi (API_URL, API_KEY 헤더)
+├── styles/
+│   ├── variables.css            # CSS 변수, 폰트 정의
+│   ├── reset.css                # 리셋, 기본 스타일
+│   ├── common.css               # 공통 (container, section, tabs, grids)
+│   ├── header.css               # 네비 활성 바, 예약 바운스 애니메이션
 │   ├── hero.css
 │   ├── news.css
 │   ├── intro.css
 │   ├── usage.css
-│   ├── reservation.css   # 달력, 시간 슬롯, 예약 폼, 예약확인 포함
-│   ├── modal.css         # 모달 + 라이트박스
+│   ├── reservation.css          # 달력, 시간 슬롯, 예약 폼, 취소 버튼, 가격 표시
+│   ├── modal.css                # 모달, 라이트박스, 취소 정책 테이블
+│   ├── skeleton.css             # 스켈레톤 + 스피너
 │   ├── footer.css
-│   └── responsive.css    # 데스크톱 미디어 쿼리 (1024px~, 1280px~)
+│   └── responsive.css           # 데스크톱 미디어 쿼리 (768px~, 1024px~, 1280px~)
 └── types/
     ├── index.ts
-    └── reservation.ts
+    └── reservation.ts           # ReservationFormData (name, email, phone 등)
 ```
 
-## 페이지 구성 (단일 페이지, 섹션 스크롤)
-1. **헤더** — 다율숲 로고(SB어그로L) + 네비게이션 (소식/소개/이용안내/예약), 상단 고정(fixed), 예약은 초록색 강조
-2. **히어로** — 배경 이미지 + 텍스트 오버레이
-3. **다율숲 소식** — 뉴스 리스트, 클릭 시 모달로 상세 보기
-4. **소개** — 탭 UI (다율숲 / 찾아오시는 길 / 주요시설 / 사진), 이미지 클릭 시 모달(좌우 이동)
-5. **이용안내** — 탭 UI (숲체험 프로그램 / 주요시설 / 이용료 / 사진), 이미지 클릭 시 모달(좌우 이동)
-6. **예약** — [예약하기 / 예약확인] 탭
-   - 예약하기: 개인/단체 → 달력(2개월) → 시간대 선택(인원 현황 표시) → 신청 폼
-   - 예약확인: 성명 + 연락처로 조회
-7. **푸터** — 연락처, 주소, 저작권
+## 결제 플로우
+1. 예약 폼 작성 → "예약 신청하기" → 확인 모달 (결제금액 표시)
+2. "결제하기" → BE `prepare` API (자리 선점, 금액 저장)
+3. 포트원 결제창 오픈 (`PortOne.requestPayment`)
+4. 결제 성공 → BE `complete` API (3중 검증)
+5. 완료 모달
+- 결제창 닫기/취소/에러 시 → BE `cleanup` API (PREPARED 즉시 삭제)
+- 모바일: `redirectUrl`로 `/payment-complete` 페이지 리다이렉트
+- 포트원 미설정 시 (`STORE_ID`, `CHANNEL_KEY` 비어있으면) → 결제 없이 바로 확정
 
-## 주요 구현 사항
+## 예약 취소
+- 예약 조회 → 취소하기 버튼 (이용일 전에만 표시)
+- 취소 모달: BE `cancel-preview` API로 환불금액 조회 + 정책 테이블 (해당 행 하이라이트)
+- "취소하기" → BE `cancel` API (환불금액 재계산 + 포트원 환불)
+- 결제금액 표시: 취소 시 "5,000원 (환불완료)" / "5,000원 (3,500원 환불)" / "5,000원 (환불없음)"
 
-### 달력
-- 이번 달 + 다음 달 동시 표시
-- 오늘: 초록색(`--primary`) 동그라미 + 흰 글자 (항상 표시)
-- 선택된 날짜: 노란색(`--calendar-today`) 동그라미 + 검정 글자
-- 과거 날짜 비활성화, ◀ 버튼 이번달 이전 비활성
-- 일요일 빨간색, 토요일 파란색
+## 로딩 상태
+- **스켈레톤**: 소식, 소개 시설/사진, 이용안내 프로그램/시설/이용료/사진, 시간대 슬롯, 예약 조회 결과
+- **스피너**: 예약 결제 진행 중, 취소 처리 중 (풀스크린 오버레이)
 
-### 시간대
-- 오전1~4, 오후1~4, 야간1~2 (총 10개 슬롯)
-- 각 슬롯에 현재 인원/최대 인원 표시 (예: `2/20`)
-- 마감 시 비활성화 + "마감" 표시
+## 헤더 네비게이션
+- 스크롤 위치에 따라 활성 섹션에 초록 하단 바 표시
+- "예약" 텍스트 바운스 애니메이션 (2초 주기)
 
-### 예약 폼 유효성
-- 신청인 성명: 한글/영어만, 최대 10글자
-- 연락처/비상연락처: 숫자만, `010-0000-0000` 형식 자동 포맷
-- 참여자 전체 수: 숫자만, 최대 4자리, 세자리 콤마
-- 모든 필드 입력 시 예약 버튼 활성화
+## 이미지 모달
+- 모바일: Swiper 라이트박스 (부드러운 좌우 슬라이드)
+- 데스크톱: 모달 + `<` `>` 버튼
 
-### 예약 플로우
-1. 예약 신청하기 클릭 → 확인 모달 (정보 요약)
-2. 신청하기 클릭 → 완료 모달
-3. 확인 클릭 → 폼 초기화 + 맨 위로 스크롤
-
-### 모바일/데스크톱 분기
-- **이미지 모달**: 모바일=풀스크린 라이트박스, 데스크톱=모달(large)
-- **날짜 선택 시**: 모바일/데스크톱 모두 "시간 선택"으로 스크롤 이동
-- **시간 선택 시**: 모바일/데스크톱 모두 "예약 신청" 폼으로 스크롤 이동
-- **사이드바**: 없음 (단일 페이지)
-
-### 이미지
-- 히어로: `main.jpg` (배경 이미지)
-- 소개 > 다율숲: `intro-main.png`
-- 소개 > 찾아오시는 길: `directions.png`
-- 소개 > 주요시설: `facilities/` (4장)
-- 소개 > 사진: `intro/intro-01~06.png`
-- 이용안내 > 주요시설: `usage/usage-*.jpg` (4장)
-- 이용안내 > 사진: `usage/usage-01~06.png`
-
-## 코딩 컨벤션
-- CSS: Plain CSS + CSS 변수, 섹션별 파일 분리, 인라인 스타일 최소화
-- 컴포넌트: 기능별 디렉토리 분리 (layout / sections / common / modal)
-- 상수: `constants/`에서 관리, 컴포넌트에 하드코딩 금지
-- 타입: `types/`에서 관리
-- 폰트 크기: rem 단위 (6단계: 3.5/1.75/1.25/1.125/1/0.9375rem)
-- 모달: ESC 키 닫기 지원, 오버레이 클릭 닫기
+## 환경 변수 (.env.local)
+```
+NEXT_PUBLIC_API_URL=http://localhost:3001
+NEXT_PUBLIC_API_KEY=
+NEXT_PUBLIC_PORTONE_STORE_ID=     # 비어있으면 결제 없이 예약
+NEXT_PUBLIC_PORTONE_CHANNEL_KEY=  # 비어있으면 결제 없이 예약
+```
 
 ## 명령어
 ```bash
@@ -133,8 +112,3 @@ npm run build  # 프로덕션 빌드
 npm run start  # 프로덕션 서버
 npm run lint   # ESLint 검사
 ```
-
-## 추후 작업
-- [ ] API 연동 (constants → API 호출로 교체, dys-BE)
-- [ ] 결제 기능 연동 (포트원)
-- [ ] 푸터 실제 연락처/주소 입력

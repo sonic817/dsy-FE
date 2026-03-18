@@ -179,6 +179,11 @@ export default function UsageGuideSection() {
         onClose={() => setModalImage(null)}
         src={modalImage?.src || ""}
         alt={modalImage?.alt || ""}
+        list={modalImage?.list}
+        index={modalImage?.index}
+        onSlideChange={(i) => {
+          if (modalImage?.list) setModalImage({ ...modalImage.list[i], list: modalImage.list, index: i });
+        }}
         onPrev={modalImage?.list && modalImage.index !== undefined && modalImage.index > 0 ? goModalPrev : undefined}
         onNext={modalImage?.list && modalImage.index !== undefined && modalImage.index < modalImage.list.length - 1 ? goModalNext : undefined}
       />
