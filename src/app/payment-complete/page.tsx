@@ -54,7 +54,8 @@ function PaymentCompleteContent() {
         )}
         {status === "success" && (
           <>
-            <p style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--primary)", marginBottom: 16 }}>{message}</p>
+            <p style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--primary)", marginBottom: 8 }}>{message}</p>
+            <p style={{ fontSize: "0.875rem", color: "var(--text-light)", marginBottom: 24 }}>예약 내역은 예약 &gt; 예약확인에서 조회할 수 있습니다.</p>
             <button onClick={goHome} style={{ padding: "12px 32px", background: "var(--primary)", color: "#fff", borderRadius: 10, fontSize: "1rem", fontWeight: 600 }}>
               홈으로 돌아가기
             </button>

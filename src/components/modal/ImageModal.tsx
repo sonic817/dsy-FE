@@ -21,12 +21,18 @@ export default function ImageModal({ isOpen, onClose, src, alt, onPrev, onNext, 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      history.pushState({ modal: "image" }, "");
+      const handlePopState = () => onClose();
       const handleEsc = (e: KeyboardEvent) => {
-        if (e.key === "Escape") onClose();
+        if (e.key === "Escape") {
+          history.back();
+        }
       };
+      window.addEventListener("popstate", handlePopState);
       window.addEventListener("keydown", handleEsc);
       return () => {
         document.body.style.overflow = "";
+        window.removeEventListener("popstate", handlePopState);
         window.removeEventListener("keydown", handleEsc);
       };
     } else {
@@ -39,9 +45,9 @@ export default function ImageModal({ isOpen, onClose, src, alt, onPrev, onNext, 
   return (
     <>
       {/* 모바일: Swiper 라이트박스 */}
-      <div className="lightbox" onClick={onClose}>
+      <div className="lightbox" onClick={() => history.back()}>
         <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-          <button className="lightbox-close" onClick={onClose}>
+          <button className="lightbox-close" onClick={() => history.back()}>
             <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M14 14L26 26M26 14L14 26" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg>
           </button>
           {list && list.length > 1 ? (
