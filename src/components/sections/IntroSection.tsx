@@ -55,7 +55,7 @@ export default function IntroSection() {
         {/* 다율숲 */}
         <div className={`tab-content ${activeTab === 0 ? "active" : ""}`}>
           <img
-            src="/images/intro-main.png"
+            src="https://pub-6e4c4b7de2a64b20a6f4ed43bc11a71e.r2.dev/prod/static/3010cb09-4e43-4044-9865-e1bad91b0abc.png"
             alt="다율숲 대표 이미지"
             className="intro-main-img"
           />
@@ -71,10 +71,10 @@ export default function IntroSection() {
         {/* 찾아오시는 길 */}
         <div className={`tab-content ${activeTab === 1 ? "active" : ""}`}>
           <img
-            src="/images/intro/directions.png"
+            src="https://pub-6e4c4b7de2a64b20a6f4ed43bc11a71e.r2.dev/prod/static/76edab39-316b-4bc1-a0c3-3475d4b5e641.png"
             alt="찾아오시는 길"
             className="map-img"
-            onClick={() => setModalImage({ src: "/images/intro/directions.png", alt: "찾아오시는 길" })}
+            onClick={() => setModalImage({ src: "https://pub-6e4c4b7de2a64b20a6f4ed43bc11a71e.r2.dev/prod/static/76edab39-316b-4bc1-a0c3-3475d4b5e641.png", alt: "찾아오시는 길" })}
             style={{ cursor: "pointer" }}
           />
           <div className="intro-info" style={{ marginTop: 16 }}>

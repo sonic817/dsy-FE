@@ -25,7 +25,7 @@ export default function UsageGuideSection() {
 
   useEffect(() => {
     fetchApi("/api/programs").then((r) => r.json()).then(setPrograms).catch(() => {}).finally(() => setLoadingPrograms(false));
-    fetchApi("/api/galleries?category=facility").then((r) => r.json()).then(setFacilities).catch(() => {}).finally(() => setLoadingFacilities(false));
+    fetchApi("/api/galleries?category=usage_facility").then((r) => r.json()).then(setFacilities).catch(() => {}).finally(() => setLoadingFacilities(false));
     fetchApi("/api/fees").then((r) => r.json()).then(setFees).catch(() => {}).finally(() => setLoadingFees(false));
     fetchApi("/api/galleries?category=usage").then((r) => r.json()).then(setPhotos).catch(() => {}).finally(() => setLoadingPhotos(false));
   }, []);
@@ -143,7 +143,6 @@ export default function UsageGuideSection() {
               ))}
             </tbody>
           </table>
-          <p className="fee-note">* 이용료는 추후 업데이트 예정입니다.</p>
         </div>
 
         {/* 사진 */}
