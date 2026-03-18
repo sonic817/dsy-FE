@@ -281,15 +281,99 @@
   display: none;
 }
 
-/* 데스크톱: 모달만 표시 */
+.image-viewer-desktop {
+  display: none;
+}
+
+/* 데스크톱: 풀스크린 뷰어 표시 */
 @media (min-width: 1024px) {
   .lightbox {
     display: none;
   }
 
   .image-modal-desktop {
+    display: none;
+  }
+
+  .image-viewer-desktop {
     display: block;
   }
+}
+
+/* Image Viewer (fullscreen) */
+.image-viewer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+}
+
+.image-viewer-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1.75rem;
+  line-height: 1;
+  padding-top: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.image-viewer-close:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.image-viewer-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  line-height: 1;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.image-viewer-nav:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.image-viewer-prev {
+  left: 20px;
+}
+
+.image-viewer-next {
+  right: 20px;
+}
+
+.image-viewer-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
 }
 
 /* Image Modal */
