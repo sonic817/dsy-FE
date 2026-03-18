@@ -96,26 +96,6 @@
   width: 80%;
 }
 
-/* Fee Table Skeleton */
-.fee-skeleton {
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-}
-
-.fee-skeleton td {
-  padding: 12px 8px;
-  border-bottom: 1px solid var(--border);
-}
-
-.fee-skeleton td .skeleton-box {
-  height: 14px;
-  width: 60%;
-  margin: 0 auto;
-}
-
 /* Slot Skeleton */
 .slot-skeleton-group {
   margin-bottom: 12px;

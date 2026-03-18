@@ -12,7 +12,7 @@
   background: #fff;
   border-radius: 12px;
   padding: 16px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .program-card h4 {
@@ -25,6 +25,13 @@
 .program-card p {
   font-size: 0.8125rem;
   color: var(--text-light);
+}
+
+.program-notice {
+  font-size: 1rem;
+  color: var(--text-light);
+  margin-top: 32px;
+  text-align: center;
 }
 
 .fee-table {
@@ -59,9 +66,10 @@
   background: var(--primary-light);
 }
 
-.fee-note {
-  font-size: 0.8125rem;
-  color: #999;
-  margin-top: 12px;
+.fee-notice {
+  font-size: 1rem;
+  color: var(--text-light);
+  margin-top: 32px;
   text-align: center;
 }
+

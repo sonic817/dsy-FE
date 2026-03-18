@@ -10,5 +10,9 @@ export async function fetchApi(path: string, options?: RequestInit) {
       ...options?.headers,
     },
   });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({ message: "요청 실패" }));
+    throw new Error(error.message || `HTTP ${res.status}`);
+  }
   return res;
 }

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { fetchApi } from "@/lib/api";
+import { useFees } from "@/lib/useFees";
 import ImageModal from "@/components/modal/ImageModal";
 
 interface Program { id: number; name: string; description: string; }
 interface Gallery { id: number; title: string; image_url: string; sort_order: number; }
-interface Fee { id: number; period: string; individual_price: number; group_price: number; }
 
 const USAGE_TABS = ["숲체험 프로그램", "주요시설", "이용료", "사진"];
 const PERIOD_LABELS: Record<string, string> = { morning: "오전", afternoon: "오후", night: "야간" };
@@ -15,18 +16,16 @@ export default function UsageGuideSection() {
   const [activeTab, setActiveTab] = useState(0);
   const [programs, setPrograms] = useState<Program[]>([]);
   const [facilities, setFacilities] = useState<Gallery[]>([]);
-  const [fees, setFees] = useState<Fee[]>([]);
+  const { fees, loading: loadingFees } = useFees();
   const [photos, setPhotos] = useState<Gallery[]>([]);
   const [loadingPrograms, setLoadingPrograms] = useState(true);
   const [loadingFacilities, setLoadingFacilities] = useState(true);
-  const [loadingFees, setLoadingFees] = useState(true);
   const [loadingPhotos, setLoadingPhotos] = useState(true);
   const [modalImage, setModalImage] = useState<{ src: string; alt: string; list?: { src: string; alt: string }[]; index?: number } | null>(null);
 
   useEffect(() => {
     fetchApi("/api/programs").then((r) => r.json()).then(setPrograms).catch(() => {}).finally(() => setLoadingPrograms(false));
     fetchApi("/api/galleries?category=usage_facility").then((r) => r.json()).then(setFacilities).catch(() => {}).finally(() => setLoadingFacilities(false));
-    fetchApi("/api/fees").then((r) => r.json()).then(setFees).catch(() => {}).finally(() => setLoadingFees(false));
     fetchApi("/api/galleries?category=usage").then((r) => r.json()).then(setPhotos).catch(() => {}).finally(() => setLoadingPhotos(false));
   }, []);
 
@@ -82,6 +81,7 @@ export default function UsageGuideSection() {
               ))}
             </div>
           )}
+          <p className="program-notice">프로그램은 계절 및 운영 상황에 따라 변경될 수 있습니다.</p>
         </div>
 
         {/* 주요시설 */}
@@ -107,7 +107,7 @@ export default function UsageGuideSection() {
                   }}
                   style={{ cursor: "pointer" }}
                 >
-                  <img src={facility.image_url} alt={facility.title} className="facility-card-img" />
+                  <Image src={facility.image_url} alt={facility.title} className="facility-card-img" width={240} height={120} sizes="50vw" />
                   <p className="facility-card-name">{facility.title}</p>
                 </div>
               ))}
@@ -143,6 +143,7 @@ export default function UsageGuideSection() {
               ))}
             </tbody>
           </table>
+          <p className="fee-notice">이용료는 변경될 수 있습니다. 자세한 문의는 연락처로 부탁드립니다.</p>
         </div>
 
         {/* 사진 */}
@@ -156,11 +157,14 @@ export default function UsageGuideSection() {
           ) : (
             <div className="photo-grid">
               {photos.map((photo, i) => (
-                <img
+                <Image
                   key={photo.id}
                   src={photo.image_url}
                   alt={photo.title || "사진"}
                   className="photo-grid-img"
+                  width={240}
+                  height={140}
+                  sizes="50vw"
                   onClick={() => {
                     const list = photos.map(p => ({ src: p.image_url, alt: "사진" }));
                     setModalImage({ src: photo.image_url, alt: "사진", list, index: i });

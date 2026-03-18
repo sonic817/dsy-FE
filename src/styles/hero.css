@@ -1,11 +1,12 @@
 .hero {
   position: relative;
   margin-top: 100px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
 }
 
 .hero-bg {
-  width: 100%;
-  display: block;
+  object-fit: cover;
 }
 
 .hero-overlay {

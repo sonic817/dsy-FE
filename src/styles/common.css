@@ -31,19 +31,6 @@
   border-radius: 2px;
 }
 
-/* Image Placeholder */
-.image-placeholder {
-  border: 2px dashed var(--red-placeholder);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--red-placeholder);
-  font-size: 0.875rem;
-  background: #fff5f5;
-  min-height: 180px;
-}
-
 /* Tabs (shared) */
 .tabs {
   display: flex;
@@ -84,13 +71,6 @@
   display: block;
 }
 
-.tab-text {
-  font-size: 0.9375rem;
-  line-height: 1.7;
-  color: var(--text-light);
-  margin-bottom: 16px;
-}
-
 /* Grids */
 .facility-grid {
   display: grid;
@@ -101,11 +81,6 @@
 .facility-card {
   border-radius: 12px;
   overflow: hidden;
-}
-
-.facility-card .image-placeholder {
-  min-height: 120px;
-  border-radius: 12px;
 }
 
 .facility-card-img {
@@ -126,10 +101,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-}
-
-.photo-grid .image-placeholder {
-  min-height: 140px;
 }
 
 .photo-grid-img {

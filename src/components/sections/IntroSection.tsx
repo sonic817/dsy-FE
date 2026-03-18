@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { fetchApi } from "@/lib/api";
 import ImageModal from "@/components/modal/ImageModal";
 
@@ -54,10 +55,13 @@ export default function IntroSection() {
 
         {/* 다율숲 */}
         <div className={`tab-content ${activeTab === 0 ? "active" : ""}`}>
-          <img
+          <Image
             src="https://pub-6e4c4b7de2a64b20a6f4ed43bc11a71e.r2.dev/prod/static/3010cb09-4e43-4044-9865-e1bad91b0abc.png"
             alt="다율숲 대표 이미지"
             className="intro-main-img"
+            width={480}
+            height={320}
+            sizes="(min-width: 1024px) 1100px, 100vw"
           />
           <div className="intro-info">
             <h4>다율숲 소개</h4>
@@ -70,10 +74,13 @@ export default function IntroSection() {
 
         {/* 찾아오시는 길 */}
         <div className={`tab-content ${activeTab === 1 ? "active" : ""}`}>
-          <img
+          <Image
             src="https://pub-6e4c4b7de2a64b20a6f4ed43bc11a71e.r2.dev/prod/static/76edab39-316b-4bc1-a0c3-3475d4b5e641.png"
             alt="찾아오시는 길"
             className="map-img"
+            width={480}
+            height={320}
+            sizes="(min-width: 1024px) 1100px, 100vw"
             onClick={() => setModalImage({ src: "https://pub-6e4c4b7de2a64b20a6f4ed43bc11a71e.r2.dev/prod/static/76edab39-316b-4bc1-a0c3-3475d4b5e641.png", alt: "찾아오시는 길" })}
             style={{ cursor: "pointer" }}
           />
@@ -112,7 +119,7 @@ export default function IntroSection() {
                   }}
                   style={{ cursor: "pointer" }}
                 >
-                  <img src={facility.image_url} alt={facility.title} className="facility-card-img" />
+                  <Image src={facility.image_url} alt={facility.title} className="facility-card-img" width={240} height={120} sizes="50vw" />
                   <p className="facility-card-name">{facility.title}</p>
                 </div>
               ))}
@@ -131,11 +138,14 @@ export default function IntroSection() {
           ) : (
             <div className="photo-grid">
               {photos.map((photo, i) => (
-                <img
+                <Image
                   key={photo.id}
                   src={photo.image_url}
                   alt={photo.title || "사진"}
                   className="photo-grid-img"
+                  width={240}
+                  height={140}
+                  sizes="50vw"
                   onClick={() => {
                     const list = photos.map(p => ({ src: p.image_url, alt: "사진" }));
                     setModalImage({ src: photo.image_url, alt: "사진", list, index: i });

@@ -1,15 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import * as PortOne from "@portone/browser-sdk/v2";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Calendar from "@/components/common/Calendar";
 import ReservationConfirmModal from "@/components/modal/ReservationConfirmModal";
 import ReservationCompleteModal from "@/components/modal/ReservationCompleteModal";
 import ReservationCheckSection from "@/components/sections/ReservationCheckSection";
 import { fetchApi } from "@/lib/api";
+import { useFees } from "@/lib/useFees";
+import { formatPhone, filterName } from "@/lib/formatters";
 import type { ReservationType, ReservationFormData } from "@/types";
-
-interface Fee { id: number; period: string; individual_price: number; group_price: number; }
 
 interface SlotInfo {
   id: number;
@@ -31,7 +30,7 @@ export default function ReservationSection() {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
-  const [fees, setFees] = useState<Fee[]>([]);
+  const { fees } = useFees();
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState<ReservationFormData>({
@@ -67,28 +66,17 @@ export default function ReservationSection() {
     setLoadingSlots(false);
   }, []);
 
-  useEffect(() => {
-    fetchApi("/api/fees").then((r) => r.json()).then(setFees).catch(() => {});
-  }, []);
 
   useEffect(() => {
-    if (selectedDate) fetchSlots(selectedDate);
+    if (selectedDate) fetchSlots(selectedDate, true);
   }, [selectedDate, fetchSlots]);
 
-  const morningSlots = slots.filter(s => s.period === "morning");
-  const afternoonSlots = slots.filter(s => s.period === "afternoon");
-  const nightSlots = slots.filter(s => s.period === "night");
+  const morningSlots = useMemo(() => slots.filter(s => s.period === "morning"), [slots]);
+  const afternoonSlots = useMemo(() => slots.filter(s => s.period === "afternoon"), [slots]);
+  const nightSlots = useMemo(() => slots.filter(s => s.period === "night"), [slots]);
 
   const handleNameChange = (value: string) => {
-    const filtered = value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\s]/g, "").slice(0, 10);
-    setFormData((prev) => ({ ...prev, name: filtered }));
-  };
-
-  const formatPhone = (value: string): string => {
-    const digits = value.replace(/\D/g, "").slice(0, 11);
-    if (digits.length <= 3) return digits;
-    if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
-    return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+    setFormData((prev) => ({ ...prev, name: filterName(value) }));
   };
 
   const handlePhoneChange = (field: "phone" | "emergencyContact", value: string) => {
@@ -170,6 +158,7 @@ export default function ReservationSection() {
 
       if (hasPayment) {
         // 2단계: 포트원 결제
+        const PortOne = await import("@portone/browser-sdk/v2");
         let payment;
         try {
           payment = await PortOne.requestPayment({
@@ -299,7 +288,6 @@ export default function ReservationSection() {
         {/* 달력 */}
         <Calendar selectedDate={selectedDate} onDateSelect={(date) => {
           setSelectedDate(date);
-          fetchSlots(date, true);
         }} />
 
         {/* 선택된 날짜 표시 */}

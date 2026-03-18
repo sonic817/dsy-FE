@@ -1,7 +1,16 @@
+import Image from "next/image";
+
 export default function HeroSection() {
   return (
     <section className="hero">
-      <img src="https://pub-6e4c4b7de2a64b20a6f4ed43bc11a71e.r2.dev/prod/static/1497edab-4a48-4ddb-9baa-18af74ae788d.jpg" alt="다율숲 대표 이미지" className="hero-bg" />
+      <Image
+        src="https://pub-6e4c4b7de2a64b20a6f4ed43bc11a71e.r2.dev/prod/static/1497edab-4a48-4ddb-9baa-18af74ae788d.jpg"
+        alt="다율숲 대표 이미지"
+        className="hero-bg"
+        fill
+        priority
+        sizes="100vw"
+      />
       <div className="hero-overlay">
         <h2 className="hero-title">
           숲으로의 초대,

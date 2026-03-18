@@ -19,6 +19,10 @@
 
 /* ===== Desktop (1024px~) ===== */
 @media (min-width: 1024px) {
+  .section {
+    min-height: calc(100vh - 100px);
+  }
+
   .container {
     max-width: 1100px;
     padding: 0 32px;
@@ -75,26 +79,38 @@
     margin-top: 12px;
   }
 
-  /* News */
-  .news-list {
-    flex-direction: row;
-    gap: 16px;
+  /* News: 두 패널 레이아웃 */
+  .news-mobile-list {
+    display: none;
   }
 
-  .news-item {
+  .news-mobile-modal {
+    display: none;
+  }
+
+  .news-panel-layout {
+    display: flex;
+    gap: 24px;
+  }
+
+  .news-panel-list {
+    width: 320px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .news-panel-item {
+    padding: 20px;
+  }
+
+  .news-panel-item .news-item-title {
+    font-size: 1.0625rem;
+  }
+
+  .news-panel-detail {
     flex: 1;
-    padding: 24px;
-    border-radius: 16px;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-
-  .news-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  }
-
-  .news-item-title {
-    font-size: 1.125rem;
   }
 
   /* Tabs */
@@ -129,12 +145,12 @@
 
   /* Grids */
   .facility-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
   }
 
   .facility-card-img {
-    height: 160px;
+    height: 220px;
   }
 
   .facility-card-name {
@@ -147,7 +163,7 @@
   }
 
   .photo-grid-img {
-    height: 200px;
+    height: 260px;
     border-radius: 12px;
   }
 
@@ -161,7 +177,8 @@
   .program-card {
     flex: 1;
     min-width: calc(50% - 8px);
-    padding: 24px;
+    min-height: 120px;
+    padding: 32px;
   }
 
   .program-card h4 {
@@ -173,14 +190,18 @@
   }
 
   .fee-table {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto;
-    font-size: 1rem;
+    font-size: 1.125rem;
   }
 
-  .fee-table th,
+  .fee-table th {
+    padding: 20px 16px;
+    font-size: 1.25rem;
+  }
+
   .fee-table td {
-    padding: 14px 16px;
+    padding: 24px 16px;
   }
 
   /* Reservation */
@@ -317,6 +338,6 @@
   }
 
   .photo-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
