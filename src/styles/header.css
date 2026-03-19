@@ -22,7 +22,7 @@
 }
 
 .header-logo {
-  font-family: 'SBAggroL', sans-serif;
+  font-family: var(--font-logo), sans-serif;
   font-size: 1.875rem;
   font-weight: 800;
   letter-spacing: 0.05em;
