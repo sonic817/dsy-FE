@@ -7,7 +7,7 @@ export default function RefundPolicyPage() {
     <>
       <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 24, borderBottom: "2px solid #333", paddingBottom: 12 }}>취소 및 환불 정책</h1>
 
-      <p style={{ marginBottom: 24 }}>대일숲 주식회사(이하 &quot;회사&quot;)는 다율숲 숲체험 예약 서비스의 취소 및 환불에 대해 다음과 같은 정책을 적용합니다.</p>
+      <p style={{ marginBottom: 24 }}>다율숲 주식회사(이하 &quot;회사&quot;)는 다율숲 숲체험 예약 서비스의 취소 및 환불에 대해 다음과 같은 정책을 적용합니다.</p>
 
       <Section title="1. 취소 및 환불 기준">
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
@@ -38,7 +38,7 @@ export default function RefundPolicyPage() {
       <Section title="3. 취소 방법">
         <ul>
           <li>예약 사이트의 &quot;예약확인&quot; 메뉴에서 취소</li>
-          <li>전화 취소: 031-000-0000 (평일 오전 9시 ~ 오후 6시)</li>
+
           <li>이메일 취소: dis2412@naver.com</li>
         </ul>
       </Section>
@@ -53,7 +53,7 @@ export default function RefundPolicyPage() {
 
       <Section title="5. 문의">
         <ul style={{ listStyle: "none", padding: 0 }}>
-          <li>전화: 031-000-0000 (평일 오전 9시 ~ 오후 6시)</li>
+
           <li>이메일: dis2412@naver.com</li>
         </ul>
       </Section>

@@ -7,7 +7,7 @@ export default function PrivacyPolicyPage() {
     <>
       <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 24, borderBottom: "2px solid #333", paddingBottom: 12 }}>개인정보처리방침</h1>
 
-      <p style={{ marginBottom: 24 }}>대일숲 주식회사(이하 &quot;회사&quot;)는 이용자의 개인정보를 중요시하며, 「개인정보 보호법」 등 관련 법령을 준수하고 있습니다.</p>
+      <p style={{ marginBottom: 24 }}>다율숲 주식회사(이하 &quot;회사&quot;)는 이용자의 개인정보를 중요시하며, 「개인정보 보호법」 등 관련 법령을 준수하고 있습니다.</p>
 
       <Section title="제1조 (수집하는 개인정보 항목)">
         <p>회사는 예약 서비스 제공을 위해 다음과 같은 개인정보를 수집합니다.</p>
@@ -59,7 +59,7 @@ export default function PrivacyPolicyPage() {
         <ol>
           <li>이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있습니다.</li>
           <li>이용자는 개인정보의 처리 정지, 삭제를 요구할 수 있습니다.</li>
-          <li>위 요청은 이메일(dis2412@naver.com) 또는 전화(031-000-0000)로 연락 주시면 처리해 드립니다.</li>
+          <li>위 요청은 이메일(dis2412@naver.com)로 연락 주시면 처리해 드립니다.</li>
         </ol>
       </Section>
 
@@ -75,7 +75,7 @@ export default function PrivacyPolicyPage() {
         <ul style={{ listStyle: "none", padding: 0 }}>
           <li>성명: 하우석</li>
           <li>직위: 대표</li>
-          <li>연락처: 031-000-0000</li>
+
           <li>이메일: dis2412@naver.com</li>
         </ul>
       </Section>

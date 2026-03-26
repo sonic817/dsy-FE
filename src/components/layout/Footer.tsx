@@ -4,8 +4,8 @@ export default function Footer() {
       <div className="container">
         <div className="footer-inner">
           <div className="footer-left">
-            <h3 className="footer-title">대일숲 주식회사</h3>
-            <p className="footer-phone">031-000-0000</p>
+            <h3 className="footer-title">다율숲 주식회사</h3>
+
             <p className="footer-info">
               평일 오전 9시 ~ 오후 6시
               <br />
@@ -18,9 +18,9 @@ export default function Footer() {
               <br />
               사업자등록번호: 893-86-03169
               <br />
-              통신판매업신고: 제0000-울산울주-0000호
+              통신판매업신고: 제2026-울산북구-0104호
               <br />
-              주소: 울산광역시 울주군 범서읍 굴화1길 65, 301호
+              주소: 울산광역시 북구 동남로 477, 1층
               <br />
               이메일: dis2412@naver.com
               <br />
@@ -37,7 +37,7 @@ export default function Footer() {
           <a href="/terms/refund">취소 및 환불 정책</a>
         </p>
         <p className="footer-copyright">
-          Copyright &copy; {new Date().getFullYear()} 대일숲 주식회사. All rights reserved.
+          Copyright &copy; {new Date().getFullYear()} 다율숲 주식회사. All rights reserved.
         </p>
       </div>
     </footer>

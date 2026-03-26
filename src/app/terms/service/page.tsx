@@ -8,7 +8,7 @@ export default function TermsOfServicePage() {
       <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 24, borderBottom: "2px solid #333", paddingBottom: 12 }}>이용약관</h1>
 
       <Section title="제1조 (목적)">
-        본 약관은 대일숲 주식회사(이하 &quot;회사&quot;)가 운영하는 다율숲 숲체험 예약 서비스(이하 &quot;서비스&quot;)의 이용 조건 및 절차, 회사와 이용자의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.
+        본 약관은 다율숲 주식회사(이하 &quot;회사&quot;)가 운영하는 다율숲 숲체험 예약 서비스(이하 &quot;서비스&quot;)의 이용 조건 및 절차, 회사와 이용자의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.
       </Section>
 
       <Section title="제2조 (정의)">
