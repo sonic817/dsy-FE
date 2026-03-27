@@ -141,9 +141,13 @@
 /* Calendar */
 .calendar-wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 12px;
   margin-bottom: 24px;
+}
+
+.calendar-wrapper .calendar:nth-child(2) {
+  display: none;
 }
 
 .calendar {
