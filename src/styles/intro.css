@@ -10,13 +10,13 @@
 }
 
 .intro-info h4 {
-  font-size: 1rem;
+  font-size: var(--fs-body);
   color: var(--primary-dark);
   margin-bottom: 8px;
 }
 
 .intro-info p {
-  font-size: 0.875rem;
+  font-size: var(--fs-label);
   color: var(--text-light);
   line-height: 1.7;
 }

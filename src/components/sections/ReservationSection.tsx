@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Calendar from "@/components/common/Calendar";
+import MobileInfoCard from "@/components/common/MobileInfoCard";
+import Modal from "@/components/modal/Modal";
 import ReservationConfirmModal from "@/components/modal/ReservationConfirmModal";
 import ReservationCompleteModal from "@/components/modal/ReservationCompleteModal";
 import ReservationCheckSection from "@/components/sections/ReservationCheckSection";
@@ -35,6 +37,7 @@ export default function ReservationSection() {
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+  const [isProgramPreviewOpen, setIsProgramPreviewOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
@@ -82,6 +85,7 @@ export default function ReservationSection() {
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
     setSelectedProgram(null);
+    setIsProgramPreviewOpen(false);
     setSelectedSlot(null);
     setSelectedSlotId(null);
     setTimeout(() => {
@@ -97,6 +101,11 @@ export default function ReservationSection() {
 
   const handleProgramSelect = (program: Program) => {
     setSelectedProgram(program);
+    if (window.matchMedia("(min-width: 1024px)").matches) {
+      setIsProgramPreviewOpen(false);
+    } else {
+      setIsProgramPreviewOpen(true);
+    }
     setSelectedSlot(null);
     setSelectedSlotId(null);
   };
@@ -160,11 +169,12 @@ export default function ReservationSection() {
           type,
           date: `${y}-${m}-${d}`,
           timeSlotId: selectedSlotId,
+          programId: selectedProgram!.id,
           name: formData.name.trim(),
+          email: formData.email.trim(),
           phone: formData.phone.trim(),
           totalPeople: Number(formData.totalPeople.replace(/,/g, "")),
           emergencyContact: formData.emergencyContact.trim(),
-          program: selectedProgram?.name || "",
         }),
       });
 
@@ -295,7 +305,7 @@ export default function ReservationSection() {
           </div>
         )}
 
-        {/* 프로그램 + 이미지 */}
+        {/* 프로그램 선택 */}
         {selectedDate && (
           <div id="program-slots-area">
             <h3 className="step-title">프로그램 선택</h3>
@@ -310,28 +320,28 @@ export default function ReservationSection() {
               ) : (
                 <div className="program-select-list">
                   {programs.map((program) => (
-                    <button
+                    <MobileInfoCard
                       key={program.id}
-                      className={`program-select-btn ${selectedProgram?.id === program.id ? "selected" : ""}`}
+                      selected={selectedProgram?.id === program.id}
+                      title={program.name}
+                      subtitle={program.description}
                       onClick={() => handleProgramSelect(program)}
-                    >
-                      <span className="program-select-name">{program.name}</span>
-                      <span className="program-select-desc">{program.description}</span>
-                    </button>
+                    />
                   ))}
                 </div>
               )}
             </div>
-
-            {selectedProgram?.image_url && (
-              <div className="program-image-panel">
+            <div className="program-image-panel">
+              {selectedProgram?.image_url ? (
                 <img
                   src={selectedProgram.image_url}
                   alt={selectedProgram.name}
                   className="program-image"
                 />
-              </div>
-            )}
+              ) : (
+                <p className="step-placeholder">프로그램을 선택해주세요.</p>
+              )}
+            </div>
             </div>
           </div>
         )}
@@ -574,6 +584,27 @@ export default function ReservationSection() {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       />
+
+      <Modal
+        isOpen={isProgramPreviewOpen}
+        onClose={() => setIsProgramPreviewOpen(false)}
+        title={selectedProgram?.name || "프로그램 상세"}
+      >
+        {selectedProgram && (
+          <div className="program-preview-modal-content">
+            {selectedProgram.image_url && (
+              <div className="program-preview-modal-image">
+                <img
+                  src={selectedProgram.image_url}
+                  alt={selectedProgram.name}
+                  className="program-preview-image"
+                />
+              </div>
+            )}
+            <div className="program-preview-modal-desc">{selectedProgram.description}</div>
+          </div>
+        )}
+      </Modal>
 
       {submitting && (
         <div className="spinner-overlay">

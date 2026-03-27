@@ -7,9 +7,3 @@ export interface ReservationFormData {
   totalPeople: string;
   emergencyContact: string;
 }
-
-export interface TimeSlots {
-  morning: string[];
-  afternoon: string[];
-  night: string[];
-}

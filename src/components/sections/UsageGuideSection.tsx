@@ -1,10 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
+import MobileInfoCard from "@/components/common/MobileInfoCard";
+import Modal from "@/components/modal/Modal";
 import { fetchApi } from "@/lib/api";
 import { useFees } from "@/lib/useFees";
 
-interface Program { id: number; name: string; description: string; }
+interface Program { id: number; name: string; description: string; image_url: string | null; }
 
 const USAGE_TABS = ["프로그램", "개인·단체예약", "대관문의", "이용료·환불규정"];
 const PERIOD_LABELS: Record<string, string> = { morning: "오전", afternoon: "오후", night: "야간" };
@@ -12,11 +15,16 @@ const PERIOD_LABELS: Record<string, string> = { morning: "오전", afternoon: "�
 export default function UsageGuideSection() {
   const [activeTab, setActiveTab] = useState(0);
   const [programs, setPrograms] = useState<Program[]>([]);
+  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+  const [isProgramModalOpen, setIsProgramModalOpen] = useState(false);
   const { fees, loading: loadingFees } = useFees();
   const [loadingPrograms, setLoadingPrograms] = useState(true);
 
   useEffect(() => {
-    fetchApi("/api/programs").then((r) => r.json()).then(setPrograms).catch(() => {}).finally(() => setLoadingPrograms(false));
+    fetchApi("/api/programs").then((r) => r.json()).then((data: Program[]) => {
+      setPrograms(data);
+      if (data.length > 0) setSelectedProgram(data[0]);
+    }).catch(() => {}).finally(() => setLoadingPrograms(false));
   }, []);
 
   return (
@@ -48,14 +56,58 @@ export default function UsageGuideSection() {
               ))}
             </div>
           ) : (
-            <div className="program-list">
-              {programs.map((program) => (
-                <div key={program.id} className="program-card">
-                  <h4>{program.name}</h4>
-                  <p>{program.description}</p>
+            <>
+              {/* 데스크톱: 두 패널 */}
+              <div className="program-panel-layout">
+                <div className="program-panel-list">
+                  {programs.map((program) => (
+                    <div
+                      key={program.id}
+                      className={`program-panel-item ${selectedProgram?.id === program.id ? "active" : ""}`}
+                      onClick={() => setSelectedProgram(program)}
+                    >
+                      <p className="program-item-name">{program.name}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+                <div className="program-panel-detail">
+                  {selectedProgram ? (
+                    <>
+                      <h3 className="program-panel-detail-title">{selectedProgram.name}</h3>
+                      {selectedProgram.image_url && (
+                        <div className="program-panel-detail-image">
+                          <Image
+                            src={selectedProgram.image_url}
+                            alt={selectedProgram.name}
+                            width={600}
+                            height={400}
+                            sizes="(min-width: 1024px) 50vw, 100vw"
+                          />
+                        </div>
+                      )}
+                      <div className="program-panel-detail-content">{selectedProgram.description}</div>
+                    </>
+                  ) : (
+                    <p className="program-panel-detail-empty">프로그램을 선택해주세요.</p>
+                  )}
+                </div>
+              </div>
+              {/* 모바일: 카드 리스트 */}
+              <div className="program-mobile-list program-select-list">
+                {programs.map((program) => (
+                  <MobileInfoCard
+                    key={program.id}
+                    selected={selectedProgram?.id === program.id}
+                    title={program.name}
+                    subtitle={program.description}
+                    onClick={() => {
+                      setSelectedProgram(program);
+                      setIsProgramModalOpen(true);
+                    }}
+                  />
+                ))}
+              </div>
+            </>
           )}
           <p className="program-notice">프로그램은 계절 및 운영 상황에 따라 변경될 수 있습니다.</p>
         </div>
@@ -150,6 +202,28 @@ export default function UsageGuideSection() {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={isProgramModalOpen}
+        onClose={() => setIsProgramModalOpen(false)}
+        title={selectedProgram?.name || "프로그램 상세"}
+      >
+        {selectedProgram && (
+          <div className="program-mobile-modal-content">
+            {selectedProgram.image_url && (
+              <div className="program-mobile-modal-image">
+                <Image
+                  src={selectedProgram.image_url}
+                  alt={selectedProgram.name}
+                  width={600}
+                  height={400}
+                  sizes="100vw"
+                />
+              </div>
+            )}
+            <div className="program-mobile-modal-desc">{selectedProgram.description}</div>
+          </div>
+        )}
+      </Modal>
     </section>
   );
 }

@@ -6,19 +6,19 @@
 }
 
 .footer-title {
-  font-size: 1.25rem;
+  font-size: var(--fs-title-sm);
   font-weight: 700;
   margin-bottom: 12px;
 }
 
 .footer-contact {
-  font-size: 0.9375rem;
+  font-size: var(--fs-body-sm);
   font-weight: 600;
   margin-bottom: 4px;
 }
 
 .footer-hours {
-  font-size: 0.75rem;
+  font-size: var(--fs-caption);
   opacity: 0.5;
 }
 
@@ -33,7 +33,7 @@
 }
 
 .footer-right p {
-  font-size: 0.75rem;
+  font-size: var(--fs-caption);
   opacity: 0.5;
   line-height: 1.8;
 }
@@ -53,9 +53,10 @@
 }
 
 .footer-links {
-  font-size: 0.75rem;
+  font-size: var(--fs-caption);
   margin-bottom: 12px;
   opacity: 0.6;
+  text-align: center;
 }
 
 .footer-links a {
@@ -73,6 +74,7 @@
 }
 
 .footer-copyright {
-  font-size: 0.6875rem;
+  font-size: var(--fs-caption);
   opacity: 0.35;
+  text-align: center;
 }

@@ -56,7 +56,7 @@
 }
 
 .modal-title {
-  font-size: 1.125rem;
+  font-size: var(--fs-body-lg);
   font-weight: 700;
   color: var(--primary);
 }
@@ -68,7 +68,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  font-size: 1.75rem;
+  font-size: var(--fs-title-lg);
   color: var(--text-light);
   line-height: 1;
   transition: background 0.2s;
@@ -94,7 +94,7 @@
   flex: 1;
   padding: 14px;
   border-radius: 10px;
-  font-size: 0.9375rem;
+  font-size: var(--fs-body-sm);
   font-weight: 700;
   transition: all 0.2s;
   text-align: center;
@@ -124,7 +124,7 @@
   justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px solid #f0f0f0;
-  font-size: 0.9375rem;
+  font-size: var(--fs-body-sm);
 }
 
 .confirm-row:last-child {
@@ -159,7 +159,7 @@
 }
 
 .cancel-policy-title {
-  font-size: 0.875rem;
+  font-size: var(--fs-label);
   font-weight: 700;
   color: var(--text);
   margin-bottom: 8px;
@@ -178,7 +178,7 @@
 .cancel-policy-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.75rem;
+  font-size: var(--fs-caption);
 }
 
 .cancel-policy-table th {
@@ -216,13 +216,13 @@
 
 /* News Detail Modal */
 .news-detail-date {
-  font-size: 0.8125rem;
+  font-size: var(--fs-label);
   color: var(--text-light);
   margin-bottom: 16px;
 }
 
 .news-detail-content {
-  font-size: 0.9375rem;
+  font-size: var(--fs-body-sm);
   color: var(--text);
   line-height: 1.8;
   white-space: pre-line;
@@ -319,7 +319,7 @@
   border: none;
   border-radius: 50%;
   color: #fff;
-  font-size: 1.75rem;
+  font-size: var(--fs-title-lg);
   line-height: 1;
   padding-top: 4px;
   cursor: pointer;
@@ -344,7 +344,7 @@
   border-radius: 50%;
   color: #fff;
   line-height: 1;
-  font-size: 1.25rem;
+  font-size: var(--fs-title-sm);
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s;

@@ -11,8 +11,10 @@ interface ReservationResult {
   timeSlot: string;
   type: string;
   name: string;
+  email: string | null;
   phone: string;
-  totalPeople: string;
+  totalPeople: number;
+  program: string | null;
   amountPaid: number;
   amountCancelled: number;
   status: string;
@@ -193,6 +195,12 @@ export default function ReservationCheckSection() {
                     <span className="check-result-label">시간</span>
                     <span className="check-result-value">{item.timeSlot}</span>
                   </div>
+                  {item.program && (
+                    <div className="check-result-row">
+                      <span className="check-result-label">프로그램</span>
+                      <span className="check-result-value">{item.program}</span>
+                    </div>
+                  )}
                   <div className="check-result-row">
                     <span className="check-result-label">구분</span>
                     <span className="check-result-value">{item.type}</span>
@@ -201,6 +209,12 @@ export default function ReservationCheckSection() {
                     <span className="check-result-label">신청인</span>
                     <span className="check-result-value">{item.name}</span>
                   </div>
+                  {item.email && (
+                    <div className="check-result-row">
+                      <span className="check-result-label">이메일</span>
+                      <span className="check-result-value">{item.email}</span>
+                    </div>
+                  )}
                   <div className="check-result-row">
                     <span className="check-result-label">인원</span>
                     <span className="check-result-value">{item.totalPeople}명</span>

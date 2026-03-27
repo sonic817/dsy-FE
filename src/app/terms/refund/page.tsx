@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "취소 및 환불 정책 - 다율숲
 export default function RefundPolicyPage() {
   return (
     <>
-      <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 24, borderBottom: "2px solid #333", paddingBottom: 12 }}>취소 및 환불 정책</h1>
+      <h1 style={{ fontSize: "var(--fs-title-sm)", fontWeight: 700, marginBottom: 24, borderBottom: "2px solid #333", paddingBottom: 12 }}>취소 및 환불 정책</h1>
 
       <p style={{ marginBottom: 24 }}>다율숲 주식회사(이하 &quot;회사&quot;)는 다율숲 숲체험 예약 서비스의 취소 및 환불에 대해 다음과 같은 정책을 적용합니다.</p>
 
@@ -24,7 +24,7 @@ export default function RefundPolicyPage() {
       </Section>
 
       <Section title="3. 취소 및 환불 기준">
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "var(--fs-label)" }}>
           <thead>
             <tr style={{ background: "#f5f5f5" }}>
               <th style={th}>구분</th>
@@ -83,7 +83,7 @@ const td: React.CSSProperties = { padding: "10px 12px", borderBottom: "1px solid
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 24 }}>
-      <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 8 }}>{title}</h2>
+      <h2 style={{ fontSize: "var(--fs-body-sm)", fontWeight: 700, marginBottom: 8 }}>{title}</h2>
       <div>{children}</div>
     </div>
   );

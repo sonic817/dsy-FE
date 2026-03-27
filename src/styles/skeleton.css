@@ -59,18 +59,6 @@
   margin: 10px auto;
 }
 
-/* Photo Grid Skeleton */
-.photo-skeleton {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.photo-skeleton .skeleton-img {
-  height: 140px;
-  border-radius: 8px;
-}
-
 /* Program Skeleton - 2행 2열 */
 .program-skeleton {
   display: flex;

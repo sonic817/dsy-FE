@@ -5,14 +5,10 @@
   }
 
   .hero-title {
-    font-size: 2.25rem;
+    font-size: var(--fs-display-sm);
   }
 
   .facility-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .photo-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
@@ -36,7 +32,7 @@
   }
 
   .nav-link {
-    font-size: 1.125rem;
+    font-size: var(--fs-body-lg);
     padding: 16px 0;
   }
 
@@ -56,12 +52,12 @@
   }
 
   .hero-title {
-    font-size: 3rem;
+    font-size: var(--fs-display-md);
     margin-bottom: 12px;
   }
 
   .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: var(--fs-title-sm);
   }
 
   /* Section */
@@ -70,7 +66,7 @@
   }
 
   .section-title {
-    font-size: 1.75rem;
+    font-size: var(--fs-title-lg);
     margin-bottom: 36px;
   }
 
@@ -109,7 +105,7 @@
   }
 
   .news-panel-item .news-item-title {
-    font-size: 1.0625rem;
+    font-size: var(--fs-body);
   }
 
   .news-panel-detail {
@@ -126,7 +122,7 @@
   .tab-btn {
     flex: none;
     padding: 12px 28px;
-    font-size: 0.9375rem;
+    font-size: var(--fs-body-sm);
   }
 
   /* Intro */
@@ -139,7 +135,7 @@
   }
 
   .intro-info h4 {
-    font-size: 1.125rem;
+    font-size: var(--fs-body-lg);
   }
 
   .map-img {
@@ -157,39 +153,40 @@
   }
 
   .facility-card-name {
-    font-size: 1rem;
+    font-size: var(--fs-body);
   }
 
-  .photo-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+  /* Usage: 프로그램 두 패널 */
+  .program-mobile-list {
+    display: none;
   }
 
-  .photo-grid-img {
-    height: 260px;
-    border-radius: 12px;
+  .program-panel-layout {
+    display: flex;
+    gap: 24px;
+    height: 400px;
   }
 
-  /* Usage */
-  .program-list {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 16px;
+  .program-panel-list {
+    width: 320px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
   }
 
-  .program-card {
+  .program-panel-item {
+    padding: 20px;
+  }
+
+  .program-panel-item .program-item-name {
+    font-size: var(--fs-body);
+  }
+
+  .program-panel-detail {
     flex: 1;
-    min-width: calc(50% - 8px);
-    min-height: 120px;
-    padding: 32px;
-  }
-
-  .program-card h4 {
-    font-size: 1.125rem;
-  }
-
-  .program-card p {
-    font-size: 0.9375rem;
+    overflow-y: auto;
   }
 
   .calendar-wrapper {
@@ -207,12 +204,12 @@
   .fee-table {
     max-width: 700px;
     margin: 0 auto;
-    font-size: 1.125rem;
+    font-size: var(--fs-body-lg);
   }
 
   .fee-table th {
     padding: 20px 16px;
-    font-size: 1.25rem;
+    font-size: var(--fs-title-sm);
   }
 
   .fee-table td {
@@ -224,6 +221,10 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 32px;
+  }
+
+  .program-image-panel {
+    display: block;
   }
 
   .time-form-area {
@@ -238,11 +239,11 @@
   }
 
   .calendar-weekday {
-    font-size: 0.9375rem;
+    font-size: var(--fs-body-sm);
   }
 
   .calendar-day {
-    font-size: 1rem;
+    font-size: var(--fs-body);
   }
 
   .calendar-day span {
@@ -256,7 +257,7 @@
 
   .time-slot-btn {
     padding: 12px 0;
-    font-size: 0.9375rem;
+    font-size: var(--fs-body-sm);
   }
 
   .reservation-form {
@@ -264,12 +265,12 @@
   }
 
   .form-title {
-    font-size: 1.25rem;
+    font-size: var(--fs-title-sm);
   }
 
   .submit-btn {
     padding: 18px;
-    font-size: 1.125rem;
+    font-size: var(--fs-body-lg);
   }
 
   /* Footer */
@@ -293,11 +294,11 @@
   }
 
   .footer-title {
-    font-size: 1.375rem;
+    font-size: var(--fs-title-md);
   }
 
   .footer-contact {
-    font-size: 1.0625rem;
+    font-size: var(--fs-body);
   }
 
   /* Modal */
@@ -310,15 +311,15 @@
   }
 
   .modal-title {
-    font-size: 1.375rem;
+    font-size: var(--fs-title-md);
   }
 
   .news-detail-date {
-    font-size: 0.9375rem;
+    font-size: var(--fs-body-sm);
   }
 
   .news-detail-content {
-    font-size: 1.0625rem;
+    font-size: var(--fs-body);
   }
 
   .cancel-policy-table-wrapper {
@@ -344,14 +345,11 @@
   }
 
   .hero-title {
-    font-size: 3.5rem;
+    font-size: var(--fs-display-lg);
   }
 
   .hero-subtitle {
-    font-size: 1.375rem;
+    font-size: var(--fs-title-md);
   }
 
-  .photo-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }

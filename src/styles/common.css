@@ -13,7 +13,7 @@
 }
 
 .section-title {
-  font-size: 1.25rem;
+  font-size: var(--fs-title-sm);
   font-weight: 700;
   color: var(--primary);
   text-align: center;
@@ -45,12 +45,63 @@
   display: none;
 }
 
+/* Shared scrollbars */
+.program-mobile-list,
+.program-mobile-modal-content,
+.program-select-list,
+.program-preview-modal-content,
+.program-panel-list,
+.program-panel-detail,
+.news-mobile-list,
+.news-panel-list,
+.news-panel-detail {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.program-mobile-list::-webkit-scrollbar,
+.program-mobile-modal-content::-webkit-scrollbar,
+.program-select-list::-webkit-scrollbar,
+.program-preview-modal-content::-webkit-scrollbar,
+.program-panel-list::-webkit-scrollbar,
+.program-panel-detail::-webkit-scrollbar,
+.news-mobile-list::-webkit-scrollbar,
+.news-panel-list::-webkit-scrollbar,
+.news-panel-detail::-webkit-scrollbar {
+  width: 6px;
+}
+
+.program-mobile-list::-webkit-scrollbar-thumb,
+.program-mobile-modal-content::-webkit-scrollbar-thumb,
+.program-select-list::-webkit-scrollbar-thumb,
+.program-preview-modal-content::-webkit-scrollbar-thumb,
+.program-panel-list::-webkit-scrollbar-thumb,
+.program-panel-detail::-webkit-scrollbar-thumb,
+.news-mobile-list::-webkit-scrollbar-thumb,
+.news-panel-list::-webkit-scrollbar-thumb,
+.news-panel-detail::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
+}
+
+.program-mobile-list::-webkit-scrollbar-thumb:hover,
+.program-mobile-modal-content::-webkit-scrollbar-thumb:hover,
+.program-select-list::-webkit-scrollbar-thumb:hover,
+.program-preview-modal-content::-webkit-scrollbar-thumb:hover,
+.program-panel-list::-webkit-scrollbar-thumb:hover,
+.program-panel-detail::-webkit-scrollbar-thumb:hover,
+.news-mobile-list::-webkit-scrollbar-thumb:hover,
+.news-panel-list::-webkit-scrollbar-thumb:hover,
+.news-panel-detail::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
 .tab-btn {
   flex: 1;
   min-width: fit-content;
   padding: 10px 14px;
   border-radius: 20px;
-  font-size: 0.8125rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   background: #f0f0f0;
   color: var(--text-light);
@@ -61,6 +112,70 @@
 .tab-btn.active {
   background: var(--primary);
   color: var(--text-white);
+}
+
+.program-select-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.program-select-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.program-select-btn:hover {
+  border-color: var(--primary);
+}
+
+.program-select-btn.selected {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--text-white);
+}
+
+.program-select-name {
+  font-size: var(--fs-body-sm);
+  font-weight: 700;
+}
+
+.program-select-desc {
+  font-size: var(--fs-label);
+  color: var(--text-light);
+}
+
+.program-select-btn.selected .program-select-desc {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.program-select-meta {
+  display: block;
+}
+
+.program-select-meta-text {
+  font-size: var(--fs-label);
+  color: var(--text-light);
+}
+
+.program-select-meta-action {
+  display: none;
+}
+
+.program-select-btn.selected .program-select-meta-text {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.program-select-btn.selected .program-select-meta-action {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .tab-content {
@@ -92,20 +207,34 @@
 
 .facility-card-name {
   text-align: center;
-  font-size: 0.8125rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   padding: 8px 0;
 }
 
-.photo-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
+@media (max-width: 767px) {
+  .program-select-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+  }
 
-.photo-grid-img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 8px;
+  .program-select-meta-text {
+    flex: 1;
+    min-width: 0;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .program-select-meta-action {
+    display: inline-block;
+    flex-shrink: 0;
+    font-size: var(--fs-label);
+    font-weight: 600;
+    color: var(--primary);
+  }
 }

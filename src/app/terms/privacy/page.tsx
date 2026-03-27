@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "개인정보처리방침 - 다율숲
 export default function PrivacyPolicyPage() {
   return (
     <>
-      <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 24, borderBottom: "2px solid #333", paddingBottom: 12 }}>개인정보처리방침</h1>
+      <h1 style={{ fontSize: "var(--fs-title-sm)", fontWeight: 700, marginBottom: 24, borderBottom: "2px solid #333", paddingBottom: 12 }}>개인정보처리방침</h1>
 
       <p style={{ marginBottom: 24 }}>다율숲 주식회사(이하 &quot;회사&quot;)는 이용자의 개인정보를 중요시하며, 「개인정보 보호법」 등 관련 법령을 준수하고 있습니다.</p>
 
@@ -92,7 +92,7 @@ export default function PrivacyPolicyPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 24 }}>
-      <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 8 }}>{title}</h2>
+      <h2 style={{ fontSize: "var(--fs-body-sm)", fontWeight: 700, marginBottom: 8 }}>{title}</h2>
       <div>{children}</div>
     </div>
   );

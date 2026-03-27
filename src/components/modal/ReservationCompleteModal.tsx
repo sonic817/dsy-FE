@@ -22,7 +22,7 @@ export default function ReservationCompleteModal({
         </button>
       }
     >
-      <p style={{ textAlign: "center", fontSize: "0.9375rem", color: "#333", lineHeight: 1.8 }}>
+      <p style={{ textAlign: "center", fontSize: "var(--fs-body-sm)", color: "#333", lineHeight: 1.8 }}>
         예약이 신청되었습니다.
       </p>
     </Modal>

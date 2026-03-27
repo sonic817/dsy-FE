@@ -82,7 +82,7 @@ export default function ReservationConfirmModal({
       </div>
       <div className="confirm-row" style={{ borderTop: "2px solid #e0e0e0", paddingTop: 12, marginTop: 4 }}>
         <span className="confirm-label" style={{ fontWeight: 700, color: "var(--text)" }}>결제금액</span>
-        <span className="confirm-value" style={{ color: "var(--primary)", fontSize: "1.125rem" }}>
+        <span className="confirm-value" style={{ color: "var(--primary)", fontSize: "var(--fs-body-lg)" }}>
           {totalAmount.toLocaleString()}원
         </span>
       </div>
