@@ -105,7 +105,7 @@ export default function ReservationSection() {
     setSelectedSlotId(slot.id);
     setSelectedSlot(slot.name);
     setTimeout(() => {
-      const el = document.getElementById("reservation-form");
+      const el = document.getElementById("reservation-form-wrapper");
       const header = document.querySelector(".header-fixed-wrapper") as HTMLElement;
       if (el) {
         const offset = header ? header.offsetHeight : 0;
@@ -396,7 +396,7 @@ export default function ReservationSection() {
 
         {/* 예약 신청 폼 */}
         {selectedSlot && (
-        <div className="reservation-form-wrapper">
+        <div className="reservation-form-wrapper" id="reservation-form-wrapper">
           <h3 className="step-title">예약 신청</h3>
         <form className="reservation-form" id="reservation-form" onSubmit={handleSubmit}>
 

@@ -96,53 +96,58 @@ export default function UsageGuideSection() {
 
         {/* 이용료·환불규정 */}
         <div className={`tab-content ${activeTab === 3 ? "active" : ""}`}>
-          <h4 className="refund-title">이용료</h4>
-          <table className="fee-table">
-            <thead>
-              <tr>
-                <th>구분</th>
-                <th>개인</th>
-                <th>단체</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loadingFees ? (
-                Array.from({ length: 3 }).map((_, i) => (
-                  <tr key={i}>
-                    <td><div className="skeleton-box" style={{ height: 14, width: "60%", margin: "0 auto" }} /></td>
-                    <td><div className="skeleton-box" style={{ height: 14, width: "60%", margin: "0 auto" }} /></td>
-                    <td><div className="skeleton-box" style={{ height: 14, width: "60%", margin: "0 auto" }} /></td>
+          <div className="fee-refund-layout">
+            <div className="fee-refund-panel">
+              <h4 className="refund-title">이용료</h4>
+              <table className="fee-table">
+                <thead>
+                  <tr>
+                    <th>구분</th>
+                    <th>개인</th>
+                    <th>단체</th>
                   </tr>
-                ))
-              ) : fees.map((fee) => (
-                <tr key={fee.id}>
-                  <td>{PERIOD_LABELS[fee.period] || fee.period}</td>
-                  <td>{fee.individual_price.toLocaleString()}원</td>
-                  <td>{fee.group_price.toLocaleString()}원</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="fee-notice">이용료는 변경될 수 있습니다.</p>
-
-          <h4 className="refund-title">취소 및 환불 규정</h4>
-          <table className="fee-table">
-            <thead>
-              <tr>
-                <th>구분</th>
-                <th>위약금</th>
-                <th>환불액</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>예약 후 2시간 이내 취소</td><td>없음</td><td>전액 환불</td></tr>
-              <tr><td>이용일 6일 전까지 취소</td><td>이용료의 30%</td><td>이용료의 70%</td></tr>
-              <tr><td>이용일 2~5일 전 취소</td><td>이용료의 50%</td><td>이용료의 50%</td></tr>
-              <tr><td>이용일 당일 취소</td><td>이용료의 100%</td><td>환불 불가</td></tr>
-              <tr><td>예약 후 미이용 (노쇼)</td><td>이용료의 100%</td><td>환불 불가</td></tr>
-            </tbody>
-          </table>
-          <p className="fee-notice">천재지변으로 프로그램 운영이 중단되는 경우 전액 환불됩니다.</p>
+                </thead>
+                <tbody>
+                  {loadingFees ? (
+                    Array.from({ length: 3 }).map((_, i) => (
+                      <tr key={i}>
+                        <td><div className="skeleton-box" style={{ height: 14, width: "60%", margin: "0 auto" }} /></td>
+                        <td><div className="skeleton-box" style={{ height: 14, width: "60%", margin: "0 auto" }} /></td>
+                        <td><div className="skeleton-box" style={{ height: 14, width: "60%", margin: "0 auto" }} /></td>
+                      </tr>
+                    ))
+                  ) : fees.map((fee) => (
+                    <tr key={fee.id}>
+                      <td>{PERIOD_LABELS[fee.period] || fee.period}</td>
+                      <td>{fee.individual_price.toLocaleString()}원</td>
+                      <td>{fee.group_price.toLocaleString()}원</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="fee-notice">이용료는 변경될 수 있습니다.</p>
+            </div>
+            <div className="fee-refund-panel">
+              <h4 className="refund-title">취소 및 환불 규정</h4>
+              <table className="fee-table">
+                <thead>
+                  <tr>
+                    <th>구분</th>
+                    <th>위약금</th>
+                    <th>환불액</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>예약 후 2시간 이내 취소</td><td>없음</td><td>전액 환불</td></tr>
+                  <tr><td>이용일 6일 전까지 취소</td><td>이용료의 30%</td><td>이용료의 70%</td></tr>
+                  <tr><td>이용일 2~5일 전 취소</td><td>이용료의 50%</td><td>이용료의 50%</td></tr>
+                  <tr><td>이용일 당일 취소</td><td>이용료의 100%</td><td>환불 불가</td></tr>
+                  <tr><td>예약 후 미이용 (노쇼)</td><td>이용료의 100%</td><td>환불 불가</td></tr>
+                </tbody>
+              </table>
+              <p className="fee-notice">천재지변으로 프로그램 운영이 중단되는 경우 전액 환불됩니다.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

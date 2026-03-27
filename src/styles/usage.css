@@ -73,10 +73,16 @@
   text-align: center;
 }
 
+.fee-refund-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
 .refund-title {
   font-size: 0.9375rem;
   font-weight: 700;
-  margin: 32px 0 12px;
+  margin: 0 0 12px;
   text-align: center;
 }
 
