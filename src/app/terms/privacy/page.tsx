@@ -59,7 +59,7 @@ export default function PrivacyPolicyPage() {
         <ol>
           <li>이용자는 언제든지 자신의 개인정보를 조회하거나 수정할 수 있습니다.</li>
           <li>이용자는 개인정보의 처리 정지, 삭제를 요구할 수 있습니다.</li>
-          <li>위 요청은 이메일(dis2412@naver.com)로 연락 주시면 처리해 드립니다.</li>
+          <li>위 요청은 이메일(0503psy@gmail.com)로 연락 주시면 처리해 드립니다.</li>
         </ol>
       </Section>
 
@@ -76,7 +76,7 @@ export default function PrivacyPolicyPage() {
           <li>성명: 하우석</li>
           <li>직위: 대표</li>
 
-          <li>이메일: dis2412@naver.com</li>
+          <li>이메일: 0503psy@gmail.com</li>
         </ul>
       </Section>
 

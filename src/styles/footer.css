@@ -12,10 +12,10 @@
 }
 
 .footer-phone {
-  font-size: 1.5rem;
-  font-weight: 800;
+  font-size: 0.875rem;
+  font-weight: 400;
   margin-bottom: 8px;
-  letter-spacing: 0.02em;
+  opacity: 0.8;
 }
 
 .footer-info {

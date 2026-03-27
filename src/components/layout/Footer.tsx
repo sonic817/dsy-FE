@@ -5,8 +5,9 @@ export default function Footer() {
         <div className="footer-inner">
           <div className="footer-left">
             <h3 className="footer-title">다율숲 주식회사</h3>
-
             <p className="footer-info">
+              전화: 052-914-6967
+              <br />
               평일 오전 9시 ~ 오후 6시
               <br />
               * 주말 및 공휴일 미운영
@@ -16,13 +17,13 @@ export default function Footer() {
             <p className="footer-info">
               대표: 하우석
               <br />
-              사업자등록번호: 893-86-03169
+              사업자등록번호: 818-86-03659
               <br />
               통신판매업신고: 제2026-울산북구-0104호
               <br />
               주소: 울산광역시 북구 동남로 477, 1층
               <br />
-              이메일: dis2412@naver.com
+              이메일: 0503psy@gmail.com
               <br />
               개인정보관리책임자: 하우석
             </p>
