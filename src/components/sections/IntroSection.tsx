@@ -7,19 +7,19 @@ import ImageModal from "@/components/modal/ImageModal";
 
 interface Gallery { id: number; title: string; image_url: string; sort_order: number; }
 
-const INTRO_TABS = ["다율숲", "찾아오시는 길", "주요시설", "사진"];
+const INTRO_TABS = ["다율숲", "찾아오시는 길", "주요시설", "주변관광"];
 
 export default function IntroSection() {
   const [activeTab, setActiveTab] = useState(0);
   const [facilities, setFacilities] = useState<Gallery[]>([]);
-  const [photos, setPhotos] = useState<Gallery[]>([]);
+  const [tourism, setTourism] = useState<Gallery[]>([]);
   const [loadingFacilities, setLoadingFacilities] = useState(true);
-  const [loadingPhotos, setLoadingPhotos] = useState(true);
+  const [loadingTourism, setLoadingTourism] = useState(true);
   const [modalImage, setModalImage] = useState<{ src: string; alt: string; list?: { src: string; alt: string }[]; index?: number } | null>(null);
 
   useEffect(() => {
     fetchApi("/api/galleries?category=facility").then((r) => r.json()).then(setFacilities).catch(() => {}).finally(() => setLoadingFacilities(false));
-    fetchApi("/api/galleries?category=intro").then((r) => r.json()).then(setPhotos).catch(() => {}).finally(() => setLoadingPhotos(false));
+    fetchApi("/api/galleries?category=tourism").then((r) => r.json()).then(setTourism).catch(() => {}).finally(() => setLoadingTourism(false));
   }, []);
 
   const goModalPrev = () => {
@@ -127,31 +127,32 @@ export default function IntroSection() {
           )}
         </div>
 
-        {/* 사진 */}
+        {/* 주변관광 */}
         <div className={`tab-content ${activeTab === 3 ? "active" : ""}`}>
-          {loadingPhotos ? (
-            <div className="photo-skeleton">
+          {loadingTourism ? (
+            <div className="gallery-skeleton">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="skeleton-box skeleton-img" />
+                <div key={i} className="gallery-skeleton-item">
+                  <div className="skeleton-box skeleton-img" />
+                  <div className="skeleton-box skeleton-name" />
+                </div>
               ))}
             </div>
           ) : (
-            <div className="photo-grid">
-              {photos.map((photo, i) => (
-                <Image
-                  key={photo.id}
-                  src={photo.image_url}
-                  alt={photo.title || "사진"}
-                  className="photo-grid-img"
-                  width={240}
-                  height={140}
-                  sizes="50vw"
+            <div className="facility-grid">
+              {tourism.map((spot, i) => (
+                <div
+                  key={spot.id}
+                  className="facility-card"
                   onClick={() => {
-                    const list = photos.map(p => ({ src: p.image_url, alt: "사진" }));
-                    setModalImage({ src: photo.image_url, alt: "사진", list, index: i });
+                    const list = tourism.map(s => ({ src: s.image_url, alt: s.title }));
+                    setModalImage({ src: spot.image_url, alt: spot.title, list, index: i });
                   }}
                   style={{ cursor: "pointer" }}
-                />
+                >
+                  <Image src={spot.image_url} alt={spot.title} className="facility-card-img" width={240} height={120} sizes="50vw" />
+                  <p className="facility-card-name">{spot.title}</p>
+                </div>
               ))}
             </div>
           )}

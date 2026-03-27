@@ -12,10 +12,10 @@ export default function Home() {
       <Header />
       <main>
         <HeroSection />
-        <NewsSection />
         <IntroSection />
         <UsageGuideSection />
         <ReservationSection />
+        <NewsSection />
       </main>
       <Footer />
     </>

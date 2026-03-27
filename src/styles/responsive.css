@@ -208,21 +208,21 @@
   }
 
   /* Reservation */
-  .reservation-type-tabs {
-    gap: 12px;
-    margin-bottom: 32px;
+  .program-image-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
   }
 
-  .type-tab {
-    padding: 14px 48px;
-    font-size: 1.125rem;
-  }
-
-  .reservation-layout {
+  .time-form-area {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 32px;
     align-items: start;
+  }
+
+  .time-select-panel {
+    margin-bottom: 0;
   }
 
   .calendar-weekday {

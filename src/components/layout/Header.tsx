@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect, useCallback } from "react";
 
-const SECTIONS = ["news", "intro", "usage", "reservation"];
+const SECTIONS = ["intro", "usage", "reservation", "news"];
 
 export default function Header() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -48,11 +48,6 @@ export default function Header() {
       <nav className="nav">
         <ul className="nav-list">
           <li className="nav-item">
-            <button className={`nav-link ${activeSection === "news" ? "active" : ""}`} onClick={() => scrollTo("news")}>
-              소식
-            </button>
-          </li>
-          <li className="nav-item">
             <button className={`nav-link ${activeSection === "intro" ? "active" : ""}`} onClick={() => scrollTo("intro")}>
               소개
             </button>
@@ -65,6 +60,11 @@ export default function Header() {
           <li className="nav-item">
             <button className={`nav-link nav-link-accent ${activeSection === "reservation" ? "active" : ""}`} onClick={() => scrollTo("reservation")}>
               <span className="bounce-text"><span className="bounce-char bounce-1">예</span><span className="bounce-char bounce-2">약</span></span>
+            </button>
+          </li>
+          <li className="nav-item">
+            <button className={`nav-link ${activeSection === "news" ? "active" : ""}`} onClick={() => scrollTo("news")}>
+              소식·참여
             </button>
           </li>
         </ul>

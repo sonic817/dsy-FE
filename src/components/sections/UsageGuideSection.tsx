@@ -1,47 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { fetchApi } from "@/lib/api";
 import { useFees } from "@/lib/useFees";
-import ImageModal from "@/components/modal/ImageModal";
 
 interface Program { id: number; name: string; description: string; }
-interface Gallery { id: number; title: string; image_url: string; sort_order: number; }
 
-const USAGE_TABS = ["숲체험 프로그램", "주요시설", "이용료", "사진"];
+const USAGE_TABS = ["프로그램", "개인·단체예약", "대관문의", "이용료·환불규정"];
 const PERIOD_LABELS: Record<string, string> = { morning: "오전", afternoon: "오후", night: "야간" };
 
 export default function UsageGuideSection() {
   const [activeTab, setActiveTab] = useState(0);
   const [programs, setPrograms] = useState<Program[]>([]);
-  const [facilities, setFacilities] = useState<Gallery[]>([]);
   const { fees, loading: loadingFees } = useFees();
-  const [photos, setPhotos] = useState<Gallery[]>([]);
   const [loadingPrograms, setLoadingPrograms] = useState(true);
-  const [loadingFacilities, setLoadingFacilities] = useState(true);
-  const [loadingPhotos, setLoadingPhotos] = useState(true);
-  const [modalImage, setModalImage] = useState<{ src: string; alt: string; list?: { src: string; alt: string }[]; index?: number } | null>(null);
 
   useEffect(() => {
     fetchApi("/api/programs").then((r) => r.json()).then(setPrograms).catch(() => {}).finally(() => setLoadingPrograms(false));
-    fetchApi("/api/galleries?category=usage_facility").then((r) => r.json()).then(setFacilities).catch(() => {}).finally(() => setLoadingFacilities(false));
-    fetchApi("/api/galleries?category=usage").then((r) => r.json()).then(setPhotos).catch(() => {}).finally(() => setLoadingPhotos(false));
   }, []);
-
-  const goModalPrev = () => {
-    if (modalImage?.list && modalImage.index !== undefined && modalImage.index > 0) {
-      const prev = modalImage.index - 1;
-      setModalImage({ ...modalImage.list[prev], list: modalImage.list, index: prev });
-    }
-  };
-
-  const goModalNext = () => {
-    if (modalImage?.list && modalImage.index !== undefined && modalImage.index < modalImage.list.length - 1) {
-      const next = modalImage.index + 1;
-      setModalImage({ ...modalImage.list[next], list: modalImage.list, index: next });
-    }
-  };
 
   return (
     <section id="usage" className="section usage-section">
@@ -60,7 +36,7 @@ export default function UsageGuideSection() {
           ))}
         </div>
 
-        {/* 숲체험 프로그램 */}
+        {/* 프로그램 */}
         <div className={`tab-content ${activeTab === 0 ? "active" : ""}`}>
           {loadingPrograms ? (
             <div className="program-skeleton">
@@ -84,39 +60,43 @@ export default function UsageGuideSection() {
           <p className="program-notice">프로그램은 계절 및 운영 상황에 따라 변경될 수 있습니다.</p>
         </div>
 
-        {/* 주요시설 */}
+        {/* 개인·단체예약 */}
         <div className={`tab-content ${activeTab === 1 ? "active" : ""}`}>
-          {loadingFacilities ? (
-            <div className="gallery-skeleton">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="gallery-skeleton-item">
-                  <div className="skeleton-box skeleton-img" />
-                  <div className="skeleton-box skeleton-name" />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="facility-grid">
-              {facilities.map((facility, i) => (
-                <div
-                  key={facility.id}
-                  className="facility-card"
-                  onClick={() => {
-                    const list = facilities.map(f => ({ src: f.image_url, alt: f.title }));
-                    setModalImage({ src: facility.image_url, alt: facility.title, list, index: i });
-                  }}
-                  style={{ cursor: "pointer" }}
-                >
-                  <Image src={facility.image_url} alt={facility.title} className="facility-card-img" width={240} height={120} sizes="50vw" />
-                  <p className="facility-card-name">{facility.title}</p>
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="usage-info-content">
+            <h4>개인 예약</h4>
+            <ul>
+              <li>1인 이상 신청 가능</li>
+              <li>홈페이지 예약 메뉴에서 날짜 및 프로그램 선택 후 예약</li>
+            </ul>
+            <h4>단체 예약</h4>
+            <ul>
+              <li>10인 이상 단체 예약 가능</li>
+              <li>전화(052-914-6967) 또는 이메일(dis2412@naver.com)로 사전 문의</li>
+            </ul>
+            <p className="usage-info-notice">예약 변경 및 취소는 이용일 기준 정책에 따라 처리됩니다.</p>
+          </div>
         </div>
 
-        {/* 이용료 */}
+        {/* 대관문의 */}
         <div className={`tab-content ${activeTab === 2 ? "active" : ""}`}>
+          <div className="usage-info-content">
+            <h4>대관 안내</h4>
+            <ul>
+              <li>행사, 워크숍, 교육 등 다양한 목적의 대관이 가능합니다.</li>
+              <li>대관 가능 시설 및 이용 조건은 문의 시 안내드립니다.</li>
+            </ul>
+            <h4>문의 방법</h4>
+            <ul>
+              <li>전화: 052-914-6967</li>
+              <li>이메일: dis2412@naver.com</li>
+            </ul>
+            <p className="usage-info-notice">대관 일정은 사전 협의가 필요하며, 운영 상황에 따라 조정될 수 있습니다.</p>
+          </div>
+        </div>
+
+        {/* 이용료·환불규정 */}
+        <div className={`tab-content ${activeTab === 3 ? "active" : ""}`}>
+          <h4 className="refund-title">이용료</h4>
           <table className="fee-table">
             <thead>
               <tr>
@@ -143,53 +123,28 @@ export default function UsageGuideSection() {
               ))}
             </tbody>
           </table>
-          <p className="fee-notice">이용료는 변경될 수 있습니다. 자세한 문의는 연락처로 부탁드립니다.</p>
-        </div>
+          <p className="fee-notice">이용료는 변경될 수 있습니다.</p>
 
-        {/* 사진 */}
-        <div className={`tab-content ${activeTab === 3 ? "active" : ""}`}>
-          {loadingPhotos ? (
-            <div className="photo-skeleton">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="skeleton-box skeleton-img" />
-              ))}
-            </div>
-          ) : (
-            <div className="photo-grid">
-              {photos.map((photo, i) => (
-                <Image
-                  key={photo.id}
-                  src={photo.image_url}
-                  alt={photo.title || "사진"}
-                  className="photo-grid-img"
-                  width={240}
-                  height={140}
-                  sizes="50vw"
-                  onClick={() => {
-                    const list = photos.map(p => ({ src: p.image_url, alt: "사진" }));
-                    setModalImage({ src: photo.image_url, alt: "사진", list, index: i });
-                  }}
-                  style={{ cursor: "pointer" }}
-                />
-              ))}
-            </div>
-          )}
+          <h4 className="refund-title">취소 및 환불 규정</h4>
+          <table className="fee-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>위약금</th>
+                <th>환불액</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>예약 후 2시간 이내 취소</td><td>없음</td><td>전액 환불</td></tr>
+              <tr><td>이용일 6일 전까지 취소</td><td>이용료의 30%</td><td>이용료의 70%</td></tr>
+              <tr><td>이용일 2~5일 전 취소</td><td>이용료의 50%</td><td>이용료의 50%</td></tr>
+              <tr><td>이용일 당일 취소</td><td>이용료의 100%</td><td>환불 불가</td></tr>
+              <tr><td>예약 후 미이용 (노쇼)</td><td>이용료의 100%</td><td>환불 불가</td></tr>
+            </tbody>
+          </table>
+          <p className="fee-notice">천재지변으로 프로그램 운영이 중단되는 경우 전액 환불됩니다.</p>
         </div>
       </div>
-
-      <ImageModal
-        isOpen={modalImage !== null}
-        onClose={() => setModalImage(null)}
-        src={modalImage?.src || ""}
-        alt={modalImage?.alt || ""}
-        list={modalImage?.list}
-        index={modalImage?.index}
-        onSlideChange={(i) => {
-          if (modalImage?.list) setModalImage({ ...modalImage.list[i], list: modalImage.list, index: i });
-        }}
-        onPrev={modalImage?.list && modalImage.index !== undefined && modalImage.index > 0 ? goModalPrev : undefined}
-        onNext={modalImage?.list && modalImage.index !== undefined && modalImage.index < modalImage.list.length - 1 ? goModalNext : undefined}
-      />
     </section>
   );
 }

@@ -67,9 +67,53 @@
 }
 
 .fee-notice {
-  font-size: 1rem;
+  font-size: 0.75rem;
   color: var(--text-light);
-  margin-top: 32px;
+  margin-top: 12px;
   text-align: center;
+}
+
+.refund-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  margin: 32px 0 12px;
+  text-align: center;
+}
+
+.usage-info-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.usage-info-content h4 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.usage-info-content h4:not(:first-child) {
+  margin-top: 20px;
+}
+
+.usage-info-content ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.usage-info-content li {
+  font-size: 0.8125rem;
+  color: var(--text-light);
+  line-height: 1.8;
+}
+
+.usage-info-notice {
+  font-size: 0.8125rem;
+  color: var(--text-light);
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
 }
 

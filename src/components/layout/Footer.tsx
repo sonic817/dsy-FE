@@ -23,7 +23,7 @@ export default function Footer() {
               <br />
               주소: 울산광역시 북구 동남로 477, 1층
               <br />
-              이메일: 0503psy@gmail.com
+              이메일: dis2412@naver.com
               <br />
               개인정보관리책임자: 하우석
             </p>

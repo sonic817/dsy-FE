@@ -10,6 +10,7 @@ interface ReservationConfirmModalProps {
   type: ReservationType;
   date: string;
   timeSlot: string;
+  program: string;
   formData: ReservationFormData;
   totalAmount: number;
 }
@@ -21,6 +22,7 @@ export default function ReservationConfirmModal({
   type,
   date,
   timeSlot,
+  program,
   formData,
   totalAmount,
 }: ReservationConfirmModalProps) {
@@ -49,6 +51,10 @@ export default function ReservationConfirmModal({
       <div className="confirm-row">
         <span className="confirm-label">날짜</span>
         <span className="confirm-value">{date}</span>
+      </div>
+      <div className="confirm-row">
+        <span className="confirm-label">프로그램</span>
+        <span className="confirm-value">{program}</span>
       </div>
       <div className="confirm-row">
         <span className="confirm-label">시간</span>

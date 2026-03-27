@@ -54,13 +54,13 @@ function MonthCalendar({
       <div className="calendar-header">
         {onPrev ? (
           <button className="calendar-nav-btn" onClick={onPrev} disabled={prevDisabled} style={prevDisabled ? { opacity: 0.3, cursor: "default" } : undefined}>◀</button>
-        ) : <span />}
+        ) : <span className="calendar-nav-btn" style={{ visibility: "hidden" }}>◀</span>}
         <h3>
           {year}년 {month + 1}월
         </h3>
         {onNext ? (
           <button className="calendar-nav-btn" onClick={onNext}>▶</button>
-        ) : <span />}
+        ) : <span className="calendar-nav-btn" style={{ visibility: "hidden" }}>▶</span>}
       </div>
       <div className="calendar-weekdays">
         {WEEKDAYS.map((wd, i) => (
