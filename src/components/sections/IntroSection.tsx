@@ -5,7 +5,7 @@ import Image from "next/image";
 import { fetchApi } from "@/lib/api";
 import ImageModal from "@/components/modal/ImageModal";
 
-interface Gallery { id: number; title: string; image_url: string; sort_order: number; }
+interface Gallery { id: number; title: string | null; image_url: string; sort_order: number; }
 
 const INTRO_TABS = ["다율숲", "찾아오시는 길", "주요시설", "주변관광"];
 
@@ -34,6 +34,11 @@ export default function IntroSection() {
       const next = modalImage.index + 1;
       setModalImage({ ...modalImage.list[next], list: modalImage.list, index: next });
     }
+  };
+
+  const getGalleryLabel = (title: string | null | undefined, fallback: string) => {
+    const trimmed = title?.trim();
+    return trimmed || fallback;
   };
 
   return (
@@ -114,13 +119,28 @@ export default function IntroSection() {
                   key={facility.id}
                   className="facility-card"
                   onClick={() => {
-                    const list = facilities.map(f => ({ src: f.image_url, alt: f.title }));
-                    setModalImage({ src: facility.image_url, alt: facility.title, list, index: i });
+                    const list = facilities.map((f, index) => ({
+                      src: f.image_url,
+                      alt: getGalleryLabel(f.title, `주요시설 ${index + 1}`),
+                    }));
+                    setModalImage({
+                      src: facility.image_url,
+                      alt: getGalleryLabel(facility.title, `주요시설 ${i + 1}`),
+                      list,
+                      index: i,
+                    });
                   }}
                   style={{ cursor: "pointer" }}
                 >
-                  <Image src={facility.image_url} alt={facility.title} className="facility-card-img" width={240} height={120} sizes="50vw" />
-                  <p className="facility-card-name">{facility.title}</p>
+                  <Image
+                    src={facility.image_url}
+                    alt={getGalleryLabel(facility.title, `주요시설 ${i + 1}`)}
+                    className="facility-card-img"
+                    width={240}
+                    height={120}
+                    sizes="50vw"
+                  />
+                  <p className="facility-card-name">{getGalleryLabel(facility.title, `주요시설 ${i + 1}`)}</p>
                 </div>
               ))}
             </div>
@@ -145,13 +165,28 @@ export default function IntroSection() {
                   key={spot.id}
                   className="facility-card"
                   onClick={() => {
-                    const list = tourism.map(s => ({ src: s.image_url, alt: s.title }));
-                    setModalImage({ src: spot.image_url, alt: spot.title, list, index: i });
+                    const list = tourism.map((s, index) => ({
+                      src: s.image_url,
+                      alt: getGalleryLabel(s.title, `주변 관광지 ${index + 1}`),
+                    }));
+                    setModalImage({
+                      src: spot.image_url,
+                      alt: getGalleryLabel(spot.title, `주변 관광지 ${i + 1}`),
+                      list,
+                      index: i,
+                    });
                   }}
                   style={{ cursor: "pointer" }}
                 >
-                  <Image src={spot.image_url} alt={spot.title} className="facility-card-img" width={240} height={120} sizes="50vw" />
-                  <p className="facility-card-name">{spot.title}</p>
+                  <Image
+                    src={spot.image_url}
+                    alt={getGalleryLabel(spot.title, `주변 관광지 ${i + 1}`)}
+                    className="facility-card-img"
+                    width={240}
+                    height={120}
+                    sizes="50vw"
+                  />
+                  <p className="facility-card-name">{getGalleryLabel(spot.title, `주변 관광지 ${i + 1}`)}</p>
                 </div>
               ))}
             </div>

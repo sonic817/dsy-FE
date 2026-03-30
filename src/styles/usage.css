@@ -83,6 +83,51 @@
   text-align: center;
 }
 
+.fee-title-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fee-title-nav .refund-title {
+  margin: 0 0 12px;
+}
+
+.fee-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: var(--fs-title-md);
+  color: var(--text);
+  cursor: pointer;
+  padding: 4px 8px;
+  font-weight: 700;
+}
+
+.fee-nav-btn:first-child {
+  left: 0;
+}
+
+.fee-nav-btn:last-child {
+  right: 0;
+}
+
+.fee-nav-btn:disabled {
+  color: var(--border);
+  cursor: default;
+}
+
+.fee-program-tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .fee-refund-layout {
   display: grid;
   grid-template-columns: 1fr;

@@ -1,7 +1,7 @@
 :root {
-  --primary: #2d7d46;
-  --primary-dark: #1e5c32;
-  --primary-light: #e8f5e9;
+  --primary: #024a2c;
+  --primary-dark: #013820;
+  --primary-light: #e0f2e9;
   --accent: #8bc34a;
   --bg: #ffffff;
   --bg-section: #f9faf8;
@@ -11,12 +11,12 @@
   --border: #ddd;
   --red-placeholder: #e53935;
   --calendar-today: #ffeb3b;
-  --calendar-selected: #2d7d46;
+  --calendar-selected: #024a2c;
   --slot-morning: #4caf50;
   --slot-afternoon: #ff9800;
   --slot-night: #3f51b5;
-  --scrollbar-thumb: rgba(45, 125, 70, 0.35);
-  --scrollbar-thumb-hover: rgba(45, 125, 70, 0.5);
+  --scrollbar-thumb: rgba(2, 74, 44, 0.35);
+  --scrollbar-thumb-hover: rgba(2, 74, 44, 0.5);
   --scrollbar-track: transparent;
   --fs-caption: 0.75rem;
   --fs-label: 0.875rem;

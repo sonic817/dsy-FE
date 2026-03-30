@@ -5,7 +5,7 @@ import Image from "next/image";
 import MobileInfoCard from "@/components/common/MobileInfoCard";
 import Modal from "@/components/modal/Modal";
 import { fetchApi } from "@/lib/api";
-import { useFees } from "@/lib/useFees";
+import { useProgramFees } from "@/lib/useProgramFees";
 
 interface Program { id: number; name: string; description: string; image_url: string | null; }
 
@@ -17,13 +17,17 @@ export default function UsageGuideSection() {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
   const [isProgramModalOpen, setIsProgramModalOpen] = useState(false);
-  const { fees, loading: loadingFees } = useFees();
+  const { programFees, loading: loadingFees } = useProgramFees();
   const [loadingPrograms, setLoadingPrograms] = useState(true);
+  const [feeProgram, setFeeProgram] = useState<Program | null>(null);
 
   useEffect(() => {
     fetchApi("/api/programs").then((r) => r.json()).then((data: Program[]) => {
       setPrograms(data);
-      if (data.length > 0) setSelectedProgram(data[0]);
+      if (data.length > 0) {
+        setSelectedProgram(data[0]);
+        setFeeProgram(data[0]);
+      }
     }).catch(() => {}).finally(() => setLoadingPrograms(false));
   }, []);
 
@@ -123,7 +127,7 @@ export default function UsageGuideSection() {
             <h4>단체 예약</h4>
             <ul>
               <li>10인 이상 단체 예약 가능</li>
-              <li>전화(052-914-6967) 또는 이메일(dis2412@naver.com)로 사전 문의</li>
+              <li>전화(0507-1317-1974) 또는 이메일(dis2412@naver.com)로 사전 문의</li>
             </ul>
             <p className="usage-info-notice">예약 변경 및 취소는 이용일 기준 정책에 따라 처리됩니다.</p>
           </div>
@@ -139,7 +143,7 @@ export default function UsageGuideSection() {
             </ul>
             <h4>문의 방법</h4>
             <ul>
-              <li>전화: 052-914-6967</li>
+              <li>전화: 0507-1317-1974</li>
               <li>이메일: dis2412@naver.com</li>
             </ul>
             <p className="usage-info-notice">대관 일정은 사전 협의가 필요하며, 운영 상황에 따라 조정될 수 있습니다.</p>
@@ -150,7 +154,25 @@ export default function UsageGuideSection() {
         <div className={`tab-content ${activeTab === 3 ? "active" : ""}`}>
           <div className="fee-refund-layout">
             <div className="fee-refund-panel">
-              <h4 className="refund-title">이용료</h4>
+              <div className="fee-title-nav">
+                <button
+                  className="fee-nav-btn"
+                  onClick={() => {
+                    const idx = programs.findIndex((p) => p.id === feeProgram?.id);
+                    if (idx > 0) setFeeProgram(programs[idx - 1]);
+                  }}
+                  disabled={programs.findIndex((p) => p.id === feeProgram?.id) <= 0}
+                >&lt;</button>
+                <h4 className="refund-title">{feeProgram?.name ?? ""} 이용료</h4>
+                <button
+                  className="fee-nav-btn"
+                  onClick={() => {
+                    const idx = programs.findIndex((p) => p.id === feeProgram?.id);
+                    if (idx < programs.length - 1) setFeeProgram(programs[idx + 1]);
+                  }}
+                  disabled={programs.findIndex((p) => p.id === feeProgram?.id) >= programs.length - 1}
+                >&gt;</button>
+              </div>
               <table className="fee-table">
                 <thead>
                   <tr>
@@ -168,16 +190,24 @@ export default function UsageGuideSection() {
                         <td><div className="skeleton-box" style={{ height: 14, width: "60%", margin: "0 auto" }} /></td>
                       </tr>
                     ))
-                  ) : fees.map((fee) => (
-                    <tr key={fee.id}>
-                      <td>{PERIOD_LABELS[fee.period] || fee.period}</td>
-                      <td>{fee.individual_price.toLocaleString()}원</td>
-                      <td>{fee.group_price.toLocaleString()}원</td>
-                    </tr>
-                  ))}
+                  ) : (["morning", "afternoon", "night"] as const).map((period) => {
+                    const individual = programFees.find(
+                      (f) => f.program_id === feeProgram?.id && f.reservation_type === "individual" && f.period === period
+                    );
+                    const group = programFees.find(
+                      (f) => f.program_id === feeProgram?.id && f.reservation_type === "group" && f.period === period
+                    );
+                    return (
+                      <tr key={period}>
+                        <td>{PERIOD_LABELS[period]}</td>
+                        <td>{individual ? `${individual.price.toLocaleString()}원` : "-"}</td>
+                        <td>{group ? `${group.price.toLocaleString()}원` : "-"}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
-              <p className="fee-notice">이용료는 변경될 수 있습니다.</p>
+              <p className="fee-notice">단체는 10인 이상입니다.</p>
             </div>
             <div className="fee-refund-panel">
               <h4 className="refund-title">취소 및 환불 규정</h4>

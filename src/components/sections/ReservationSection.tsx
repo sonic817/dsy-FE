@@ -8,7 +8,7 @@ import ReservationConfirmModal from "@/components/modal/ReservationConfirmModal"
 import ReservationCompleteModal from "@/components/modal/ReservationCompleteModal";
 import ReservationCheckSection from "@/components/sections/ReservationCheckSection";
 import { fetchApi } from "@/lib/api";
-import { useFees } from "@/lib/useFees";
+import { useProgramFees } from "@/lib/useProgramFees";
 import { formatPhone, filterName } from "@/lib/formatters";
 import type { ReservationType, ReservationFormData } from "@/types";
 
@@ -42,7 +42,7 @@ export default function ReservationSection() {
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
   const [programs, setPrograms] = useState<Program[]>([]);
-  const { fees } = useFees();
+  const { programFees } = useProgramFees();
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [loadingPrograms, setLoadingPrograms] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -139,11 +139,14 @@ export default function ReservationSection() {
   };
 
   const getUnitPrice = () => {
-    if (!selectedSlot) return 0;
+    if (!selectedSlot || !selectedProgram) return 0;
     const slotInfo = slots.find((s) => s.name === selectedSlot);
-    const fee = fees.find((f) => f.period === slotInfo?.period);
+    if (!slotInfo) return 0;
+    const fee = programFees.find(
+      (f) => f.program_id === selectedProgram.id && f.reservation_type === type && f.period === slotInfo.period
+    );
     if (!fee) return 0;
-    return type === "individual" ? fee.individual_price : fee.group_price;
+    return fee.price;
   };
 
   const unitPrice = getUnitPrice();
@@ -267,6 +270,7 @@ export default function ReservationSection() {
     selectedDate &&
     selectedProgram &&
     selectedSlot &&
+    unitPrice > 0 &&
     formData.name.trim() &&
     formData.email.trim() &&
     formData.phone.trim() &&

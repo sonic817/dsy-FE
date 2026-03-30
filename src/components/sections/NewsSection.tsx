@@ -11,7 +11,7 @@ import type { NewsItem } from "@/components/sections/news/types";
 
 interface Gallery {
   id: number;
-  title: string;
+  title: string | null;
   image_url: string;
   sort_order: number;
 }
@@ -99,6 +99,11 @@ export default function NewsSection() {
     }
   };
 
+  const getGalleryLabel = (title: string | null | undefined, fallback: string) => {
+    const trimmed = title?.trim();
+    return trimmed || fallback;
+  };
+
   return (
     <section id="news" className="section news-section">
       <div className="container">
@@ -141,13 +146,28 @@ export default function NewsSection() {
                   key={item.id}
                   className="facility-card"
                   onClick={() => {
-                    const list = galleryItems.map((g) => ({ src: g.image_url, alt: g.title }));
-                    setModalImage({ src: item.image_url, alt: item.title, list, index: i });
+                    const list = galleryItems.map((g, index) => ({
+                      src: g.image_url,
+                      alt: getGalleryLabel(g.title, `참여갤러리 ${index + 1}`),
+                    }));
+                    setModalImage({
+                      src: item.image_url,
+                      alt: getGalleryLabel(item.title, `참여갤러리 ${i + 1}`),
+                      list,
+                      index: i,
+                    });
                   }}
                   style={{ cursor: "pointer" }}
                 >
-                  <Image src={item.image_url} alt={item.title} className="facility-card-img" width={240} height={120} sizes="50vw" />
-                  <p className="facility-card-name">{item.title}</p>
+                  <Image
+                    src={item.image_url}
+                    alt={getGalleryLabel(item.title, `참여갤러리 ${i + 1}`)}
+                    className="facility-card-img"
+                    width={240}
+                    height={120}
+                    sizes="50vw"
+                  />
+                  <p className="facility-card-name">{getGalleryLabel(item.title, `참여갤러리 ${i + 1}`)}</p>
                 </div>
               ))}
             </div>

@@ -5,7 +5,7 @@ export default function Footer() {
         <div className="footer-inner">
           <div className="footer-left">
             <h3 className="footer-title">다율숲 주식회사</h3>
-            <p className="footer-contact">문의: 052-914-6967</p>
+            <p className="footer-contact">문의: 0507-1317-1974</p>
             <p className="footer-hours">평일 10:00 - 18:00 | 주말 · 공휴일 휴무</p>
           </div>
           <div className="footer-divider-mobile" />
@@ -13,7 +13,8 @@ export default function Footer() {
             <p>대표 하우석</p>
             <p>사업자등록번호 818-86-03659</p>
             <p>통신판매업신고 제2026-울산북구-0104호</p>
-            <p>울산광역시 북구 동남로 477, 1층</p>
+            <p>(도로명) 울산광역시 북구 동남로 477, 1층</p>
+            <p>(지번) 울산광역시 북구 대안동 606-8</p>
             <p>이메일 dis2412@naver.com</p>
             <p>개인정보관리책임자 하우석</p>
           </div>
