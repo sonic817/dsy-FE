@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Gowun_Dodum } from "next/font/google";
 import "./globals.css";
 
-const sbAggroM = localFont({
-  src: "../../public/fonts/sb-aggro-m.woff2",
+const gowunDodum = Gowun_Dodum({
+  weight: "400",
+  subsets: ["latin"],
   variable: "--font-body",
-  display: "swap",
-});
-
-const sbAggroL = localFont({
-  src: "../../public/fonts/sb-aggro-l.woff2",
-  variable: "--font-logo",
   display: "swap",
 });
 
@@ -25,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${sbAggroM.variable} ${sbAggroL.variable}`}>
+    <html lang="ko" className={gowunDodum.variable}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: `history.scrollRestoration = "manual"` }} />
       </head>
