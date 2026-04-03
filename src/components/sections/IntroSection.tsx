@@ -5,6 +5,12 @@ import Image from "next/image";
 import NaverMap from "@/components/common/NaverMap";
 import ImageModal from "@/components/modal/ImageModal";
 import { fetchApi } from "@/lib/api";
+import {
+  buildGalleryModalState,
+  getAdjacentGalleryModalState,
+  getGalleryLabel,
+  type GalleryModalState,
+} from "@/lib/gallery";
 
 interface Gallery {
   id: number;
@@ -25,45 +31,28 @@ export default function IntroSection() {
   const [tourism, setTourism] = useState<Gallery[]>([]);
   const [loadingFacilities, setLoadingFacilities] = useState(true);
   const [loadingTourism, setLoadingTourism] = useState(true);
-  const [modalImage, setModalImage] = useState<{
-    src: string;
-    alt: string;
-    list?: { src: string; alt: string }[];
-    index?: number;
-  } | null>(null);
+  const [modalImage, setModalImage] = useState<GalleryModalState | null>(null);
 
   useEffect(() => {
     fetchApi("/api/galleries?category=facility")
       .then((r) => r.json())
       .then(setFacilities)
-      .catch(() => {})
+      .catch((error) => {
+        console.error("[IntroSection] Failed to load facility galleries.", error);
+      })
       .finally(() => setLoadingFacilities(false));
 
     fetchApi("/api/galleries?category=tourism")
       .then((r) => r.json())
       .then(setTourism)
-      .catch(() => {})
+      .catch((error) => {
+        console.error("[IntroSection] Failed to load tourism galleries.", error);
+      })
       .finally(() => setLoadingTourism(false));
   }, []);
 
-  const goModalPrev = () => {
-    if (modalImage?.list && modalImage.index !== undefined && modalImage.index > 0) {
-      const prev = modalImage.index - 1;
-      setModalImage({ ...modalImage.list[prev], list: modalImage.list, index: prev });
-    }
-  };
-
-  const goModalNext = () => {
-    if (modalImage?.list && modalImage.index !== undefined && modalImage.index < modalImage.list.length - 1) {
-      const next = modalImage.index + 1;
-      setModalImage({ ...modalImage.list[next], list: modalImage.list, index: next });
-    }
-  };
-
-  const getGalleryLabel = (title: string | null | undefined, fallback: string) => {
-    const trimmed = title?.trim();
-    return trimmed || fallback;
-  };
+  const previousModalImage = getAdjacentGalleryModalState(modalImage, -1);
+  const nextModalImage = getAdjacentGalleryModalState(modalImage, 1);
 
   return (
     <section id="intro" className="section intro-section">
@@ -174,13 +163,7 @@ export default function IntroSection() {
                       src: item.image_url,
                       alt: getGalleryLabel(item.title, `주요시설 ${index + 1}`),
                     }));
-
-                    setModalImage({
-                      src: facility.image_url,
-                      alt: getGalleryLabel(facility.title, `주요시설 ${i + 1}`),
-                      list,
-                      index: i,
-                    });
+                    setModalImage(buildGalleryModalState(list, i));
                   }}
                   style={{ cursor: "pointer" }}
                 >
@@ -220,13 +203,7 @@ export default function IntroSection() {
                       src: item.image_url,
                       alt: getGalleryLabel(item.title, `주변관광 ${index + 1}`),
                     }));
-
-                    setModalImage({
-                      src: spot.image_url,
-                      alt: getGalleryLabel(spot.title, `주변관광 ${i + 1}`),
-                      list,
-                      index: i,
-                    });
+                    setModalImage(buildGalleryModalState(list, i));
                   }}
                   style={{ cursor: "pointer" }}
                 >
@@ -254,16 +231,10 @@ export default function IntroSection() {
         list={modalImage?.list}
         index={modalImage?.index}
         onSlideChange={(index) => {
-          if (modalImage?.list) {
-            setModalImage({ ...modalImage.list[index], list: modalImage.list, index });
-          }
+          setModalImage((current) => buildGalleryModalState(current?.list || [], index));
         }}
-        onPrev={modalImage?.list && modalImage.index !== undefined && modalImage.index > 0 ? goModalPrev : undefined}
-        onNext={
-          modalImage?.list && modalImage.index !== undefined && modalImage.index < modalImage.list.length - 1
-            ? goModalNext
-            : undefined
-        }
+        onPrev={previousModalImage ? () => setModalImage(previousModalImage) : undefined}
+        onNext={nextModalImage ? () => setModalImage(nextModalImage) : undefined}
       />
     </section>
   );

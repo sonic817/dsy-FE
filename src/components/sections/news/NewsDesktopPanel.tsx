@@ -1,6 +1,7 @@
 "use client";
 
 import type { NewsItem } from "./types";
+import { hasAttachment } from "./utils";
 
 interface NewsDesktopPanelProps {
   items: NewsItem[];
@@ -9,9 +10,6 @@ interface NewsDesktopPanelProps {
   onSelect: (item: NewsItem) => void;
   formatDate: (dateStr: string) => string;
 }
-
-const hasAttachment = (item: NewsItem) =>
-  Boolean(item.has_attachment || item.attachment_name || item.attachment_url || item.file_name || item.file_url);
 
 export default function NewsDesktopPanel({
   items,

@@ -120,10 +120,6 @@ export default function NaverMap({ active, latitude, longitude, label }: NaverMa
         pixelOffset: new naverMaps.Point(0, 12),
       });
 
-      naverMaps.Event.addListener(mapRef.current, "zoom_changed", (zoom: number) => {
-        console.log("[NaverMap] zoom:", zoom);
-      });
-
       naverMaps.Event.addListener(markerRef.current, "click", () => {
         if (!infoWindowRef.current) {
           return;

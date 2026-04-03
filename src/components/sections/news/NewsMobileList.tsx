@@ -1,6 +1,7 @@
 "use client";
 
 import type { NewsItem } from "./types";
+import { hasAttachment } from "./utils";
 
 interface NewsMobileListProps {
   items: NewsItem[];
@@ -8,9 +9,6 @@ interface NewsMobileListProps {
   formatDate: (dateStr: string) => string;
   onOpen: (item: NewsItem) => void;
 }
-
-const hasAttachment = (item: NewsItem) =>
-  Boolean(item.has_attachment || item.attachment_name || item.attachment_url || item.file_name || item.file_url);
 
 export default function NewsMobileList({
   items,

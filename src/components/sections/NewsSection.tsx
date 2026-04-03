@@ -8,6 +8,12 @@ import ImageModal from "@/components/modal/ImageModal";
 import NewsDesktopPanel from "@/components/sections/news/NewsDesktopPanel";
 import NewsMobileList from "@/components/sections/news/NewsMobileList";
 import type { NewsItem } from "@/components/sections/news/types";
+import {
+  buildGalleryModalState,
+  getAdjacentGalleryModalState,
+  getGalleryLabel,
+  type GalleryModalState,
+} from "@/lib/gallery";
 
 interface Gallery {
   id: number;
@@ -29,7 +35,7 @@ export default function NewsSection() {
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
   const [selectedNotice, setSelectedNotice] = useState<NewsItem | null>(null);
   const [mobileModalNews, setMobileModalNews] = useState<NewsItem | null>(null);
-  const [modalImage, setModalImage] = useState<{ src: string; alt: string; list?: { src: string; alt: string }[]; index?: number } | null>(null);
+  const [modalImage, setModalImage] = useState<GalleryModalState | null>(null);
 
   useEffect(() => {
     fetchApi("/api/news?category=news")
@@ -38,7 +44,9 @@ export default function NewsSection() {
         setNewsItems(data);
         if (data.length > 0) setSelectedNews(data[0]);
       })
-      .catch(() => {})
+      .catch((error) => {
+        console.error("[NewsSection] Failed to load news items.", error);
+      })
       .finally(() => setLoadingNews(false));
 
     fetchApi("/api/news?category=notice")
@@ -47,13 +55,17 @@ export default function NewsSection() {
         setNoticeItems(data);
         if (data.length > 0) setSelectedNotice(data[0]);
       })
-      .catch(() => {})
+      .catch((error) => {
+        console.error("[NewsSection] Failed to load notice items.", error);
+      })
       .finally(() => setLoadingNotice(false));
 
     fetchApi("/api/galleries?category=gallery")
       .then((r) => r.json())
       .then(setGalleryItems)
-      .catch(() => {})
+      .catch((error) => {
+        console.error("[NewsSection] Failed to load gallery items.", error);
+      })
       .finally(() => setLoadingGallery(false));
   }, []);
 
@@ -85,25 +97,6 @@ export default function NewsSection() {
     </>
   );
 
-  const goModalPrev = () => {
-    if (modalImage?.list && modalImage.index !== undefined && modalImage.index > 0) {
-      const prev = modalImage.index - 1;
-      setModalImage({ ...modalImage.list[prev], list: modalImage.list, index: prev });
-    }
-  };
-
-  const goModalNext = () => {
-    if (modalImage?.list && modalImage.index !== undefined && modalImage.index < modalImage.list.length - 1) {
-      const next = modalImage.index + 1;
-      setModalImage({ ...modalImage.list[next], list: modalImage.list, index: next });
-    }
-  };
-
-  const getGalleryLabel = (title: string | null | undefined, fallback: string) => {
-    const trimmed = title?.trim();
-    return trimmed || fallback;
-  };
-
   const getMobileModalItems = (): NewsItem[] => {
     if (activeTab === 0) return newsItems;
     if (activeTab === 1) return noticeItems;
@@ -119,6 +112,8 @@ export default function NewsSection() {
     mobileModalIndex >= 0 && mobileModalIndex < mobileModalItems.length - 1
       ? mobileModalItems[mobileModalIndex + 1]
       : null;
+  const previousModalImage = getAdjacentGalleryModalState(modalImage, -1);
+  const nextModalImage = getAdjacentGalleryModalState(modalImage, 1);
 
   return (
     <section id="news" className="section news-section">
@@ -166,12 +161,7 @@ export default function NewsSection() {
                       src: g.image_url,
                       alt: getGalleryLabel(g.title, `참여갤러리 ${index + 1}`),
                     }));
-                    setModalImage({
-                      src: item.image_url,
-                      alt: getGalleryLabel(item.title, `참여갤러리 ${i + 1}`),
-                      list,
-                      index: i,
-                    });
+                    setModalImage(buildGalleryModalState(list, i));
                   }}
                   style={{ cursor: "pointer" }}
                 >
@@ -211,10 +201,10 @@ export default function NewsSection() {
         list={modalImage?.list}
         index={modalImage?.index}
         onSlideChange={(i) => {
-          if (modalImage?.list) setModalImage({ ...modalImage.list[i], list: modalImage.list, index: i });
+          setModalImage((current) => buildGalleryModalState(current?.list || [], i));
         }}
-        onPrev={modalImage?.list && modalImage.index !== undefined && modalImage.index > 0 ? goModalPrev : undefined}
-        onNext={modalImage?.list && modalImage.index !== undefined && modalImage.index < modalImage.list.length - 1 ? goModalNext : undefined}
+        onPrev={previousModalImage ? () => setModalImage(previousModalImage) : undefined}
+        onNext={nextModalImage ? () => setModalImage(nextModalImage) : undefined}
       />
     </section>
   );
