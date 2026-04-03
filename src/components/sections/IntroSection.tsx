@@ -1,13 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { fetchApi } from "@/lib/api";
+import NaverMap from "@/components/common/NaverMap";
 import ImageModal from "@/components/modal/ImageModal";
+import { fetchApi } from "@/lib/api";
 
-interface Gallery { id: number; title: string | null; image_url: string; sort_order: number; }
+interface Gallery {
+  id: number;
+  title: string | null;
+  image_url: string;
+  sort_order: number;
+}
 
 const INTRO_TABS = ["다율숲", "찾아오시는 길", "주요시설", "주변관광"];
+const DAYUL_SOOP_COORDS = {
+  latitude: 35.662981387662974,
+  longitude: 129.40243367701228,
+};
 
 export default function IntroSection() {
   const [activeTab, setActiveTab] = useState(0);
@@ -15,11 +25,25 @@ export default function IntroSection() {
   const [tourism, setTourism] = useState<Gallery[]>([]);
   const [loadingFacilities, setLoadingFacilities] = useState(true);
   const [loadingTourism, setLoadingTourism] = useState(true);
-  const [modalImage, setModalImage] = useState<{ src: string; alt: string; list?: { src: string; alt: string }[]; index?: number } | null>(null);
+  const [modalImage, setModalImage] = useState<{
+    src: string;
+    alt: string;
+    list?: { src: string; alt: string }[];
+    index?: number;
+  } | null>(null);
 
   useEffect(() => {
-    fetchApi("/api/galleries?category=facility").then((r) => r.json()).then(setFacilities).catch(() => {}).finally(() => setLoadingFacilities(false));
-    fetchApi("/api/galleries?category=tourism").then((r) => r.json()).then(setTourism).catch(() => {}).finally(() => setLoadingTourism(false));
+    fetchApi("/api/galleries?category=facility")
+      .then((r) => r.json())
+      .then(setFacilities)
+      .catch(() => {})
+      .finally(() => setLoadingFacilities(false));
+
+    fetchApi("/api/galleries?category=tourism")
+      .then((r) => r.json())
+      .then(setTourism)
+      .catch(() => {})
+      .finally(() => setLoadingTourism(false));
   }, []);
 
   const goModalPrev = () => {
@@ -49,7 +73,7 @@ export default function IntroSection() {
         <div className="tabs">
           {INTRO_TABS.map((tab, index) => (
             <button
-              key={index}
+              key={tab}
               className={`tab-btn ${activeTab === index ? "active" : ""}`}
               onClick={() => setActiveTab(index)}
             >
@@ -58,50 +82,53 @@ export default function IntroSection() {
           ))}
         </div>
 
-        {/* 다율숲 */}
         <div className={`tab-content ${activeTab === 0 ? "active" : ""}`}>
-          <Image
-            src="https://pub-6e4c4b7de2a64b20a6f4ed43bc11a71e.r2.dev/prod/static/3010cb09-4e43-4044-9865-e1bad91b0abc.png"
-            alt="다율숲 대표 이미지"
-            className="intro-main-img"
-            width={480}
-            height={320}
-            sizes="(min-width: 1024px) 1100px, 100vw"
-          />
-          <div className="intro-info">
-            <h4>다율숲 소개</h4>
-            <p>
-              다율숲은 자연 속에서 힐링과 체험을 제공하는 공간입니다.
-              다양한 숲체험 프로그램과 함께 특별한 시간을 보내세요.
-            </p>
+          <div className="intro-info intro-info-about">
+            <div className="intro-info-logo">
+              <Image src="/intro-logo.png" alt="다율숲 로고" width={160} height={160} sizes="160px" />
+            </div>
+            <div className="intro-info-text">
+              <h4>사람과 숲이 함께 숨 쉬며 성장하는 곳, 다율숲입니다.</h4>
+              <p>
+                다율숲은 단순히 숲을 관찰하는 곳에 머물지 않습니다.
+                <br />
+                <br />
+                생명의 경이로움을 과학적으로 탐구하는 <strong>발견</strong>,
+                <br />
+                아이들의 작은 손길로 숲의 숨결을 일깨우는 <strong>실천</strong>,
+                <br />
+                그리고 숲의 리듬으로 회복을 경험하는 <strong>쉼</strong>이 공존하는 공간입니다.
+                <br />
+                <br />
+                우리 아이들이 자연과 공존하는 지혜를 배우고
+                <br />
+                일상의 스트레스를 비워낼 수 있도록
+                <br />
+                다율숲이 든든한 초록빛 쉼표가 되겠습니다.
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* 찾아오시는 길 */}
         <div className={`tab-content ${activeTab === 1 ? "active" : ""}`}>
-          <Image
-            src="https://pub-6e4c4b7de2a64b20a6f4ed43bc11a71e.r2.dev/prod/static/76edab39-316b-4bc1-a0c3-3475d4b5e641.png"
-            alt="찾아오시는 길"
-            className="map-img"
-            width={480}
-            height={320}
-            sizes="(min-width: 1024px) 1100px, 100vw"
-            onClick={() => setModalImage({ src: "https://pub-6e4c4b7de2a64b20a6f4ed43bc11a71e.r2.dev/prod/static/76edab39-316b-4bc1-a0c3-3475d4b5e641.png", alt: "찾아오시는 길" })}
-            style={{ cursor: "pointer" }}
+          <NaverMap
+            active={activeTab === 1}
+            latitude={DAYUL_SOOP_COORDS.latitude}
+            longitude={DAYUL_SOOP_COORDS.longitude}
+            label="다율숲"
           />
           <div className="intro-info" style={{ marginTop: 16 }}>
-            <h4>오시는 길</h4>
+            <h4>찾아오시는 길</h4>
             <p>
-              주소: 주소를 입력하세요
+              주소: 울산광역시 북구 동남로 477
               <br />
-              대중교통: 교통 정보를 입력하세요
+              일반/위성 전환과 확대, 축소, 드래그로 주변 위치를 함께 확인하실 수 있습니다.
               <br />
-              자가용: 네비게이션에 &quot;다율숲&quot; 검색
+              지도가 보이지 않으면 네이버 지도 Web 서비스 URL 등록값을 다시 확인해 주세요.
             </p>
           </div>
         </div>
 
-        {/* 주요시설 */}
         <div className={`tab-content ${activeTab === 2 ? "active" : ""}`}>
           {loadingFacilities ? (
             <div className="gallery-skeleton">
@@ -119,10 +146,11 @@ export default function IntroSection() {
                   key={facility.id}
                   className="facility-card"
                   onClick={() => {
-                    const list = facilities.map((f, index) => ({
-                      src: f.image_url,
-                      alt: getGalleryLabel(f.title, `주요시설 ${index + 1}`),
+                    const list = facilities.map((item, index) => ({
+                      src: item.image_url,
+                      alt: getGalleryLabel(item.title, `주요시설 ${index + 1}`),
                     }));
+
                     setModalImage({
                       src: facility.image_url,
                       alt: getGalleryLabel(facility.title, `주요시설 ${i + 1}`),
@@ -147,7 +175,6 @@ export default function IntroSection() {
           )}
         </div>
 
-        {/* 주변관광 */}
         <div className={`tab-content ${activeTab === 3 ? "active" : ""}`}>
           {loadingTourism ? (
             <div className="gallery-skeleton">
@@ -165,13 +192,14 @@ export default function IntroSection() {
                   key={spot.id}
                   className="facility-card"
                   onClick={() => {
-                    const list = tourism.map((s, index) => ({
-                      src: s.image_url,
-                      alt: getGalleryLabel(s.title, `주변 관광지 ${index + 1}`),
+                    const list = tourism.map((item, index) => ({
+                      src: item.image_url,
+                      alt: getGalleryLabel(item.title, `주변관광 ${index + 1}`),
                     }));
+
                     setModalImage({
                       src: spot.image_url,
-                      alt: getGalleryLabel(spot.title, `주변 관광지 ${i + 1}`),
+                      alt: getGalleryLabel(spot.title, `주변관광 ${i + 1}`),
                       list,
                       index: i,
                     });
@@ -180,13 +208,13 @@ export default function IntroSection() {
                 >
                   <Image
                     src={spot.image_url}
-                    alt={getGalleryLabel(spot.title, `주변 관광지 ${i + 1}`)}
+                    alt={getGalleryLabel(spot.title, `주변관광 ${i + 1}`)}
                     className="facility-card-img"
                     width={240}
                     height={120}
                     sizes="50vw"
                   />
-                  <p className="facility-card-name">{getGalleryLabel(spot.title, `주변 관광지 ${i + 1}`)}</p>
+                  <p className="facility-card-name">{getGalleryLabel(spot.title, `주변관광 ${i + 1}`)}</p>
                 </div>
               ))}
             </div>
@@ -201,11 +229,17 @@ export default function IntroSection() {
         alt={modalImage?.alt || ""}
         list={modalImage?.list}
         index={modalImage?.index}
-        onSlideChange={(i) => {
-          if (modalImage?.list) setModalImage({ ...modalImage.list[i], list: modalImage.list, index: i });
+        onSlideChange={(index) => {
+          if (modalImage?.list) {
+            setModalImage({ ...modalImage.list[index], list: modalImage.list, index });
+          }
         }}
         onPrev={modalImage?.list && modalImage.index !== undefined && modalImage.index > 0 ? goModalPrev : undefined}
-        onNext={modalImage?.list && modalImage.index !== undefined && modalImage.index < modalImage.list.length - 1 ? goModalNext : undefined}
+        onNext={
+          modalImage?.list && modalImage.index !== undefined && modalImage.index < modalImage.list.length - 1
+            ? goModalNext
+            : undefined
+        }
       />
     </section>
   );

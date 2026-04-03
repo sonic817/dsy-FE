@@ -126,6 +126,20 @@
   }
 
   /* Intro */
+  .intro-info-about {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 460px);
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    max-width: 860px;
+    padding: 40px 48px;
+  }
+
+  .intro-info-logo img {
+    width: 188px;
+  }
+
   .intro-main-img {
     border-radius: 16px;
   }
@@ -140,6 +154,14 @@
 
   .map-img {
     border-radius: 16px;
+  }
+
+  .intro-map {
+    border-radius: 16px;
+  }
+
+  .intro-map-canvas {
+    height: 420px;
   }
 
   /* Grids */

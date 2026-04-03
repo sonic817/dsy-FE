@@ -4,7 +4,7 @@ export default function HeroSection() {
   return (
     <section className="hero">
       <Image
-        src="https://pub-6e4c4b7de2a64b20a6f4ed43bc11a71e.r2.dev/prod/static/1497edab-4a48-4ddb-9baa-18af74ae788d.jpg"
+        src="/hero.jpg"
         alt="다율숲 대표 이미지"
         className="hero-bg"
         fill
@@ -13,11 +13,11 @@ export default function HeroSection() {
       />
       <div className="hero-overlay">
         <h2 className="hero-title">
-          숲으로의 초대,
+          한눈에 펼쳐지는 다율숲,
           <br />
-          자연과 함께하는 행복
+          모든 발걸음이 배움이 됩니다.
         </h2>
-        <p className="hero-subtitle">다율숲에서 특별한 숲체험을 만나보세요</p>
+        <p className="hero-subtitle">실천으로 가꾸고 숲으로 회복하는 우리들의 생태 지도</p>
       </div>
     </section>
   );
