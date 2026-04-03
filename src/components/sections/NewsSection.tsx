@@ -104,6 +104,22 @@ export default function NewsSection() {
     return trimmed || fallback;
   };
 
+  const getMobileModalItems = (): NewsItem[] => {
+    if (activeTab === 0) return newsItems;
+    if (activeTab === 1) return noticeItems;
+    return [];
+  };
+
+  const mobileModalItems = getMobileModalItems();
+  const mobileModalIndex = mobileModalNews
+    ? mobileModalItems.findIndex((item) => item.id === mobileModalNews.id)
+    : -1;
+  const mobilePrevNews = mobileModalIndex > 0 ? mobileModalItems[mobileModalIndex - 1] : null;
+  const mobileNextNews =
+    mobileModalIndex >= 0 && mobileModalIndex < mobileModalItems.length - 1
+      ? mobileModalItems[mobileModalIndex + 1]
+      : null;
+
   return (
     <section id="news" className="section news-section">
       <div className="container">
@@ -181,6 +197,10 @@ export default function NewsSection() {
         title={mobileModalNews?.title || ""}
         date={mobileModalNews ? formatDate(mobileModalNews.created_at) : ""}
         content={mobileModalNews?.content || ""}
+        previousTitle={mobilePrevNews?.title || ""}
+        nextTitle={mobileNextNews?.title || ""}
+        onPrevious={mobilePrevNews ? () => setMobileModalNews(mobilePrevNews) : undefined}
+        onNext={mobileNextNews ? () => setMobileModalNews(mobileNextNews) : undefined}
       />
 
       <ImageModal

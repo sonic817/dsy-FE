@@ -228,6 +228,10 @@
   white-space: pre-line;
 }
 
+.news-detail-nav-modal {
+  margin-top: 20px;
+}
+
 /* Lightbox (mobile fullscreen) */
 .lightbox {
   position: fixed;

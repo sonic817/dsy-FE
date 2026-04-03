@@ -2,11 +2,8 @@
   background: #fff;
 }
 
-/* 모바일: 카드 리스트 */
 .news-mobile-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: block;
 }
 
 .news-mobile-modal {
@@ -17,41 +14,117 @@
   display: none;
 }
 
-.news-item {
+.news-board {
+  border: 1px solid var(--border);
+  border-radius: 14px;
   background: #fff;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.news-board-scroll {
+  overflow-x: auto;
+}
+
+.news-board-table {
+  min-width: 720px;
+}
+
+.news-board-row {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) 72px 120px;
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 0 16px;
+  border-bottom: 1px solid #eef1ed;
+}
+
+.news-board-row:last-child {
+  border-bottom: none;
+}
+
+.news-board-header {
+  min-height: 48px;
+  background: #f7faf7;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.news-board-item {
+  width: 100%;
+  background: #fff;
+  border: none;
+  font: inherit;
+  text-align: left;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
-.news-item-title {
-  font-weight: 600;
+.news-board-item:hover {
+  background: #f9fbf8;
+}
+
+.news-board-item.active {
+  background: var(--primary-light);
+}
+
+.news-board-cell {
+  min-width: 0;
   font-size: var(--fs-body-sm);
-  margin-bottom: 4px;
+  color: var(--text);
+  line-height: 1.4;
 }
 
-.news-item-date {
+.news-board-cell-number,
+.news-board-cell-attachment,
+.news-board-cell-date {
+  text-align: center;
+}
+
+.news-board-cell-title {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.news-board-cell-date,
+.news-board-cell-attachment {
   font-size: var(--fs-label);
   color: var(--text-light);
 }
 
-/* 데스크톱: 두 패널 */
-.news-panel-item {
-  padding: 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: 1px solid var(--border);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+.news-board-row-skeleton {
+  cursor: default;
 }
 
-.news-panel-item:hover {
-  background: var(--primary-light);
+.news-board-skeleton {
+  height: 14px;
+  border-radius: 999px;
 }
 
-.news-panel-item.active {
-  background: var(--primary-light);
+.news-board-skeleton-number,
+.news-board-skeleton-attachment {
+  width: 28px;
+  justify-self: center;
+}
+
+.news-board-skeleton-title {
+  width: 100%;
+}
+
+.news-board-skeleton-date {
+  width: 72px;
+  justify-self: center;
+}
+
+.news-board-empty {
+  padding: 48px 24px;
+  color: var(--text-light);
+  text-align: center;
+  font-size: var(--fs-body-sm);
 }
 
 .news-panel-detail {
@@ -85,6 +158,54 @@
   white-space: pre-line;
 }
 
+.news-detail-nav {
+  margin-top: 28px;
+  border-top: 1px solid var(--border);
+}
+
+.news-detail-nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.news-detail-nav-item:last-child {
+  border-bottom: none;
+}
+
+.news-detail-nav-item.disabled {
+  cursor: default;
+}
+
+.news-detail-nav-label {
+  flex: 0 0 56px;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.news-detail-nav-title {
+  min-width: 0;
+  flex: 1;
+  font-size: var(--fs-body-sm);
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.news-detail-nav-item.disabled .news-detail-nav-title {
+  color: var(--text-light);
+}
+
 .news-panel-detail-empty {
   color: var(--text-light);
   text-align: center;
@@ -92,24 +213,31 @@
 }
 
 @media (max-width: 767px) {
-  .news-mobile-list {
-    max-height: 350px;
-    padding-right: 4px;
-  }
-
-  .news-item {
+  .news-board {
+    border-radius: 12px;
     box-shadow: none;
   }
 
-  .news-mobile-list .news-item-title {
-    margin: 0;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .news-board-table {
+    min-width: 640px;
   }
 
-  .news-mobile-list .news-item-date {
-    margin: 0;
+  .news-board-row {
+    grid-template-columns: 56px minmax(0, 1fr) 56px 96px;
+    gap: 8px;
+    min-height: 50px;
+    padding: 0 12px;
+  }
+
+  .news-board-header {
+    min-height: 42px;
+  }
+
+  .news-board-cell {
+    font-size: var(--fs-label);
+  }
+
+  .news-board-cell-title {
+    font-size: var(--fs-body-sm);
   }
 }
