@@ -141,7 +141,7 @@ export default function NaverMap({ active, latitude, longitude, label }: NaverMa
     <div className="intro-map">
       {NAVER_MAP_CLIENT_ID ? (
         <Script
-          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${NAVER_MAP_CLIENT_ID}`}
+          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${NAVER_MAP_CLIENT_ID}`}
           strategy="afterInteractive"
           onLoad={() => setScriptReady(true)}
         />
