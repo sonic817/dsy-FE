@@ -2,7 +2,7 @@
 
 interface MobileInfoCardProps {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   onClick: () => void;
   selected?: boolean;
   className?: string;
@@ -31,7 +31,7 @@ export default function MobileInfoCard({
     <button type="button" className={buttonClassName} onClick={onClick}>
       <span className={titleTextClassName}>{title}</span>
       <span className="program-select-meta">
-        <span className={subtitleTextClassName}>{subtitle}</span>
+        {subtitle ? <span className={subtitleTextClassName}>{subtitle}</span> : null}
         <span className="program-select-meta-action">{actionLabel}</span>
       </span>
     </button>

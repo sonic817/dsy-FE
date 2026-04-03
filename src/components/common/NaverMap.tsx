@@ -89,11 +89,22 @@ export default function NaverMap({ active, latitude, longitude, label }: NaverMa
         scaleControlOptions: {
           position: naverMaps.Position.BOTTOM_RIGHT,
         },
-        logoControl: true,
-        logoControlOptions: {
-          position: naverMaps.Position.BOTTOM_LEFT,
-        },
+        logoControl: false,
       });
+
+      // 네이버 로고 숨기기
+      const hideLogo = () => {
+        const mapEl = document.getElementById(mapElementId);
+        if (!mapEl) return;
+        const anchors = mapEl.querySelectorAll('a[href*="naver.com"], a[href*="pstatic.net"]');
+        anchors.forEach((a) => {
+          const wrapper = a.parentElement;
+          if (wrapper) wrapper.style.display = "none";
+        });
+      };
+      hideLogo();
+      setTimeout(hideLogo, 300);
+      setTimeout(hideLogo, 1000);
 
       markerRef.current = new naverMaps.Marker({
         position,

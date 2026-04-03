@@ -152,6 +152,22 @@
     font-size: var(--fs-body-lg);
   }
 
+  .intro-heading-mobile {
+    display: none;
+  }
+
+  .intro-heading-desktop {
+    display: block;
+  }
+
+  .intro-info-copy-mobile {
+    display: none;
+  }
+
+  .intro-info-copy-desktop {
+    display: flex;
+  }
+
   .map-img {
     border-radius: 16px;
   }
@@ -239,6 +255,25 @@
   }
 
   /* Reservation */
+  .program-time-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .program-time-area .program-select-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .program-time-area .program-select-panel .program-select-list {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
   .program-image-area {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -249,15 +284,24 @@
     display: block;
   }
 
-  .time-form-area {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    align-items: start;
-  }
-
   .time-select-panel {
     margin-bottom: 0;
+  }
+
+  .reservation-form-layout {
+    flex-direction: row;
+    gap: 32px;
+    align-items: flex-start;
+  }
+
+  .reservation-form-layout .form-summary {
+    flex: 0 0 300px;
+    align-self: flex-start;
+  }
+
+  .reservation-form-layout .reservation-form {
+    flex: 1;
+    min-width: 0;
   }
 
   .calendar-weekday {
@@ -278,8 +322,13 @@
   }
 
   .time-slot-btn {
+    min-height: 60px;
     padding: 12px 0;
     font-size: var(--fs-body-sm);
+  }
+
+  .slot-skeleton-btn {
+    height: 60px;
   }
 
   .reservation-form {

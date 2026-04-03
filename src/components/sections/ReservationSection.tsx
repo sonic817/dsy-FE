@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import Calendar from "@/components/common/Calendar";
 import MobileInfoCard from "@/components/common/MobileInfoCard";
 import Modal from "@/components/modal/Modal";
@@ -54,6 +54,9 @@ export default function ReservationSection() {
     emergencyContact: "",
   });
 
+  const timePanelRef = useRef<HTMLDivElement>(null);
+  const programPanelRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     fetchApi("/api/programs")
       .then((r) => r.json())
@@ -61,6 +64,21 @@ export default function ReservationSection() {
       .catch(() => {})
       .finally(() => setLoadingPrograms(false));
   }, []);
+
+  useEffect(() => {
+    const timeEl = timePanelRef.current;
+    const programEl = programPanelRef.current;
+    if (!timeEl || !programEl) return;
+
+    const sync = () => {
+      programEl.style.maxHeight = `${timeEl.offsetHeight}px`;
+    };
+    sync();
+
+    const observer = new ResizeObserver(sync);
+    observer.observe(timeEl);
+    return () => observer.disconnect();
+  }, [selectedProgram, slots, loadingSlots]);
 
   const fetchSlots = useCallback(async (date: Date) => {
     const y = date.getFullYear();
@@ -152,6 +170,13 @@ export default function ReservationSection() {
   const unitPrice = getUnitPrice();
   const peopleCount = Number(formData.totalPeople.replace(/,/g, "") || "0");
   const totalAmount = unitPrice * peopleCount;
+  const reservationTypeLabel = type === "individual" ? "개인" : "단체";
+  const showPriceSummary = unitPrice > 0 && peopleCount > 0;
+  const timeSlotSkeletonGroups = [
+    { label: "오전", count: 4, gridClass: "" },
+    { label: "오후", count: 4, gridClass: "" },
+    { label: "야간", count: 2, gridClass: "night" },
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -309,12 +334,12 @@ export default function ReservationSection() {
           </div>
         )}
 
-        {/* 프로그램 선택 */}
+        {/* 프로그램 선택 + 시간 선택 */}
         {selectedDate && (
           <div id="program-slots-area">
-            <h3 className="step-title">프로그램 선택</h3>
-            <div className="program-image-area">
-            <div className="program-select-panel">
+            <div className="program-time-area">
+            <div className="program-select-panel" ref={programPanelRef}>
+              <h3 className="step-title">프로그램 선택</h3>
               {loadingPrograms ? (
                 <div className="program-select-skeleton">
                   {Array.from({ length: 3 }).map((_, i) => (
@@ -328,236 +353,273 @@ export default function ReservationSection() {
                       key={program.id}
                       selected={selectedProgram?.id === program.id}
                       title={program.name}
-                      subtitle={program.description}
                       onClick={() => handleProgramSelect(program)}
                     />
                   ))}
                 </div>
               )}
             </div>
-            <div className="program-image-panel">
-              {selectedProgram?.image_url ? (
-                <img
-                  src={selectedProgram.image_url}
-                  alt={selectedProgram.name}
-                  className="program-image"
-                />
-              ) : (
-                <p className="step-placeholder">프로그램을 선택해주세요.</p>
-              )}
+            <div className="time-select-panel" ref={timePanelRef}>
+              <h3 className="step-title">시간 선택</h3>
+              {!selectedProgram ? (
+                <div id="time-slots" className="time-slots-placeholder">
+                  <div className="time-slots-placeholder-skeleton" aria-hidden="true">
+                    {timeSlotSkeletonGroups.map((group) => (
+                      <div key={group.label} className="slot-skeleton-group">
+                        <div className="skeleton-box slot-skeleton-label" />
+                        <div className={`slot-skeleton-grid ${group.gridClass}`}>
+                          {Array.from({ length: group.count }).map((_, i) => (
+                            <div key={i} className="skeleton-box slot-skeleton-btn" />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="time-slots-placeholder-text">프로그램을 먼저 선택해 주세요.</p>
+                </div>
+              ) : loadingSlots ? (
+                <div id="time-slots">
+                  {timeSlotSkeletonGroups.map((group) => (
+                    <div key={group.label} className="slot-skeleton-group">
+                      <div className="skeleton-box slot-skeleton-label" />
+                      <div className={`slot-skeleton-grid ${group.gridClass}`}>
+                        {Array.from({ length: group.count }).map((_, i) => (
+                          <div key={i} className="skeleton-box slot-skeleton-btn" />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : slots.length > 0 ? (
+                <div id="time-slots">
+                  {[
+                    { label: "오전", dotClass: "morning", items: morningSlots, gridClass: "" },
+                    { label: "오후", dotClass: "afternoon", items: afternoonSlots, gridClass: "" },
+                    { label: "야간", dotClass: "night", items: nightSlots, gridClass: "night-grid" },
+                  ].map((group) => (
+                    <div key={group.label} className="time-slot-group">
+                      <p className="time-slot-group-label">
+                        <span className={`dot ${group.dotClass}`} />
+                        {group.label}
+                      </p>
+                      <div className={`time-slot-grid ${group.gridClass}`}>
+                        {group.items.map((slot) => {
+                          const isFull = slot.currentCount >= slot.maxCapacity;
+                          return (
+                            <button
+                              key={slot.id}
+                              className={`time-slot-btn ${selectedSlot === slot.name ? "selected" : ""} ${isFull ? "unavailable" : ""}`}
+                              onClick={() => { if (!isFull) handleSlotSelect(slot); }}
+                              disabled={isFull}
+                            >
+                              <span className="slot-name">{slot.name}</span>
+                              <span className="slot-count">{isFull ? "마감" : `${slot.currentCount}/${slot.maxCapacity}`}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
             </div>
             </div>
           </div>
         )}
 
-        {/* 시간 선택 + 예약 신청 */}
-        {selectedDate && (
-          <div className="time-form-area">
-          <div className="time-select-panel">
-            <h3 className="step-title">시간 선택</h3>
-            {!selectedProgram ? (
-              <p className="step-placeholder">프로그램을 먼저 선택해주세요.</p>
-            ) : loadingSlots ? (
-              <div id="time-slots">
-                {[
-                  { label: "오전", count: 4, gridClass: "" },
-                  { label: "오후", count: 4, gridClass: "" },
-                  { label: "야간", count: 2, gridClass: "night" },
-                ].map((group) => (
-                  <div key={group.label} className="slot-skeleton-group">
-                    <div className="skeleton-box slot-skeleton-label" />
-                    <div className={`slot-skeleton-grid ${group.gridClass}`}>
-                      {Array.from({ length: group.count }).map((_, i) => (
-                        <div key={i} className="skeleton-box slot-skeleton-btn" />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : slots.length > 0 ? (
-              <div id="time-slots">
-                {[
-                  { label: "오전", dotClass: "morning", items: morningSlots, gridClass: "" },
-                  { label: "오후", dotClass: "afternoon", items: afternoonSlots, gridClass: "" },
-                  { label: "야간", dotClass: "night", items: nightSlots, gridClass: "night-grid" },
-                ].map((group) => (
-                  <div key={group.label} className="time-slot-group">
-                    <p className="time-slot-group-label">
-                      <span className={`dot ${group.dotClass}`} />
-                      {group.label}
-                    </p>
-                    <div className={`time-slot-grid ${group.gridClass}`}>
-                      {group.items.map((slot) => {
-                        const isFull = slot.currentCount >= slot.maxCapacity;
-                        return (
-                          <button
-                            key={slot.id}
-                            className={`time-slot-btn ${selectedSlot === slot.name ? "selected" : ""} ${isFull ? "unavailable" : ""}`}
-                            onClick={() => { if (!isFull) handleSlotSelect(slot); }}
-                            disabled={isFull}
-                          >
-                            <span className="slot-name">{slot.name}</span>
-                            <span className="slot-count">{isFull ? "마감" : `${slot.currentCount}/${slot.maxCapacity}`}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : null}
-          </div>
-
-        {/* 예약 신청 폼 */}
-        {selectedSlot && (
+        {/* 예약 신청 */}
+        {selectedDate && selectedSlot && (
         <div className="reservation-form-wrapper" id="reservation-form-wrapper">
-          <h3 className="step-title">예약 신청</h3>
-        <form className="reservation-form" id="reservation-form" onSubmit={handleSubmit}>
-
-          <div className="form-summary">
-            <div className="form-summary-row">
-              <span className="label">날짜</span>
-              <span className="value">
-                {selectedDate ? formatDate(selectedDate) : "미선택"}
-              </span>
-            </div>
-            <div className="form-summary-row">
-              <span className="label">프로그램</span>
-              <span className="value">{selectedProgram?.name || "미선택"}</span>
-            </div>
-            <div className="form-summary-row">
-              <span className="label">시간</span>
-              <span className="value">{selectedSlot || "미선택"}</span>
-            </div>
-            <div className="form-summary-row">
-              <span className="label">이용료</span>
-              <span className="value">{unitPrice > 0 ? `${unitPrice.toLocaleString()}원 / 인` : "미선택"}</span>
-            </div>
+          <div className="reservation-form-header">
+            <h3 className="step-title">예약 신청</h3>
+            <p className="reservation-form-desc">
+              선택한 예약 정보를 확인한 뒤 신청자 정보를 입력해 주세요.
+            </p>
           </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label className="form-label">
-                구분<span className="required">*</span>
-              </label>
-              <div className="form-type-select">
-                <button
-                  type="button"
-                  className={`form-type-btn ${type === "individual" ? "active" : ""}`}
-                  onClick={() => setType("individual")}
-                >
-                  개인
-                </button>
-                <button
-                  type="button"
-                  className={`form-type-btn ${type === "group" ? "active" : ""}`}
-                  onClick={() => setType("group")}
-                >
-                  단체
-                </button>
+          <div className="reservation-form-layout">
+            <aside className="form-summary">
+              <div className="form-summary-head">
+                <span className="form-summary-kicker">선택 내역</span>
+                <strong className="form-summary-title">예약 정보</strong>
+                <p className="form-summary-desc">
+                  신청 전에 일정과 프로그램을 한 번 더 확인해 주세요.
+                </p>
               </div>
-            </div>
-            <div className="form-group">
-              <label className="form-label">
-                참여자 전체 수<span className="required">*</span>
-              </label>
-              <input
-                type="text"
-                inputMode="numeric"
-                className="form-input"
-                placeholder={
-                  type === "individual"
-                    ? "참여 인원 수를 입력하세요"
-                    : "단체 전체 인원 수를 입력하세요"
-                }
-                value={formData.totalPeople}
-                onChange={(e) => handlePeopleChange(e.target.value)}
-                maxLength={5}
-                required
-              />
-            </div>
+
+              <div className="form-summary-emphasis">
+                <span className="form-summary-emphasis-label">일시</span>
+                <strong className="form-summary-emphasis-value">
+                  {selectedDate ? formatDate(selectedDate) : "미선택"}
+                </strong>
+                <span className="form-summary-emphasis-subvalue">{selectedSlot || "미선택"}</span>
+              </div>
+
+              <div className="form-summary-details">
+                <div className="form-summary-row">
+                  <span className="label">프로그램</span>
+                  <span className="value">{selectedProgram?.name || "미선택"}</span>
+                </div>
+                <div className="form-summary-row">
+                  <span className="label">구분</span>
+                  <span className="value">{reservationTypeLabel}</span>
+                </div>
+                <div className="form-summary-row">
+                  <span className="label">이용료</span>
+                  <span className="value">{unitPrice > 0 ? `${unitPrice.toLocaleString()}원 / 인` : "미선택"}</span>
+                </div>
+              </div>
+
+              <div className={`form-summary-total ${showPriceSummary ? "ready" : ""}`}>
+                <span className="form-summary-total-label">예상 결제금액</span>
+                {showPriceSummary ? (
+                  <>
+                    <strong className="form-summary-total-value">
+                      {totalAmount.toLocaleString()}원
+                    </strong>
+                    <span className="form-summary-total-meta">
+                      {peopleCount}명 x {unitPrice.toLocaleString()}원
+                    </span>
+                  </>
+                ) : (
+                  <span className="form-summary-total-placeholder">
+                    참여 인원을 입력하면 자동으로 계산됩니다.
+                  </span>
+                )}
+              </div>
+            </aside>
+
+            <form className="reservation-form" id="reservation-form" onSubmit={handleSubmit}>
+              <div className="reservation-form-section">
+                <h4 className="form-section-title">예약 기본 정보</h4>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label className="form-label">
+                      구분<span className="required">*</span>
+                    </label>
+                    <div className="form-type-select">
+                      <button
+                        type="button"
+                        className={`form-type-btn ${type === "individual" ? "active" : ""}`}
+                        onClick={() => setType("individual")}
+                      >
+                        개인
+                      </button>
+                      <button
+                        type="button"
+                        className={`form-type-btn ${type === "group" ? "active" : ""}`}
+                        onClick={() => setType("group")}
+                      >
+                        단체
+                      </button>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">
+                      참여자 전체 수<span className="required">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      className="form-input"
+                      placeholder={
+                        type === "individual"
+                          ? "참여 인원 수를 입력하세요"
+                          : "단체 전체 인원 수를 입력하세요"
+                      }
+                      value={formData.totalPeople}
+                      onChange={(e) => handlePeopleChange(e.target.value)}
+                      maxLength={5}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="reservation-form-section">
+                <h4 className="form-section-title">신청자 정보</h4>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label className="form-label">
+                      신청인 성명<span className="required">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="성명을 입력하세요"
+                      value={formData.name}
+                      onChange={(e) => handleNameChange(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">
+                      이메일<span className="required">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      className="form-input"
+                      placeholder="이메일을 입력하세요"
+                      value={formData.email}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label className="form-label">
+                      연락처<span className="required">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      className="form-input"
+                      placeholder="010-0000-0000"
+                      value={formData.phone}
+                      onChange={(e) => handlePhoneChange("phone", e.target.value)}
+                      maxLength={13}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">
+                      비상연락처 (신청인 외)
+                    </label>
+                    <input
+                      type="tel"
+                      className="form-input"
+                      placeholder="010-0000-0000"
+                      value={formData.emergencyContact}
+                      onChange={(e) => handlePhoneChange("emergencyContact", e.target.value)}
+                      maxLength={13}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {showPriceSummary && (
+                <div className="form-price-info">
+                  <span className="form-price-label">결제 예정 금액</span>
+                  <div className="form-price-inline">
+                    <span className="form-price-calc">
+                      {peopleCount}명 x {unitPrice.toLocaleString()}원 =
+                    </span>
+                    <span className="form-price-total">
+                      {totalAmount.toLocaleString()}원
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="submit-btn"
+                disabled={!isFormValid}
+              >
+                결제 및 예약하기
+              </button>
+            </form>
           </div>
-
-          {unitPrice > 0 && peopleCount > 0 && (
-            <div className="form-price-info">
-              <span className="form-price-calc">
-                {peopleCount}명 x {unitPrice.toLocaleString()}원 =
-              </span>
-              <span className="form-price-total">
-                {totalAmount.toLocaleString()}원
-              </span>
-            </div>
-          )}
-
-          <div className="form-row">
-            <div className="form-group">
-              <label className="form-label">
-                신청인 성명<span className="required">*</span>
-              </label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="성명을 입력하세요"
-                value={formData.name}
-                onChange={(e) => handleNameChange(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">
-                이메일<span className="required">*</span>
-              </label>
-              <input
-                type="email"
-                className="form-input"
-                placeholder="이메일을 입력하세요"
-                value={formData.email}
-                onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label className="form-label">
-                연락처<span className="required">*</span>
-              </label>
-              <input
-                type="tel"
-                className="form-input"
-                placeholder="010-0000-0000"
-                value={formData.phone}
-                onChange={(e) => handlePhoneChange("phone", e.target.value)}
-                maxLength={13}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">
-                비상연락처 (신청인 외)
-              </label>
-              <input
-                type="tel"
-                className="form-input"
-                placeholder="010-0000-0000"
-                value={formData.emergencyContact}
-                onChange={(e) => handlePhoneChange("emergencyContact", e.target.value)}
-                maxLength={13}
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="submit-btn"
-            disabled={!isFormValid}
-          >
-            결제 및 예약하기
-          </button>
-        </form>
-        </div>
-        )}
         </div>
         )}
       </>)}

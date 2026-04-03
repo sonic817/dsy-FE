@@ -9,7 +9,7 @@ import { useProgramFees } from "@/lib/useProgramFees";
 
 interface Program { id: number; name: string; description: string; image_url: string | null; }
 
-const USAGE_TABS = ["프로그램", "개인·단체예약", "대관문의", "이용료·환불규정"];
+const USAGE_TABS = ["프로그램", "개인·단체예약", "이용료·환불규정", "대관문의"];
 const PERIOD_LABELS: Record<string, string> = { morning: "오전", afternoon: "오후", night: "야간" };
 
 export default function UsageGuideSection() {
@@ -133,25 +133,8 @@ export default function UsageGuideSection() {
           </div>
         </div>
 
-        {/* 대관문의 */}
-        <div className={`tab-content ${activeTab === 2 ? "active" : ""}`}>
-          <div className="usage-info-content">
-            <h4>대관 안내</h4>
-            <ul>
-              <li>행사, 워크숍, 교육 등 다양한 목적의 대관이 가능합니다.</li>
-              <li>대관 가능 시설 및 이용 조건은 문의 시 안내드립니다.</li>
-            </ul>
-            <h4>문의 방법</h4>
-            <ul>
-              <li>전화: 0507-1317-1974</li>
-              <li>이메일: dis2412@naver.com</li>
-            </ul>
-            <p className="usage-info-notice">대관 일정은 사전 협의가 필요하며, 운영 상황에 따라 조정될 수 있습니다.</p>
-          </div>
-        </div>
-
         {/* 이용료·환불규정 */}
-        <div className={`tab-content ${activeTab === 3 ? "active" : ""}`}>
+        <div className={`tab-content ${activeTab === 2 ? "active" : ""}`}>
           <div className="fee-refund-layout">
             <div className="fee-refund-panel">
               <div className="fee-title-nav">
@@ -229,6 +212,23 @@ export default function UsageGuideSection() {
               </table>
               <p className="fee-notice">천재지변으로 프로그램 운영이 중단되는 경우 전액 환불됩니다.</p>
             </div>
+          </div>
+        </div>
+
+        {/* 대관문의 */}
+        <div className={`tab-content ${activeTab === 3 ? "active" : ""}`}>
+          <div className="usage-info-content">
+            <h4>대관 안내</h4>
+            <ul>
+              <li>행사, 워크숍, 교육 등 다양한 목적의 대관이 가능합니다.</li>
+              <li>대관 가능 시설 및 이용 조건은 문의 시 안내드립니다.</li>
+            </ul>
+            <h4>문의 방법</h4>
+            <ul>
+              <li>전화: 0507-1317-1974</li>
+              <li>이메일: dis2412@naver.com</li>
+            </ul>
+            <p className="usage-info-notice">대관 일정은 사전 협의가 필요하며, 운영 상황에 따라 조정될 수 있습니다.</p>
           </div>
         </div>
       </div>
