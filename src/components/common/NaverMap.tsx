@@ -19,14 +19,11 @@ interface NaverMapProps {
 }
 
 const NAVER_MAP_CLIENT_ID = process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID || "";
-const MARKER_ICON_URL = "/map/dayul-soop-marker.png";
-const MARKER_WIDTH = 132;
-const MARKER_HEIGHT = 61;
 const INFO_WINDOW_CONTENT = [
   '<div class="naver-map-info-window">',
   "  <h3>다율숲</h3>",
   "  <p><strong>오시는 길</strong></p>",
-  "  <p>주소: 울산광역시 북구 동남로477</p>",
+  "  <p>주소: 울산광역시 북구 동남로 477</p>",
   '  <p>교통편: 네비게이션 "다율숲" 검색 자차이용</p>',
   "</div>",
 ].join("");
@@ -62,7 +59,7 @@ export default function NaverMap({ active, latitude, longitude, label }: NaverMa
     if (!mapRef.current) {
       mapRef.current = new naverMaps.Map(mapElementId, {
         center: position,
-        zoom: 19,
+        zoom: 18,
         minZoom: 11,
         maxZoom: 19,
         draggable: true,
@@ -80,7 +77,7 @@ export default function NaverMap({ active, latitude, longitude, label }: NaverMa
         },
         mapTypeControl: true,
         mapTypeControlOptions: {
-          position: naverMaps.Position.TOP_LEFT,
+          position: naverMaps.Position.TOP_RIGHT,
           style: naverMaps.MapTypeControlStyle.BUTTON,
           mapTypeIds: [naverMaps.MapTypeId.NORMAL, naverMaps.MapTypeId.SATELLITE],
         },
@@ -88,10 +85,13 @@ export default function NaverMap({ active, latitude, longitude, label }: NaverMa
         mapDataControlOptions: {
           position: naverMaps.Position.BOTTOM_LEFT,
         },
-        scaleControl: false,
+        scaleControl: true,
+        scaleControlOptions: {
+          position: naverMaps.Position.BOTTOM_RIGHT,
+        },
         logoControl: true,
         logoControlOptions: {
-          position: naverMaps.Position.BOTTOM_RIGHT,
+          position: naverMaps.Position.BOTTOM_LEFT,
         },
       });
 
@@ -99,12 +99,6 @@ export default function NaverMap({ active, latitude, longitude, label }: NaverMa
         position,
         map: mapRef.current,
         title: label || "지도 위치",
-        icon: {
-          url: MARKER_ICON_URL,
-          size: new naverMaps.Size(MARKER_WIDTH, MARKER_HEIGHT),
-          origin: new naverMaps.Point(0, 0),
-          anchor: new naverMaps.Point(MARKER_WIDTH / 2, MARKER_HEIGHT),
-        },
       });
 
       infoWindowRef.current = new naverMaps.InfoWindow({
@@ -112,7 +106,11 @@ export default function NaverMap({ active, latitude, longitude, label }: NaverMa
         borderWidth: 0,
         backgroundColor: "#fff",
         disableAnchor: false,
-        pixelOffset: new naverMaps.Point(0, -8),
+        pixelOffset: new naverMaps.Point(0, 12),
+      });
+
+      naverMaps.Event.addListener(mapRef.current, "zoom_changed", (zoom: number) => {
+        console.log("[NaverMap] zoom:", zoom);
       });
 
       naverMaps.Event.addListener(markerRef.current, "click", () => {
