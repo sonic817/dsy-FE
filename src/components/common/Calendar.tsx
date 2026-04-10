@@ -23,18 +23,22 @@ function MonthCalendar({
   selectedDate,
   onDateSelect,
   today,
+  maxDate,
   onPrev,
   onNext,
   prevDisabled,
+  nextDisabled,
 }: {
   year: number;
   month: number;
   selectedDate: Date | null;
   onDateSelect: (date: Date) => void;
   today: Date;
+  maxDate: Date;
   onPrev?: () => void;
   onNext?: () => void;
   prevDisabled?: boolean;
+  nextDisabled?: boolean;
 }) {
   const daysInMonth = getDaysInMonth(year, month);
   const firstDay = getFirstDayOfMonth(year, month);
@@ -59,7 +63,7 @@ function MonthCalendar({
           {year}년 {month + 1}월
         </h3>
         {onNext ? (
-          <button className="calendar-nav-btn" onClick={onNext}>▶</button>
+          <button className="calendar-nav-btn" onClick={onNext} disabled={nextDisabled} style={nextDisabled ? { opacity: 0.3, cursor: "default" } : undefined}>▶</button>
         ) : <span className="calendar-nav-btn" style={{ visibility: "hidden" }}>▶</span>}
       </div>
       <div className="calendar-weekdays">
@@ -78,6 +82,8 @@ function MonthCalendar({
           const date = new Date(year, month, day);
           const dayOfWeek = date.getDay();
           const isPast = date < todayDate;
+          const isBeyondMax = date > maxDate;
+          const isDisabled = isPast || isBeyondMax;
           const isToday =
             date.getTime() === todayDate.getTime();
           const isSelected =
@@ -87,7 +93,7 @@ function MonthCalendar({
             date.getDate() === selectedDate.getDate();
 
           const classNames = ["calendar-day"];
-          if (isPast) classNames.push("past");
+          if (isDisabled) classNames.push("past");
           if (isToday) classNames.push("today");
           if (isSelected) classNames.push("selected");
           if (dayOfWeek === 0) classNames.push("sunday");
@@ -98,7 +104,7 @@ function MonthCalendar({
               key={i}
               className={classNames.join(" ")}
               onClick={() => {
-                if (!isPast) {
+                if (!isDisabled) {
                   onDateSelect(date);
                 }
               }}
@@ -141,6 +147,8 @@ export default function Calendar({ selectedDate, onDateSelect }: CalendarProps) 
     return () => clearTimeout(timerId);
   }, []);
 
+  const maxDate = new Date(today.getFullYear(), today.getMonth() + 6, today.getDate());
+
   const nextMonth = baseMonth === 11 ? 0 : baseMonth + 1;
   const nextYear = baseMonth === 11 ? baseYear + 1 : baseYear;
 
@@ -157,7 +165,12 @@ export default function Calendar({ selectedDate, onDateSelect }: CalendarProps) 
     }
   };
 
+  const maxMonthDate = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
+  const secondDisplayMonth = new Date(nextYear, nextMonth, 1);
+  const nextNavDisabled = secondDisplayMonth >= maxMonthDate;
+
   const goForward = () => {
+    if (nextNavDisabled) return;
     if (baseMonth === 11) {
       setBaseYear(baseYear + 1);
       setBaseMonth(0);
@@ -176,9 +189,11 @@ export default function Calendar({ selectedDate, onDateSelect }: CalendarProps) 
         selectedDate={selectedDate}
         onDateSelect={onDateSelect}
         today={today}
+        maxDate={maxDate}
         onPrev={goBack}
         prevDisabled={baseYear === today.getFullYear() && baseMonth === today.getMonth()}
         onNext={goForward}
+        nextDisabled={nextNavDisabled}
       />
       <MonthCalendar
         year={nextYear}
@@ -186,6 +201,7 @@ export default function Calendar({ selectedDate, onDateSelect }: CalendarProps) 
         selectedDate={selectedDate}
         onDateSelect={onDateSelect}
         today={today}
+        maxDate={maxDate}
       />
     </div>
   );
