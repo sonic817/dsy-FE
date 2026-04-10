@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 
 const SECTIONS = ["intro", "usage", "reservation", "news"];
 
@@ -41,7 +42,8 @@ export default function Header() {
       <header className="header">
         <div className="container">
           <h1 className="header-logo" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ cursor: "pointer" }}>
-            <span>다율</span>숲
+            <Image src="/logo-white.png" alt="다율숲 로고" width={32} height={32} className="header-logo-img" />
+            다율숲
           </h1>
         </div>
       </header>

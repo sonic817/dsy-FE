@@ -26,10 +26,9 @@
   font-size: var(--fs-title-lg);
   font-weight: 800;
   letter-spacing: 0.05em;
-}
-
-.header-logo span {
-  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 /* Nav */

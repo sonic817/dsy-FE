@@ -1,10 +1,15 @@
+import Image from "next/image";
+
 export default function Footer() {
   return (
     <footer className="footer">
       <div className="container">
         <div className="footer-inner">
           <div className="footer-left">
-            <h3 className="footer-title">다율숲 주식회사</h3>
+            <h3 className="footer-title">
+              <Image src="/logo-white.png" alt="다율숲 로고" width={24} height={24} className="footer-logo-img" />
+              다율숲 주식회사
+            </h3>
             <p className="footer-contact">문의: 0507-1317-1974</p>
             <p className="footer-hours">평일 10:00 - 18:00 | 주말 · 공휴일 휴무</p>
           </div>

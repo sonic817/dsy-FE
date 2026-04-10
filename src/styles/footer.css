@@ -9,6 +9,9 @@
   font-size: var(--fs-title-sm);
   font-weight: 700;
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .footer-contact {

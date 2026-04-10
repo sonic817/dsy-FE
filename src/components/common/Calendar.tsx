@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface CalendarProps {
   selectedDate: Date | null;
@@ -115,9 +115,31 @@ function MonthCalendar({
 }
 
 export default function Calendar({ selectedDate, onDateSelect }: CalendarProps) {
-  const today = new Date();
-  const [baseYear, setBaseYear] = useState(today.getFullYear());
-  const [baseMonth, setBaseMonth] = useState(today.getMonth());
+  const [today, setToday] = useState(() => new Date());
+  const [baseYear, setBaseYear] = useState(() => new Date().getFullYear());
+  const [baseMonth, setBaseMonth] = useState(() => new Date().getMonth());
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const now = new Date();
+    setToday(now);
+    setBaseYear(now.getFullYear());
+    setBaseMonth(now.getMonth());
+    setMounted(true);
+
+    const scheduleNextMidnight = () => {
+      const current = new Date();
+      const midnight = new Date(current.getFullYear(), current.getMonth(), current.getDate() + 1);
+      const ms = midnight.getTime() - current.getTime();
+      return setTimeout(() => {
+        setToday(new Date());
+        timerId = scheduleNextMidnight();
+      }, ms);
+    };
+
+    let timerId = scheduleNextMidnight();
+    return () => clearTimeout(timerId);
+  }, []);
 
   const nextMonth = baseMonth === 11 ? 0 : baseMonth + 1;
   const nextYear = baseMonth === 11 ? baseYear + 1 : baseYear;
@@ -143,6 +165,8 @@ export default function Calendar({ selectedDate, onDateSelect }: CalendarProps) 
       setBaseMonth(baseMonth + 1);
     }
   };
+
+  if (!mounted) return null;
 
   return (
     <div className="calendar-wrapper">
