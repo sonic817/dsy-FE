@@ -73,10 +73,22 @@ export default function IntroSection() {
 
         <div className={`tab-content ${activeTab === 0 ? "active" : ""}`}>
           <div className="intro-info intro-info-about">
-            <div className="intro-info-logo">
-              <Image src="/intro-logo.png" alt="다율숲 로고" width={160} height={160} sizes="160px" />
+            <div className="intro-about-visual">
+              <div className="intro-feature-image">
+                <Image
+                  src="/intro-dayulsoop-scene.jpg"
+                  alt="다율숲 전경"
+                  fill
+                  className="intro-feature-image-element"
+                  sizes="(min-width: 1024px) 520px, 100vw"
+                />
+              </div>
+              <p className="intro-feature-caption">숲길, 체험, 쉼이 한 흐름으로 이어지는 다율숲의 전경입니다.</p>
             </div>
             <div className="intro-info-text">
+              <div className="intro-mini-logo">
+                <Image src="/intro-logo.png" alt="다율숲 로고" width={96} height={96} sizes="96px" />
+              </div>
               <h4 className="intro-heading intro-heading-mobile">
                 사람과 숲이 함께 숨 쉬며
                 <br />
@@ -124,7 +136,9 @@ export default function IntroSection() {
                   그리고 숲의 리듬으로 회복을 경험하는 <strong>쉼</strong>이 공존하는 공간입니다.
                 </p>
                 <p>
-                  우리 아이들이 자연과 공존하는 지혜를 배우고 일상의 스트레스를 비워낼 수 있도록
+                  우리 아이들이 자연과 공존하는 지혜를 배우고
+                  <br />
+                  일상의 스트레스를 비워낼 수 있도록
                   <br />
                   다율숲이 든든한 초록빛 쉼표가 되겠습니다.
                 </p>

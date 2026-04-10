@@ -24,30 +24,41 @@
 .intro-info-about {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
+  gap: 24px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
   padding: 28px 24px;
-  min-height: 320px;
+  min-height: 0;
 }
 
-.intro-info-logo {
-  flex-shrink: 0;
-  display: flex;
-  justify-content: center;
-}
-
-.intro-info-logo img {
-  width: 156px;
-  height: auto;
+.intro-about-visual {
+  width: 100%;
 }
 
 .intro-info-text {
-  max-width: 520px;
-  text-align: center;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.intro-mini-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.intro-mini-logo img {
+  width: 96px;
+  height: auto;
+}
+
+.intro-kicker {
+  margin: 0 0 12px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  color: var(--primary);
 }
 
 .intro-heading {
@@ -69,6 +80,28 @@
   gap: 14px;
 }
 
+.intro-feature-image {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  aspect-ratio: 4 / 3;
+  box-shadow: 0 18px 40px rgba(11, 93, 59, 0.16);
+}
+
+.intro-feature-image-element {
+  object-fit: cover;
+}
+
+.intro-feature-caption {
+  margin: 12px 4px 0;
+  font-size: var(--fs-label);
+  color: var(--text-light);
+  line-height: 1.6;
+  text-align: center;
+}
+
 .intro-info-copy-desktop {
   display: none;
 }
@@ -83,6 +116,7 @@
   color: var(--text);
   font-weight: 500;
   line-height: 1.8;
+  text-align: center;
   word-break: keep-all;
   overflow-wrap: normal;
   line-break: strict;

@@ -132,31 +132,52 @@
   /* Intro */
   .intro-info-about {
     display: grid;
-    grid-template-columns: 220px minmax(0, 560px);
+    grid-template-columns: minmax(0, 560px) minmax(320px, 416px);
     align-items: center;
     justify-content: center;
-    gap: 28px;
+    gap: 16px;
     width: 100%;
     padding: 40px 44px;
-    min-height: 420px;
+    min-height: 0;
   }
 
-  .intro-info-logo {
-    justify-content: flex-end;
-  }
-
-  .intro-info-logo img {
-    width: 210px;
+  .intro-about-visual {
+    order: 2;
+    width: 100%;
+    max-width: 416px;
+    justify-self: end;
   }
 
   .intro-info-text {
     max-width: 560px;
     width: 100%;
+    margin: 0;
     justify-self: start;
+    transform: translateY(-14px);
+  }
+
+  .intro-kicker {
+    margin-bottom: 14px;
+  }
+
+  .intro-mini-logo {
+    margin-bottom: 12px;
   }
 
   .intro-main-img {
     border-radius: 16px;
+  }
+
+  .intro-feature-image {
+    margin: 0;
+    width: 100%;
+    border-radius: 22px;
+    aspect-ratio: 1 / 1;
+  }
+
+  .intro-feature-caption {
+    margin-top: 14px;
+    width: 100%;
   }
 
   .intro-info {

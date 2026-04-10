@@ -80,21 +80,21 @@ export default function ReservationSection() {
     return () => observer.disconnect();
   }, [selectedProgram, slots, loadingSlots]);
 
-  const fetchSlots = useCallback(async (date: Date) => {
+  const fetchSlots = useCallback(async (date: Date, programId: number) => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, "0");
     const d = String(date.getDate()).padStart(2, "0");
     setLoadingSlots(true);
     try {
-      const res = await fetchApi(`/api/time-slots?date=${y}-${m}-${d}`);
+      const res = await fetchApi(`/api/time-slots?date=${y}-${m}-${d}&programId=${programId}`);
       if (res.ok) setSlots(await res.json());
     } catch { /* */ }
     setLoadingSlots(false);
   }, []);
 
   useEffect(() => {
-    if (selectedDate) fetchSlots(selectedDate);
-  }, [selectedDate, fetchSlots]);
+    if (selectedDate && selectedProgram) fetchSlots(selectedDate, selectedProgram.id);
+  }, [selectedDate, selectedProgram, fetchSlots]);
 
   const morningSlots = useMemo(() => slots.filter(s => s.period === "morning"), [slots]);
   const afternoonSlots = useMemo(() => slots.filter(s => s.period === "afternoon"), [slots]);
@@ -196,7 +196,7 @@ export default function ReservationSection() {
         body: JSON.stringify({
           type,
           date: `${y}-${m}-${d}`,
-          timeSlotId: selectedSlotId,
+          programTimeSlotId: selectedSlotId,
           programId: selectedProgram!.id,
           name: formData.name.trim(),
           email: formData.email.trim(),

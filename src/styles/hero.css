@@ -7,6 +7,12 @@
 
 .hero-bg {
   object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.hero-bg-active {
+  opacity: 1;
 }
 
 .hero-overlay {
