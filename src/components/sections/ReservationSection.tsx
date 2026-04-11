@@ -99,6 +99,7 @@ export default function ReservationSection() {
   const morningSlots = useMemo(() => slots.filter(s => s.period === "morning"), [slots]);
   const afternoonSlots = useMemo(() => slots.filter(s => s.period === "afternoon"), [slots]);
   const nightSlots = useMemo(() => slots.filter(s => s.period === "night"), [slots]);
+  const allDaySlots = useMemo(() => slots.filter(s => s.period === "all_day"), [slots]);
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
@@ -176,6 +177,7 @@ export default function ReservationSection() {
     { label: "오전", count: 4, gridClass: "" },
     { label: "오후", count: 4, gridClass: "" },
     { label: "야간", count: 2, gridClass: "night" },
+    { label: "종일", count: 2, gridClass: "" },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -396,7 +398,8 @@ export default function ReservationSection() {
                     { label: "오전", dotClass: "morning", items: morningSlots, gridClass: "" },
                     { label: "오후", dotClass: "afternoon", items: afternoonSlots, gridClass: "" },
                     { label: "야간", dotClass: "night", items: nightSlots, gridClass: "night-grid" },
-                  ].map((group) => (
+                    { label: "종일", dotClass: "allday", items: allDaySlots, gridClass: "" },
+                  ].filter((group) => group.items.length > 0).map((group) => (
                     <div key={group.label} className="time-slot-group">
                       <p className="time-slot-group-label">
                         <span className={`dot ${group.dotClass}`} />

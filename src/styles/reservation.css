@@ -294,6 +294,10 @@
   background: var(--slot-night);
 }
 
+.dot.allday {
+  background: var(--slot-allday, #e91e63);
+}
+
 .time-slot-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

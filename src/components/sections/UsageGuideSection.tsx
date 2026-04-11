@@ -10,7 +10,7 @@ import { useProgramFees } from "@/lib/useProgramFees";
 interface Program { id: number; name: string; description: string; image_url: string | null; }
 
 const USAGE_TABS = ["프로그램", "개인·단체예약", "이용료·환불규정", "대관문의"];
-const PERIOD_LABELS: Record<string, string> = { morning: "오전", afternoon: "오후", night: "야간" };
+const PERIOD_LABELS: Record<string, string> = { morning: "오전", afternoon: "오후", night: "야간", all_day: "종일" };
 
 export default function UsageGuideSection() {
   const [activeTab, setActiveTab] = useState(0);
@@ -173,7 +173,7 @@ export default function UsageGuideSection() {
                         <td><div className="skeleton-box" style={{ height: 14, width: "60%", margin: "0 auto" }} /></td>
                       </tr>
                     ))
-                  ) : (["morning", "afternoon", "night"] as const).map((period) => {
+                  ) : (["morning", "afternoon", "night", "all_day"] as const).map((period) => {
                     const individual = programFees.find(
                       (f) => f.program_id === feeProgram?.id && f.reservation_type === "individual" && f.period === period
                     );
