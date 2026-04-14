@@ -9,7 +9,7 @@ import { useProgramFees } from "@/lib/useProgramFees";
 
 interface Program { id: number; name: string; description: string; image_url: string | null; }
 
-const USAGE_TABS = ["프로그램", "개인·단체예약", "이용료·환불규정", "대관문의"];
+const USAGE_TABS = ["프로그램", "개인·단체예약", "체험비·환불규정", "대관문의"];
 const PERIOD_LABELS: Record<string, string> = { morning: "오전", afternoon: "오후", night: "야간", all_day: "종일" };
 
 export default function UsageGuideSection() {
@@ -133,7 +133,7 @@ export default function UsageGuideSection() {
           </div>
         </div>
 
-        {/* 이용료·환불규정 */}
+        {/* 체험비·환불규정 */}
         <div className={`tab-content ${activeTab === 2 ? "active" : ""}`}>
           <div className="fee-refund-layout">
             <div className="fee-refund-panel">
@@ -146,7 +146,7 @@ export default function UsageGuideSection() {
                   }}
                   disabled={programs.findIndex((p) => p.id === feeProgram?.id) <= 0}
                 >&lt;</button>
-                <h4 className="refund-title">{feeProgram?.name ?? ""} 이용료</h4>
+                <h4 className="refund-title">{feeProgram?.name ?? ""} 체험비</h4>
                 <button
                   className="fee-nav-btn"
                   onClick={() => {
@@ -204,10 +204,10 @@ export default function UsageGuideSection() {
                 </thead>
                 <tbody>
                   <tr><td>예약 후 2시간 이내 취소</td><td>없음</td><td>전액 환불</td></tr>
-                  <tr><td>이용일 6일 전까지 취소</td><td>이용료의 30%</td><td>이용료의 70%</td></tr>
-                  <tr><td>이용일 2~5일 전 취소</td><td>이용료의 50%</td><td>이용료의 50%</td></tr>
-                  <tr><td>이용일 당일 취소</td><td>이용료의 100%</td><td>환불 불가</td></tr>
-                  <tr><td>예약 후 미이용 (노쇼)</td><td>이용료의 100%</td><td>환불 불가</td></tr>
+                  <tr><td>이용일 6일 전까지 취소</td><td>체험비의 30%</td><td>체험비의 70%</td></tr>
+                  <tr><td>이용일 2~5일 전 취소</td><td>체험비의 50%</td><td>체험비의 50%</td></tr>
+                  <tr><td>이용일 당일 취소</td><td>체험비의 100%</td><td>환불 불가</td></tr>
+                  <tr><td>예약 후 미이용 (노쇼)</td><td>체험비의 100%</td><td>환불 불가</td></tr>
                 </tbody>
               </table>
               <p className="fee-notice">천재지변으로 프로그램 운영이 중단되는 경우 전액 환불됩니다.</p>

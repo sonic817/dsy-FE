@@ -467,7 +467,7 @@ export default function ReservationSection() {
                   <span className="value">{reservationTypeLabel}</span>
                 </div>
                 <div className="form-summary-row">
-                  <span className="label">이용료</span>
+                  <span className="label">체험비</span>
                   <span className="value">{unitPrice > 0 ? `${unitPrice.toLocaleString()}원 / 인` : "미선택"}</span>
                 </div>
               </div>

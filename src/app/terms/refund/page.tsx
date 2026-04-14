@@ -34,10 +34,10 @@ export default function RefundPolicyPage() {
           </thead>
           <tbody>
             <tr><td style={td}>예약 후 2시간 이내 취소</td><td style={td}>없음</td><td style={td}>전액 환불</td></tr>
-            <tr><td style={td}>이용일 6일 전까지 취소</td><td style={td}>이용료의 30%</td><td style={td}>이용료의 70% 환불</td></tr>
-            <tr><td style={td}>이용일 2~5일 전 취소</td><td style={td}>이용료의 50%</td><td style={td}>이용료의 50% 환불</td></tr>
-            <tr><td style={td}>이용일 당일 취소</td><td style={td}>이용료의 100%</td><td style={td}>환불 불가</td></tr>
-            <tr><td style={td}>예약 후 미이용 (노쇼)</td><td style={td}>이용료의 100%</td><td style={td}>환불 불가</td></tr>
+            <tr><td style={td}>이용일 6일 전까지 취소</td><td style={td}>체험비의 30%</td><td style={td}>체험비의 70% 환불</td></tr>
+            <tr><td style={td}>이용일 2~5일 전 취소</td><td style={td}>체험비의 50%</td><td style={td}>체험비의 50% 환불</td></tr>
+            <tr><td style={td}>이용일 당일 취소</td><td style={td}>체험비의 100%</td><td style={td}>환불 불가</td></tr>
+            <tr><td style={td}>예약 후 미이용 (노쇼)</td><td style={td}>체험비의 100%</td><td style={td}>환불 불가</td></tr>
           </tbody>
         </table>
       </Section>
