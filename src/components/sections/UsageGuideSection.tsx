@@ -173,21 +173,24 @@ export default function UsageGuideSection() {
                         <td><div className="skeleton-box" style={{ height: 14, width: "60%", margin: "0 auto" }} /></td>
                       </tr>
                     ))
-                  ) : (["morning", "afternoon", "night", "all_day"] as const).map((period) => {
-                    const individual = programFees.find(
-                      (f) => f.program_id === feeProgram?.id && f.reservation_type === "individual" && f.period === period
-                    );
-                    const group = programFees.find(
-                      (f) => f.program_id === feeProgram?.id && f.reservation_type === "group" && f.period === period
-                    );
-                    return (
+                  ) : (["morning", "afternoon", "night", "all_day"] as const)
+                    .map((period) => {
+                      const individual = programFees.find(
+                        (f) => f.program_id === feeProgram?.id && f.reservation_type === "individual" && f.period === period
+                      );
+                      const group = programFees.find(
+                        (f) => f.program_id === feeProgram?.id && f.reservation_type === "group" && f.period === period
+                      );
+                      return { period, individual, group };
+                    })
+                    .filter(({ individual, group }) => (individual?.price ?? 0) > 0 || (group?.price ?? 0) > 0)
+                    .map(({ period, individual, group }) => (
                       <tr key={period}>
                         <td>{PERIOD_LABELS[period]}</td>
                         <td>{individual ? `${individual.price.toLocaleString()}원` : "-"}</td>
                         <td>{group ? `${group.price.toLocaleString()}원` : "-"}</td>
                       </tr>
-                    );
-                  })}
+                    ))}
                 </tbody>
               </table>
               <p className="fee-notice">단체는 10인 이상입니다.</p>
