@@ -144,30 +144,11 @@ export default function ReservationSection() {
     }, 100);
   };
 
-  // [DEBUG:IME] 임시 디버그 - 천지인 입력 예외 추적용, 해결 후 제거
-  const debugAlert = (field: string, inputValue: unknown, composing: boolean, err: unknown) => {
-    const e = err instanceof Error ? err : new Error(String(err));
-    const info = [
-      `[DEBUG] field: ${field}`,
-      `input: ${JSON.stringify(inputValue)}`,
-      `composing: ${composing}`,
-      `msg: ${e.message}`,
-      `stack: ${(e.stack || "").split("\n").slice(0, 3).join(" | ")}`,
-    ].join("\n");
-    console.error(info);
-    alert(`JS ERROR:\n${info}`);
-  };
-
   const handleNameChange = (value: string) => {
-    try {
-      if (isComposingRef.current) {
-        setFormData((prev) => ({ ...prev, name: value }));
-      } else {
-        setFormData((prev) => ({ ...prev, name: filterName(value) }));
-      }
-    } catch (err) {
-      debugAlert("applicantName:onChange", value, isComposingRef.current, err);
-      setFormData((prev) => ({ ...prev, name: value ?? "" }));
+    if (isComposingRef.current) {
+      setFormData((prev) => ({ ...prev, name: value }));
+    } else {
+      setFormData((prev) => ({ ...prev, name: filterName(value) }));
     }
   };
 
@@ -587,12 +568,7 @@ export default function ReservationSection() {
                       onCompositionEnd={(e) => {
                         isComposingRef.current = false;
                         const value = e.currentTarget.value;
-                        try {
-                          setFormData((prev) => ({ ...prev, name: filterName(value) }));
-                        } catch (err) {
-                          debugAlert("applicantName:compositionEnd", value, false, err);
-                          setFormData((prev) => ({ ...prev, name: value ?? "" }));
-                        }
+                        setFormData((prev) => ({ ...prev, name: filterName(value) }));
                       }}
                       required
                     />
@@ -606,7 +582,10 @@ export default function ReservationSection() {
                       className="form-input"
                       placeholder="이메일을 입력하세요"
                       value={formData.email}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setFormData((prev) => ({ ...prev, email: value }));
+                      }}
                       required
                     />
                   </div>
@@ -626,7 +605,8 @@ export default function ReservationSection() {
                       onCompositionStart={() => { isComposingRef.current = true; }}
                       onCompositionEnd={(e) => {
                         isComposingRef.current = false;
-                        setFormData((prev) => ({ ...prev, phone: formatPhone(e.currentTarget.value) }));
+                        const value = e.currentTarget.value;
+                        setFormData((prev) => ({ ...prev, phone: formatPhone(value) }));
                       }}
                       maxLength={13}
                       required
@@ -645,7 +625,8 @@ export default function ReservationSection() {
                       onCompositionStart={() => { isComposingRef.current = true; }}
                       onCompositionEnd={(e) => {
                         isComposingRef.current = false;
-                        setFormData((prev) => ({ ...prev, emergencyContact: formatPhone(e.currentTarget.value) }));
+                        const value = e.currentTarget.value;
+                        setFormData((prev) => ({ ...prev, emergencyContact: formatPhone(value) }));
                       }}
                       maxLength={13}
                     />

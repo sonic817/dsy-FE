@@ -147,7 +147,8 @@ export default function ReservationCheckSection() {
               onCompositionStart={() => { isComposingRef.current = true; }}
               onCompositionEnd={(e) => {
                 isComposingRef.current = false;
-                setCheckName(filterName(e.currentTarget.value));
+                const value = e.currentTarget.value;
+                setCheckName(filterName(value));
               }}
               required
             />
@@ -172,7 +173,8 @@ export default function ReservationCheckSection() {
               onCompositionStart={() => { isComposingRef.current = true; }}
               onCompositionEnd={(e) => {
                 isComposingRef.current = false;
-                setCheckPhone(formatPhone(e.currentTarget.value));
+                const value = e.currentTarget.value;
+                setCheckPhone(formatPhone(value));
               }}
               maxLength={13}
               required
