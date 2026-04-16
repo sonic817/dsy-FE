@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { fetchApi } from "@/lib/api";
 import { formatPhone, filterName } from "@/lib/formatters";
 import ReservationCancelModal from "@/components/modal/ReservationCancelModal";
@@ -41,9 +41,14 @@ export default function ReservationCheckSection() {
   const [cancelPreview, setCancelPreview] = useState<CancelPreview | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [cancelling, setCancelling] = useState(false);
+  const isComposingRef = useRef(false);
 
   const handleNameChange = (value: string) => {
-    setCheckName(filterName(value));
+    if (isComposingRef.current) {
+      setCheckName(value);
+    } else {
+      setCheckName(filterName(value));
+    }
   };
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -139,6 +144,11 @@ export default function ReservationCheckSection() {
               placeholder="성명을 입력하세요"
               value={checkName}
               onChange={(e) => handleNameChange(e.target.value)}
+              onCompositionStart={() => { isComposingRef.current = true; }}
+              onCompositionEnd={(e) => {
+                isComposingRef.current = false;
+                setCheckName(filterName(e.currentTarget.value));
+              }}
               required
             />
           </div>
@@ -152,7 +162,18 @@ export default function ReservationCheckSection() {
               className="form-input"
               placeholder="010-0000-0000"
               value={checkPhone}
-              onChange={(e) => setCheckPhone(formatPhone(e.target.value))}
+              onChange={(e) => {
+                if (isComposingRef.current) {
+                  setCheckPhone(e.target.value);
+                } else {
+                  setCheckPhone(formatPhone(e.target.value));
+                }
+              }}
+              onCompositionStart={() => { isComposingRef.current = true; }}
+              onCompositionEnd={(e) => {
+                isComposingRef.current = false;
+                setCheckPhone(formatPhone(e.currentTarget.value));
+              }}
               maxLength={13}
               required
             />
