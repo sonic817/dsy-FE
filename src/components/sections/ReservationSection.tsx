@@ -56,6 +56,7 @@ export default function ReservationSection() {
 
   const timePanelRef = useRef<HTMLDivElement>(null);
   const programPanelRef = useRef<HTMLDivElement>(null);
+  const isComposingRef = useRef(false);
 
   useEffect(() => {
     fetchApi("/api/programs")
@@ -144,17 +145,29 @@ export default function ReservationSection() {
   };
 
   const handleNameChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, name: filterName(value) }));
+    if (isComposingRef.current) {
+      setFormData((prev) => ({ ...prev, name: value }));
+    } else {
+      setFormData((prev) => ({ ...prev, name: filterName(value) }));
+    }
   };
 
   const handlePhoneChange = (field: "phone" | "emergencyContact", value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: formatPhone(value) }));
+    if (isComposingRef.current) {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    } else {
+      setFormData((prev) => ({ ...prev, [field]: formatPhone(value) }));
+    }
   };
 
   const handlePeopleChange = (value: string) => {
-    const digits = value.replace(/\D/g, "").slice(0, 4);
-    const formatted = digits ? Number(digits).toLocaleString() : "";
-    setFormData((prev) => ({ ...prev, totalPeople: formatted }));
+    if (isComposingRef.current) {
+      setFormData((prev) => ({ ...prev, totalPeople: value }));
+    } else {
+      const digits = value.replace(/\D/g, "").slice(0, 4);
+      const formatted = digits ? Number(digits).toLocaleString() : "";
+      setFormData((prev) => ({ ...prev, totalPeople: formatted }));
+    }
   };
 
   const getUnitPrice = () => {
@@ -551,6 +564,11 @@ export default function ReservationSection() {
                       placeholder="성명을 입력하세요"
                       value={formData.name}
                       onChange={(e) => handleNameChange(e.target.value)}
+                      onCompositionStart={() => { isComposingRef.current = true; }}
+                      onCompositionEnd={(e) => {
+                        isComposingRef.current = false;
+                        setFormData((prev) => ({ ...prev, name: filterName(e.currentTarget.value) }));
+                      }}
                       required
                     />
                   </div>
@@ -580,6 +598,11 @@ export default function ReservationSection() {
                       placeholder="010-0000-0000"
                       value={formData.phone}
                       onChange={(e) => handlePhoneChange("phone", e.target.value)}
+                      onCompositionStart={() => { isComposingRef.current = true; }}
+                      onCompositionEnd={(e) => {
+                        isComposingRef.current = false;
+                        setFormData((prev) => ({ ...prev, phone: formatPhone(e.currentTarget.value) }));
+                      }}
                       maxLength={13}
                       required
                     />
@@ -594,6 +617,11 @@ export default function ReservationSection() {
                       placeholder="010-0000-0000"
                       value={formData.emergencyContact}
                       onChange={(e) => handlePhoneChange("emergencyContact", e.target.value)}
+                      onCompositionStart={() => { isComposingRef.current = true; }}
+                      onCompositionEnd={(e) => {
+                        isComposingRef.current = false;
+                        setFormData((prev) => ({ ...prev, emergencyContact: formatPhone(e.currentTarget.value) }));
+                      }}
                       maxLength={13}
                     />
                   </div>
