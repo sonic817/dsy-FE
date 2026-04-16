@@ -144,11 +144,30 @@ export default function ReservationSection() {
     }, 100);
   };
 
+  // [DEBUG:IME] 임시 디버그 - 천지인 입력 예외 추적용, 해결 후 제거
+  const debugAlert = (field: string, inputValue: unknown, composing: boolean, err: unknown) => {
+    const e = err instanceof Error ? err : new Error(String(err));
+    const info = [
+      `[DEBUG] field: ${field}`,
+      `input: ${JSON.stringify(inputValue)}`,
+      `composing: ${composing}`,
+      `msg: ${e.message}`,
+      `stack: ${(e.stack || "").split("\n").slice(0, 3).join(" | ")}`,
+    ].join("\n");
+    console.error(info);
+    alert(`JS ERROR:\n${info}`);
+  };
+
   const handleNameChange = (value: string) => {
-    if (isComposingRef.current) {
-      setFormData((prev) => ({ ...prev, name: value }));
-    } else {
-      setFormData((prev) => ({ ...prev, name: filterName(value) }));
+    try {
+      if (isComposingRef.current) {
+        setFormData((prev) => ({ ...prev, name: value }));
+      } else {
+        setFormData((prev) => ({ ...prev, name: filterName(value) }));
+      }
+    } catch (err) {
+      debugAlert("applicantName:onChange", value, isComposingRef.current, err);
+      setFormData((prev) => ({ ...prev, name: value ?? "" }));
     }
   };
 
@@ -567,7 +586,13 @@ export default function ReservationSection() {
                       onCompositionStart={() => { isComposingRef.current = true; }}
                       onCompositionEnd={(e) => {
                         isComposingRef.current = false;
-                        setFormData((prev) => ({ ...prev, name: filterName(e.currentTarget.value) }));
+                        const value = e.currentTarget.value;
+                        try {
+                          setFormData((prev) => ({ ...prev, name: filterName(value) }));
+                        } catch (err) {
+                          debugAlert("applicantName:compositionEnd", value, false, err);
+                          setFormData((prev) => ({ ...prev, name: value ?? "" }));
+                        }
                       }}
                       required
                     />

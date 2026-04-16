@@ -6,5 +6,6 @@ export function formatPhone(value: string): string {
 }
 
 export function filterName(value: string): string {
-  return value.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\s]/g, "").slice(0, 10);
+  const str = typeof value === "string" ? value : String(value ?? "");
+  return str.replace(/[^a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣\s]/g, "").slice(0, 10);
 }
