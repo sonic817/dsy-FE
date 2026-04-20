@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { fetchApi } from "@/lib/api";
-import { formatPhone, filterName } from "@/lib/formatters";
+import { formatPhone } from "@/lib/formatters";
 import ReservationCancelModal from "@/components/modal/ReservationCancelModal";
 
 interface ReservationResult {
@@ -42,14 +42,6 @@ export default function ReservationCheckSection() {
   const [previewLoading, setPreviewLoading] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const isComposingRef = useRef(false);
-
-  const handleNameChange = (value: string) => {
-    if (isComposingRef.current) {
-      setCheckName(value);
-    } else {
-      setCheckName(filterName(value));
-    }
-  };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,13 +135,7 @@ export default function ReservationCheckSection() {
               className="form-input"
               placeholder="성명을 입력하세요"
               value={checkName}
-              onChange={(e) => handleNameChange(e.target.value)}
-              onCompositionStart={() => { isComposingRef.current = true; }}
-              onCompositionEnd={(e) => {
-                isComposingRef.current = false;
-                const value = e.currentTarget.value;
-                setCheckName(filterName(value));
-              }}
+              onChange={(e) => setCheckName(e.target.value)}
               required
             />
           </div>

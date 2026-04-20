@@ -9,7 +9,7 @@ import ReservationCompleteModal from "@/components/modal/ReservationCompleteModa
 import ReservationCheckSection from "@/components/sections/ReservationCheckSection";
 import { fetchApi } from "@/lib/api";
 import { useProgramFees } from "@/lib/useProgramFees";
-import { formatPhone, filterName } from "@/lib/formatters";
+import { formatPhone } from "@/lib/formatters";
 import type { ReservationType, ReservationFormData } from "@/types";
 
 interface SlotInfo {
@@ -142,14 +142,6 @@ export default function ReservationSection() {
         window.scrollTo({ top, behavior: "smooth" });
       }
     }, 100);
-  };
-
-  const handleNameChange = (value: string) => {
-    if (isComposingRef.current) {
-      setFormData((prev) => ({ ...prev, name: value }));
-    } else {
-      setFormData((prev) => ({ ...prev, name: filterName(value) }));
-    }
   };
 
   const handlePhoneChange = (field: "phone" | "emergencyContact", value: string) => {
@@ -563,13 +555,7 @@ export default function ReservationSection() {
                       className="form-input"
                       placeholder="성명을 입력하세요"
                       value={formData.name}
-                      onChange={(e) => handleNameChange(e.target.value)}
-                      onCompositionStart={() => { isComposingRef.current = true; }}
-                      onCompositionEnd={(e) => {
-                        isComposingRef.current = false;
-                        const value = e.currentTarget.value;
-                        setFormData((prev) => ({ ...prev, name: filterName(value) }));
-                      }}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                       required
                     />
                   </div>
