@@ -3,6 +3,8 @@
 import Modal from "./Modal";
 import type { ReservationType, ReservationFormData } from "@/types";
 
+type PaymentMethodOption = "CARD" | "TRANSFER";
+
 interface ReservationConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -13,7 +15,23 @@ interface ReservationConfirmModalProps {
   program: string;
   formData: ReservationFormData;
   totalAmount: number;
+  paymentMethod: PaymentMethodOption;
+  onPaymentMethodChange: (value: PaymentMethodOption) => void;
 }
+
+const paymentMethodOptions: Array<{
+  value: PaymentMethodOption;
+  label: string;
+}> = [
+  {
+    value: "CARD",
+    label: "카드 결제",
+  },
+  {
+    value: "TRANSFER",
+    label: "실시간 계좌이체",
+  },
+];
 
 export default function ReservationConfirmModal({
   isOpen,
@@ -25,6 +43,8 @@ export default function ReservationConfirmModal({
   program,
   formData,
   totalAmount,
+  paymentMethod,
+  onPaymentMethodChange,
 }: ReservationConfirmModalProps) {
   return (
     <Modal
@@ -79,6 +99,26 @@ export default function ReservationConfirmModal({
       <div className="confirm-row">
         <span className="confirm-label">비상연락처</span>
         <span className="confirm-value">{formData.emergencyContact}</span>
+      </div>
+      <div className="confirm-row confirm-row-stacked">
+        <span className="confirm-label">결제수단</span>
+        <div className="confirm-payment-methods" role="radiogroup" aria-label="결제수단 선택">
+          {paymentMethodOptions.map((option) => (
+            <label
+              key={option.value}
+              className={`confirm-payment-method ${paymentMethod === option.value ? "selected" : ""}`}
+            >
+              <input
+                type="radio"
+                name="payment-method"
+                value={option.value}
+                checked={paymentMethod === option.value}
+                onChange={() => onPaymentMethodChange(option.value)}
+              />
+              <span className="confirm-payment-method-title">{option.label}</span>
+            </label>
+          ))}
+        </div>
       </div>
       <div className="confirm-row" style={{ borderTop: "2px solid #e0e0e0", paddingTop: 12, marginTop: 4 }}>
         <span className="confirm-label" style={{ fontWeight: 700, color: "var(--text)" }}>결제금액</span>

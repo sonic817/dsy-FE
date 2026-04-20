@@ -28,10 +28,12 @@ interface Program {
 }
 
 type ReservationTab = "reserve" | "check";
+type PaymentMethodOption = "CARD" | "TRANSFER";
 
 export default function ReservationSection() {
   const [activeTab, setActiveTab] = useState<ReservationTab>("reserve");
   const [type, setType] = useState<ReservationType>("individual");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodOption>("CARD");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
@@ -227,7 +229,7 @@ export default function ReservationSection() {
             orderName: `다율숲 숲체험 예약 (${selectedSlot})`,
             totalAmount: expectedAmount,
             currency: "KRW",
-            payMethod: "CARD",
+            payMethod: paymentMethod,
             redirectUrl: `${window.location.origin}/payment-complete?orderId=${orderId}&expectedAmount=${expectedAmount}`,
             customer: {
               fullName: formData.name.trim(),
@@ -650,12 +652,15 @@ export default function ReservationSection() {
         program={selectedProgram?.name || ""}
         formData={formData}
         totalAmount={totalAmount}
+        paymentMethod={paymentMethod}
+        onPaymentMethodChange={setPaymentMethod}
       />
 
       <ReservationCompleteModal
         isOpen={isCompleteOpen}
         onClose={() => {
           setIsCompleteOpen(false);
+          setPaymentMethod("CARD");
           setSelectedDate(null);
           setSelectedSlot(null);
           setSelectedSlotId(null);
