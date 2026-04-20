@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import Calendar from "@/components/common/Calendar";
 import MobileInfoCard from "@/components/common/MobileInfoCard";
-import Modal from "@/components/modal/Modal";
 import ReservationConfirmModal from "@/components/modal/ReservationConfirmModal";
 import ReservationCompleteModal from "@/components/modal/ReservationCompleteModal";
 import ReservationCheckSection from "@/components/sections/ReservationCheckSection";
@@ -37,7 +36,6 @@ export default function ReservationSection() {
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
-  const [isProgramPreviewOpen, setIsProgramPreviewOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isCompleteOpen, setIsCompleteOpen] = useState(false);
   const [slots, setSlots] = useState<SlotInfo[]>([]);
@@ -105,7 +103,6 @@ export default function ReservationSection() {
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
     setSelectedProgram(null);
-    setIsProgramPreviewOpen(false);
     setSelectedSlot(null);
     setSelectedSlotId(null);
     setTimeout(() => {
@@ -121,11 +118,6 @@ export default function ReservationSection() {
 
   const handleProgramSelect = (program: Program) => {
     setSelectedProgram(program);
-    if (window.matchMedia("(min-width: 1024px)").matches) {
-      setIsProgramPreviewOpen(false);
-    } else {
-      setIsProgramPreviewOpen(true);
-    }
     setSelectedSlot(null);
     setSelectedSlotId(null);
   };
@@ -673,27 +665,6 @@ export default function ReservationSection() {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       />
-
-      <Modal
-        isOpen={isProgramPreviewOpen}
-        onClose={() => setIsProgramPreviewOpen(false)}
-        title={selectedProgram?.name || "프로그램 상세"}
-      >
-        {selectedProgram && (
-          <div className="program-preview-modal-content">
-            {selectedProgram.image_url && (
-              <div className="program-preview-modal-image">
-                <img
-                  src={selectedProgram.image_url}
-                  alt={selectedProgram.name}
-                  className="program-preview-image"
-                />
-              </div>
-            )}
-            <div className="program-preview-modal-desc">{selectedProgram.description}</div>
-          </div>
-        )}
-      </Modal>
 
       {submitting && (
         <div className="spinner-overlay">
