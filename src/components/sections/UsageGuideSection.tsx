@@ -78,18 +78,20 @@ export default function UsageGuideSection() {
                   {selectedProgram ? (
                     <>
                       <h3 className="program-panel-detail-title">{selectedProgram.name}</h3>
-                      {selectedProgram.image_url && (
-                        <div className="program-panel-detail-image">
-                          <Image
-                            src={selectedProgram.image_url}
-                            alt={selectedProgram.name}
-                            width={600}
-                            height={400}
-                            sizes="(min-width: 1024px) 50vw, 100vw"
-                          />
-                        </div>
-                      )}
-                      <div className="program-panel-detail-content">{selectedProgram.description}</div>
+                      <div className="program-panel-detail-body">
+                        {selectedProgram.image_url && (
+                          <div className="program-panel-detail-image">
+                            <Image
+                              src={selectedProgram.image_url}
+                              alt={selectedProgram.name}
+                              width={600}
+                              height={400}
+                              sizes="(min-width: 1024px) 30vw, 100vw"
+                            />
+                          </div>
+                        )}
+                        <div className="program-panel-detail-content">{selectedProgram.description}</div>
+                      </div>
                     </>
                   ) : (
                     <p className="program-panel-detail-empty">프로그램을 선택해주세요.</p>
@@ -121,8 +123,8 @@ export default function UsageGuideSection() {
           <div className="usage-info-content">
             <h4>개인 예약</h4>
             <ul>
-              <li>1인 이상 신청 가능</li>
               <li>홈페이지 예약 메뉴에서 날짜 및 프로그램 선택 후 예약</li>
+              <li>회차별 5명 미만 신청한 경우 프로그램 미운영</li>
             </ul>
             <h4>단체 예약</h4>
             <ul>

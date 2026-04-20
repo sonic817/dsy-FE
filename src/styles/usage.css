@@ -223,13 +223,21 @@
   font-size: var(--fs-title-md);
   font-weight: 700;
   color: var(--primary);
+  margin-top: 0;
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
 }
 
+.program-panel-detail-body {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
 .program-panel-detail-image {
-  margin-bottom: 24px;
+  flex: 1;
+  min-width: 0;
   border-radius: 12px;
   overflow: hidden;
 }
@@ -241,6 +249,8 @@
 }
 
 .program-panel-detail-content {
+  flex: 1;
+  min-width: 0;
   font-size: var(--fs-body);
   color: var(--text);
   line-height: 1.8;
