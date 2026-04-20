@@ -20,7 +20,7 @@ export default function Footer() {
             <p>통신판매업신고 제2026-울산북구-0104호</p>
             <p>(도로명) 울산광역시 북구 동남로 477, 1층</p>
             <p>(지번) 울산광역시 북구 대안동 606-8</p>
-            <p>이메일 dis2412@naver.com</p>
+            <p>이메일 dayulsoup0301@naver.com</p>
             <p>개인정보관리책임자 하우석</p>
           </div>
         </div>

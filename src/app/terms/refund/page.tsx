@@ -53,7 +53,7 @@ export default function RefundPolicyPage() {
         <ul>
           <li>예약 사이트의 &quot;예약확인&quot; 메뉴에서 취소</li>
 
-          <li>이메일 취소: dis2412@naver.com</li>
+          <li>이메일 취소: dayulsoup0301@naver.com</li>
         </ul>
       </Section>
 
@@ -68,7 +68,7 @@ export default function RefundPolicyPage() {
       <Section title="7. 문의">
         <ul style={{ listStyle: "none", padding: 0 }}>
 
-          <li>이메일: dis2412@naver.com</li>
+          <li>이메일: dayulsoup0301@naver.com</li>
         </ul>
       </Section>
 
