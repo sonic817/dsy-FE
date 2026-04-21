@@ -217,8 +217,9 @@ export default function ReservationSection() {
       const { orderId, expectedAmount } = await prepareRes.json();
 
       const hasPayment = process.env.NEXT_PUBLIC_PORTONE_STORE_ID && process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY;
+      const requiresPayment = type === "individual" && !!hasPayment;
 
-      if (hasPayment) {
+      if (requiresPayment) {
         const PortOne = await import("@portone/browser-sdk/v2");
         let payment;
         try {
@@ -614,7 +615,7 @@ export default function ReservationSection() {
                 </div>
               </div>
 
-              {showPriceSummary && (
+              {showPriceSummary && type === "individual" && (
                 <div className="form-price-info">
                   <span className="form-price-label">결제 예정 금액</span>
                   <div className="form-price-inline">
@@ -633,7 +634,7 @@ export default function ReservationSection() {
                 className="submit-btn"
                 disabled={!isFormValid}
               >
-                결제 및 예약하기
+                {type === "group" ? "예약 신청하기" : "결제 및 예약하기"}
               </button>
             </form>
           </div>
@@ -660,6 +661,7 @@ export default function ReservationSection() {
         isOpen={isCompleteOpen}
         onClose={() => {
           setIsCompleteOpen(false);
+          setType("individual");
           setPaymentMethod("CARD");
           setSelectedDate(null);
           setSelectedSlot(null);
