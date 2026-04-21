@@ -230,6 +230,27 @@
     font-size: var(--fs-body);
   }
 
+  .tourism-layout {
+    display: grid;
+    grid-template-columns: 455px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  .tourism-feature-card {
+    max-width: 455px;
+    margin: 0;
+  }
+
+  .tourism-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .tourism-grid .facility-card-img {
+    height: 220px;
+  }
+
   /* Usage: 프로그램 두 패널 */
   .program-mobile-list {
     display: none;

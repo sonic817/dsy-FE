@@ -188,9 +188,33 @@
 
 /* Grids */
 .facility-grid {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+  transition: opacity 0.2s ease;
+}
+
+.gallery-transitioning {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* 갤러리/모달 공용 원형 내비 버튼 base (modal.css .image-viewer-nav, intro.css .gallery-page-nav) */
+.image-viewer-nav,
+.gallery-page-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  line-height: 1;
+  font-size: var(--fs-title-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .facility-card {
@@ -199,6 +223,7 @@
 }
 
 .facility-card-img {
+  display: block;
   width: 100%;
   height: 120px;
   object-fit: cover;
