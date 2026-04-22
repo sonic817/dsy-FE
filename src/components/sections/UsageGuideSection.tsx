@@ -7,7 +7,14 @@ import Modal from "@/components/modal/Modal";
 import { fetchApi } from "@/lib/api";
 import { useProgramFees } from "@/lib/useProgramFees";
 
-interface Program { id: number; name: string; description: string; image_url: string | null; }
+interface Program {
+  id: number;
+  name: string;
+  // 새로 추가된 title 컬럼. 있으면 우측 상세 헤더에 이걸 먼저 노출. 없으면 name으로 폴백.
+  title?: string | null;
+  description: string;
+  image_url: string | null;
+}
 
 const USAGE_TABS = ["프로그램", "개인·단체예약", "체험비·환불규정", "대관문의"];
 const PERIOD_LABELS: Record<string, string> = { morning: "오전", afternoon: "오후", night: "야간", all_day: "종일" };
@@ -77,7 +84,9 @@ export default function UsageGuideSection() {
                 <div className="program-panel-detail">
                   {selectedProgram ? (
                     <>
-                      <h3 className="program-panel-detail-title">{selectedProgram.name}</h3>
+                      <h3 className="program-panel-detail-title">
+                        {selectedProgram.title?.trim() || selectedProgram.name}
+                      </h3>
                       <div className="program-panel-detail-body">
                         {selectedProgram.image_url && (
                           <div className="program-panel-detail-image">
@@ -240,7 +249,11 @@ export default function UsageGuideSection() {
       <Modal
         isOpen={isProgramModalOpen}
         onClose={() => setIsProgramModalOpen(false)}
-        title={selectedProgram?.name || "프로그램 상세"}
+        title={
+          selectedProgram?.title?.trim() ||
+          selectedProgram?.name ||
+          "프로그램 상세"
+        }
       >
         {selectedProgram && (
           <div className="program-mobile-modal-content">

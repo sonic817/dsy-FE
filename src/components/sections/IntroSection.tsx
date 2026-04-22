@@ -158,7 +158,6 @@ export default function IntroSection() {
                   sizes="(min-width: 1024px) 520px, 100vw"
                 />
               </div>
-              <p className="intro-feature-caption">숲길, 체험, 쉼이 한 흐름으로 이어지는 다율숲의 전경입니다.</p>
             </div>
             <div className="intro-info-text">
               <div className="intro-mini-logo">

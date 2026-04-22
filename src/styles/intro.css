@@ -86,20 +86,13 @@
   margin: 0;
   overflow: hidden;
   border-radius: 18px;
-  aspect-ratio: 4 / 3;
+  /* 캡션 제거로 비는 세로 공간만큼 이미지 높이를 늘려 정사각에 가깝게. */
+  aspect-ratio: 1 / 1;
   box-shadow: 0 18px 40px rgba(11, 93, 59, 0.16);
 }
 
 .intro-feature-image-element {
   object-fit: cover;
-}
-
-.intro-feature-caption {
-  margin: 12px 4px 0;
-  font-size: var(--fs-label);
-  color: var(--text-light);
-  line-height: 1.6;
-  text-align: center;
 }
 
 .tourism-layout {

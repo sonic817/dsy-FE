@@ -242,11 +242,15 @@
   min-width: 0;
   border-radius: 12px;
   overflow: hidden;
+  /* 데스크톱에서 원본 이미지 비율에 따라 우측 패널 높이가 출렁이지 않도록 4:3으로 고정.
+     .program-panel-layout 자체가 모바일에선 display: none 이라 데스크톱 전용으로 동작. */
+  aspect-ratio: 4 / 3;
 }
 
 .program-panel-detail-image img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 

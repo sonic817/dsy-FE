@@ -132,7 +132,8 @@
   /* Intro */
   .intro-info-about {
     display: grid;
-    grid-template-columns: minmax(0, 560px) minmax(320px, 416px);
+    /* 캡션 제거로 남는 세로 여유만큼 visual 열을 살짝 확장해 이미지 크기 증대. */
+    grid-template-columns: minmax(0, 560px) minmax(320px, 460px);
     align-items: center;
     justify-content: center;
     gap: 16px;
@@ -144,7 +145,7 @@
   .intro-about-visual {
     order: 2;
     width: 100%;
-    max-width: 416px;
+    max-width: 460px;
     justify-self: end;
   }
 
@@ -173,11 +174,6 @@
     width: 100%;
     border-radius: 22px;
     aspect-ratio: 1 / 1;
-  }
-
-  .intro-feature-caption {
-    margin-top: 14px;
-    width: 100%;
   }
 
   .intro-info {
@@ -259,7 +255,10 @@
   .program-panel-layout {
     display: flex;
     gap: 24px;
-    height: 400px;
+    /* 고정 height 400px 제거 → 양쪽 패널이 콘텐츠만큼 자연스럽게 늘어남.
+       align-items: flex-start로 두 열 높이가 서로 맞춰 늘어나는 stretch를 막고,
+       리스트/상세 각자의 콘텐츠 높이에 맞게 독립적으로 노출. */
+    align-items: flex-start;
   }
 
   .program-panel-list {
@@ -267,12 +266,33 @@
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    overflow-y: auto;
+    gap: 4px;
+    /* "하나의 리스트 패널" 룩. 우측 상세와 동일한 톤의 shell을 두어 좌우가 같은 박스 계열로 보이게.
+       min-height로 프로그램이 적을 때도 빈약해 보이지 않도록 시각적 하한만 잡음.
+       실제 높이는 콘텐츠만큼만 자라므로 좌우 강제 동일 높이(stretch)는 발생하지 않음. */
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    padding: 10px;
+    min-height: 360px;
   }
 
   .program-panel-item {
-    padding: 20px;
+    /* 개별 카드 그림자/진한 보더 제거 → 단일 패널 안의 "리스트 행" 느낌. */
+    padding: 12px 14px;
+    border: 1px solid transparent;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .program-panel-item:hover {
+    background: var(--primary-light);
+  }
+
+  .program-panel-item.active {
+    background: var(--primary-light);
+    border-color: var(--primary);
   }
 
   .program-panel-item .program-item-name {
@@ -281,7 +301,7 @@
 
   .program-panel-detail {
     flex: 1;
-    overflow-y: auto;
+    /* 우측 상세 영역 내부 스크롤 제거 → 페이지 레이아웃 안에서 자연스럽게 흐름. */
   }
 
   .calendar-wrapper {
