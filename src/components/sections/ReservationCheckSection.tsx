@@ -10,6 +10,7 @@ interface ReservationResult {
   date: string;
   timeSlot: string;
   type: string;
+  typeCode: "individual" | "group";
   name: string;
   email: string | null;
   phone: string;
@@ -38,6 +39,7 @@ export default function ReservationCheckSection() {
   const [searched, setSearched] = useState(false);
   const [searching, setSearching] = useState(false);
   const [cancelTargetId, setCancelTargetId] = useState<number | null>(null);
+  const [cancelTargetIsGroup, setCancelTargetIsGroup] = useState(false);
   const [cancelPreview, setCancelPreview] = useState<CancelPreview | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [cancelling, setCancelling] = useState(false);
@@ -72,8 +74,9 @@ export default function ReservationCheckSection() {
     }, 100);
   };
 
-  const openCancelModal = async (id: number) => {
+  const openCancelModal = async (id: number, isGroup: boolean) => {
     setCancelTargetId(id);
+    setCancelTargetIsGroup(isGroup);
     setPreviewLoading(true);
     setCancelPreview(null);
     try {
@@ -247,7 +250,7 @@ export default function ReservationCheckSection() {
                     <span className={`check-result-value check-status ${item.status === "취소" ? "check-status-canceled" : ""}`}>{item.status}</span>
                   </div>
                   {item.status !== "취소" && new Date(item.date + "T00:00:00") > new Date(new Date().toDateString()) && (
-                    <button className="cancel-btn" onClick={() => openCancelModal(item.id)}>
+                    <button className="cancel-btn" onClick={() => openCancelModal(item.id, item.typeCode === "group")}>
                       취소하기
                     </button>
                   )}
@@ -274,6 +277,7 @@ export default function ReservationCheckSection() {
         refundAmount={cancelPreview?.refundAmount || 0}
         refundLabel={cancelPreview?.refundLabel || ""}
         policy={cancelPreview?.policy || []}
+        isGroup={cancelTargetIsGroup}
       />
 
       {cancelling && (

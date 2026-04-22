@@ -21,6 +21,7 @@ interface ReservationCancelModalProps {
   refundAmount: number;
   refundLabel: string;
   policy: PolicyRow[];
+  isGroup: boolean;
 }
 
 export default function ReservationCancelModal({
@@ -35,6 +36,7 @@ export default function ReservationCancelModal({
   refundAmount,
   refundLabel,
   policy,
+  isGroup,
 }: ReservationCancelModalProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const activeRowRef = useRef<HTMLTableRowElement>(null);
@@ -96,43 +98,49 @@ export default function ReservationCancelModal({
               <span className="confirm-label">신청인</span>
               <span className="confirm-value">{name}</span>
             </div>
-            <div className="confirm-row">
-              <span className="confirm-label">결제금액</span>
-              <span className="confirm-value">{amountPaid > 0 ? `${amountPaid.toLocaleString()}원` : "미결제"}</span>
-            </div>
-            <div className="confirm-row">
-              <span className="confirm-label">환불금액</span>
-              <span className="confirm-value cancel-refund">
-                {amountPaid > 0 ? `${refundAmount.toLocaleString()}원 (${refundLabel})` : "-"}
-              </span>
-            </div>
+            {!isGroup && (
+              <>
+                <div className="confirm-row">
+                  <span className="confirm-label">결제금액</span>
+                  <span className="confirm-value">{amountPaid > 0 ? `${amountPaid.toLocaleString()}원` : "미결제"}</span>
+                </div>
+                <div className="confirm-row">
+                  <span className="confirm-label">환불금액</span>
+                  <span className="confirm-value cancel-refund">
+                    {amountPaid > 0 ? `${refundAmount.toLocaleString()}원 (${refundLabel})` : "-"}
+                  </span>
+                </div>
+              </>
+            )}
           </div>
 
-          <div className="cancel-policy">
-            <h4 className="cancel-policy-title">취소 및 환불 기준</h4>
-            <table className="cancel-policy-table">
-              <thead>
-                <tr>
-                  <th>구분</th>
-                  <th>위약금</th>
-                  <th>환불액</th>
-                </tr>
-              </thead>
-            </table>
-            <div className="cancel-policy-table-wrapper" ref={wrapperRef}>
+          {!isGroup && (
+            <div className="cancel-policy">
+              <h4 className="cancel-policy-title">취소 및 환불 기준</h4>
               <table className="cancel-policy-table">
-                <tbody>
-                  {policy.map((row, i) => (
-                    <tr key={i} ref={row.label === refundLabel ? activeRowRef : undefined} className={row.label === refundLabel ? "cancel-policy-active" : ""}>
-                      <td>{row.label}</td>
-                      <td>{row.penalty}</td>
-                      <td>{row.refund}</td>
-                    </tr>
-                  ))}
-                </tbody>
+                <thead>
+                  <tr>
+                    <th>구분</th>
+                    <th>위약금</th>
+                    <th>환불액</th>
+                  </tr>
+                </thead>
               </table>
+              <div className="cancel-policy-table-wrapper" ref={wrapperRef}>
+                <table className="cancel-policy-table">
+                  <tbody>
+                    {policy.map((row, i) => (
+                      <tr key={i} ref={row.label === refundLabel ? activeRowRef : undefined} className={row.label === refundLabel ? "cancel-policy-active" : ""}>
+                        <td>{row.label}</td>
+                        <td>{row.penalty}</td>
+                        <td>{row.refund}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          )}
         </>
       )}
     </Modal>
