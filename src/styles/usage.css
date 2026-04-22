@@ -15,13 +15,15 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  height: 100%;
+  height: 55vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .program-mobile-modal-image {
   border-radius: 12px;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .program-mobile-modal-image img {

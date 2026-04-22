@@ -14,7 +14,7 @@ interface ModalProps {
 export default function Modal({ isOpen, onClose, title, children, footer, large }: ModalProps) {
   const preventScroll = useCallback((e: TouchEvent) => {
     const target = e.target as HTMLElement;
-    const scrollable = target.closest(".modal-body, .cancel-policy-table-wrapper");
+    const scrollable = target.closest(".modal-body, .cancel-policy-table-wrapper, .program-mobile-modal-content");
     if (!scrollable) {
       e.preventDefault();
       return;
