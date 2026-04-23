@@ -1,5 +1,7 @@
 .usage-section {
   background: #fff;
+  /* 콘텐츠가 짧을 때 네비 이동 후 다음 섹션(예약) border가 하단에 노출되는 것 방지. */
+  min-height: calc(100vh - 60px);
 }
 
 /* 모바일: 카드 리스트 */
@@ -191,7 +193,16 @@
 }
 
 /* 데스크톱: 두 패널 */
+.program-panel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .program-panel-item {
+  width: 100%;
+  text-align: left;
+  color: inherit;
   padding: 16px;
   border-radius: 12px;
   cursor: pointer;

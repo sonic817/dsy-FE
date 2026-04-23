@@ -149,7 +149,18 @@ export default function IntroSection() {
         <div className={`tab-content ${activeTab === 0 ? "active" : ""}`}>
           <div className="intro-info intro-info-about">
             <div className="intro-about-visual">
-              <div className="intro-feature-image">
+              <div
+                className="intro-feature-image"
+                onClick={() => {
+                  setModalImage(
+                    buildGalleryModalState(
+                      [{ src: "/intro-dayulsoop-scene.jpg", alt: "다율숲 전경" }],
+                      0
+                    )
+                  );
+                }}
+                style={{ cursor: "pointer" }}
+              >
                 <Image
                   src="/intro-dayulsoop-scene.jpg"
                   alt="다율숲 전경"

@@ -1,5 +1,9 @@
 .intro-section {
   background: #fff;
+  /* 콘텐츠가 짧을 때 네비 이동 후 다음 섹션(이용안내) border가 하단에 노출되는 것 방지.
+     Header.tsx scrollTo가 섹션 padding-top 일부를 헤더 뒤로 숨기므로 실제 헤더 높이보다
+     작은 값을 차감해 모바일/데스크톱 모두 한 뷰포트를 충분히 덮게 한다. */
+  min-height: calc(100vh - 60px);
 }
 
 .intro-info {

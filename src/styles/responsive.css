@@ -15,10 +15,6 @@
 
 /* ===== Desktop (1024px~) ===== */
 @media (min-width: 1024px) {
-  .section {
-    min-height: calc(100vh - 100px);
-  }
-
   .container {
     max-width: 1100px;
     padding: 0 32px;
@@ -339,15 +335,8 @@
     align-items: start;
   }
 
-  .program-time-area .program-select-panel {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .program-time-area .program-select-panel .program-select-list {
-    flex: 1;
-    overflow-y: auto;
+  .program-time-area .program-select-panel .program-panel-list {
+    width: auto;
     min-height: 0;
   }
 
@@ -359,10 +348,6 @@
 
   .program-image-panel {
     display: block;
-  }
-
-  .time-select-panel {
-    margin-bottom: 0;
   }
 
   .reservation-form-layout {
