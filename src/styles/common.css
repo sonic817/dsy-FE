@@ -264,85 +264,64 @@
   }
 }
 
-/* 우측 하단 고정 인스타그램 플로팅 버튼.
+/* 우측 하단 고정 플로팅 액션 버튼들(네이버 지도, 인스타그램).
    z-index 90: 헤더(100)보다 낮아 네비 bounce와 겹치지 않고, 모달(200+)에는 가려진다.
-   wrap이 위치/애니메이션/그림자를 담당해 원형 히트 영역과 툴팁 히트 영역을 분리. */
-.floating-instagram-wrap {
+   각 버튼이 개별적으로 위치/애니메이션/그림자를 담당해 원형 히트 영역을 유지. */
+.floating-actions {
   position: fixed;
   right: 16px;
   bottom: 16px;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.floating-action {
+  position: relative;
   width: 48px;
   height: 48px;
   border-radius: 50%;
   background: #fff;
-  z-index: 90;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  animation: floating-instagram-bob 3.4s ease-in-out infinite;
+  animation: floating-action-bob 3.4s ease-in-out infinite;
   transition: box-shadow 0.2s ease;
 }
 
-.floating-instagram-wrap:hover,
-.floating-instagram-wrap:focus-within {
+.floating-action:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.floating-action:hover,
+.floating-action:focus-within {
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
   animation-play-state: paused;
 }
 
-.floating-instagram {
+.floating-action-link {
   display: block;
   width: 100%;
   height: 100%;
   border-radius: 50%;
 }
 
-.floating-instagram:focus:not(:focus-visible) {
+.floating-action-link:focus:not(:focus-visible) {
   outline: none;
 }
 
-.floating-instagram:focus-visible {
+.floating-action-link:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 4px;
 }
 
-.floating-instagram-img {
+.floating-action-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
 }
 
-.floating-instagram-tooltip {
-  position: absolute;
-  right: calc(100% + 10px);
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 6px 10px;
-  background: rgba(0, 0, 0, 0.78);
-  color: #fff;
-  font-size: var(--fs-label);
-  font-weight: 600;
-  border-radius: 6px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-
-.floating-instagram-tooltip::after {
-  content: "";
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  border: 5px solid transparent;
-  border-left-color: rgba(0, 0, 0, 0.78);
-}
-
-.floating-instagram-wrap:hover .floating-instagram-tooltip,
-.floating-instagram-wrap:focus-within .floating-instagram-tooltip {
-  opacity: 1;
-}
-
-@keyframes floating-instagram-bob {
+@keyframes floating-action-bob {
   0%, 100% {
     transform: translateY(0);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -354,15 +333,17 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .floating-instagram-wrap {
+  .floating-action {
     animation: none;
   }
 }
 
 @media (min-width: 1024px) {
-  .floating-instagram-wrap {
+  .floating-actions {
     right: 24px;
     bottom: 24px;
+  }
+  .floating-action {
     width: 56px;
     height: 56px;
   }
