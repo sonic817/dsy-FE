@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Gowun_Dodum } from "next/font/google";
 import "./globals.css";
+import FloatingInstagramButton from "@/components/common/FloatingInstagramButton";
 
 const gowunDodum = Gowun_Dodum({
   weight: "400",
@@ -24,7 +25,10 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: `history.scrollRestoration = "manual"` }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <FloatingInstagramButton />
+      </body>
     </html>
   );
 }
