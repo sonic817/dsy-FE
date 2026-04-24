@@ -11,7 +11,7 @@ export default function Footer() {
               다율숲 주식회사
             </h3>
             <p className="footer-contact">문의: 0507-1317-1974</p>
-            <p className="footer-hours">평일 10:00 - 18:00 | 주말 · 공휴일 휴무</p>
+            <p className="footer-hours">평일 10:00 - 20:00 | 주말 · 공휴일 10:00 - 21:00</p>
           </div>
           <div className="footer-divider-mobile" />
           <div className="footer-right">
